@@ -257,13 +257,13 @@ dados.
 dos dados, *i.e.*, quando $h = (n/2) + 1$.
 
 Para ilustrar, o gráfico da @fig-LTSvsLS mostra como a presença de *outliers*,
-especialmente aqueles dois pontos de maior e menor preço unitário, influenciam
-a estimação do coeficiente angular do modelo, mostrando um efeito maior (reta
-vermelha) do que o efeito "real" da variável área sobre os preços unitários 
-(reta verde). Já a @fig-LTSvsLS2 mostra que o ajuste da reta de regressão linear
-ordinária apenas aos pontos centrais (*i.e.*, sem a inclusão dos dois pontos
-extremos supramencionados), seria já suficiente para a obtenção de um modelo bem
-ajustado.
+influenciam a estimação do coeficiente angular do modelo, mostrando um efeito 
+maior (reta vermelha) do que o efeito "real" da variável área sobre os preços 
+unitários (reta verde). Já a @fig-LTSvsLS2 mostra que a reta de regressão linear
+ordinária (em vermelho) ajustada apenas aos pontos centrais da amostra (*i.e.*, 
+sem a inclusão dos dois pontos extremos), seria já suficiente para a obtenção de
+um modelo de regressão relativamente bem ajustado, com inclinação próxima da 
+obtida pelo modelo robusto. No entanto, a presença de 
 
 ```{r}
 # Cria elipse MCD:
@@ -287,24 +287,27 @@ ellipse_data <-  hprice1 |>
 
 ```{r}
 #| label: fig-LTSvsLS
-#| fig-cap: ""
+#| fig-cap: "Modelo de Mínimos Quadrados Ordinários afetado por outliers."
+hprice1 <- within(hprice1, {
+  outlier <- factor(w, levels = c(0, 1), labels = c("sim", "não"))
+})
 ggplot(hprice1, aes(x = log(lotsize), y = log(PU))) +
 #  geom_point() +
-  geom_point(aes(colour = factor(w))) +
+  geom_point(aes(colour = outlier)) +
   geom_smooth(method = "lm", se = FALSE, lty = 2, aes(col = "LS")) +
   # geom_smooth(method = "rlm", method.args = list(method = "MM"),
   #              aes(col = "MM")) +
-  geom_smooth(method = "lm", aes(weight = LTS$lts.wt, col = "LTS"), se = FALSE)
+  geom_smooth(method = "lm", aes(weight = LTS$lts.wt, col = "LTS"), se = TRUE)
   # geom_path(data = ellipse_data, aes(x = x, y = y), linewidth = 1) +
 ```
 
 ```{r}
 #| label: fig-LTSvsLS2
-#| fig-cap: ""
+#| fig-cap: "Modelo de Mínimos Quadrados - outliers removidos."
 ggplot(hprice1, aes(x = log(lotsize), y = log(PU))) +
-  geom_point() +
+  geom_point(aes(shape = outlier, alpha = outlier)) +
   geom_smooth(data = hprice1[-c(47, 77), ],
-              method = "lm", se = FALSE, lty = 2, aes(col = "LS")) +
+              method = "lm", se = TRUE, lty = 2, aes(col = "LS")) +
   # geom_smooth(method = "rlm", method.args = list(method = "MM"),
   #              aes(col = "MM")) +
   geom_smooth(method = "lm", aes(weight = LTS$lts.wt, col = "LTS"), se = FALSE) +
@@ -312,25 +315,51 @@ ggplot(hprice1, aes(x = log(lotsize), y = log(PU))) +
   scale_colour_manual(values = c("red", "blue"))
 ```
 
-Neste caso, seria fácil estimar um modelo de regressão linear ordinária e 
-identificar os dois pontos extremos e removê-los do modelo, obtendo assim um
-modelo já mais confiável. No entanto, o estimador LTS ainda classifica como
-*outliers* outros pontos da amostra, ilustrados em vermelho na @fig-LTSvsLS3,
-melhorando assim o ajuste final do modelo. 
+No entanto, a persistência dos outliers mesmo após a remoção dos dois pontos 
+mais extremos ainda altera significativamente a inclinação da reta. O gráfico da
+@fig-StudFit mostra que, mesmo após a remoção dos dois *outliers* extremos,
+ainda restam 6 pontos com resíduo *studentizado* com valor maior do que 2, em
+módulo.
 
+```{r}
+#| label: fig-StudFit
+#| fig-cap: "Modelo de Mínimos Quadrados - outliers removidos."
+# olsrr::ols_plot_resid_stud_fit(fit0, threshold = 2)
+olsrr::ols_plot_resid_stud_fit(fit, threshold = 2)
+```
 É importante destacar que não se trata de um processo para exclusão automática
 de *outliers*, no entanto: a aplicação do algoritmo LTS não dispensa a análise
 dos pontos classificados como *outliers* pelo avaliador, que deve decidir se
-retira realmente todos os pontos *flagados* pelo algoritmo.
+retira realmente todos os pontos *flagados* pelo algoritmo. 
+
+Ainda, é importante destacar que alguns M-estimadores podem não apresentar
+bons resultados quando os *outliers* encontram-se na variável explicativa. A
+@fig-LTSvsM mostra que o M-estimador apresenta resultado muito parecido com o 
+obtido pelo método dos mínimos quadrados ordinários, distanciando-se da solução
+mais robusta, obtida pelo método dos mínimos quadrados aparados (LTS).
 
 ```{r}
-#| label: fig-LTSvsLS3
-#| fig-cap: ""
+#| label: fig-LTSvsM
+#| fig-cap: "Mínimos Quadrados Aparados "
 ggplot(hprice1, aes(x = log(lotsize), y = log(PU))) +
-  geom_point(aes(colour = factor(w))) +
-  geom_smooth(method = "lm", se = FALSE, lty = 2, aes(col = "LS")) +
+  geom_point(aes(colour = outlier)) +
+  geom_smooth(method = "rlm", se = FALSE, aes(col = "M-Est")) +
   geom_smooth(method = "lm", aes(weight = LTS$lts.wt, col = "LTS"), se = FALSE)
 ```
+
+Já os MM-Estimadores podem ser tão robustos quanto o método dos mínimos 
+quadrados aparados, como ilustra a @fig-LTSvsMM: ambas os modelos apresentam
+praticamente a mesma inclinação da reta, indicando que o MM-estimador também é
+robusto à *outliers* nas variáveis explicativas, assim como o estimador de 
+mínimos quadrados aparados. A próxima seção detalha o que são os MM-estimadores.
+
+```{r}
+ggplot(hprice1, aes(x = log(lotsize), y = log(PU))) +
+  geom_point(aes(colour = outlier)) +
+  geom_smooth(method = "lmrob", se = FALSE, aes(col = "MM-Est")) +
+  geom_smooth(method = "lm", aes(weight = LTS$lts.wt, col = "LTS"), se = FALSE)  
+```
+
 
 
 ### *MM-estimadores*

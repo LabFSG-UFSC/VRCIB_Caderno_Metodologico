@@ -448,16 +448,16 @@ k|t| - \frac{1}{2} k^2&amp; |t| &gt;k
 \tag{3.10}\]</span></span></p>
 <p>Em que <span class="math inline">\((r^2)_{(1)} &lt; (r^2)_{(2)} &lt; \ldots &lt; (r^2)_{(n)}\)</span> são os resíduos quadráticos ordenados. Resumidamente: o estimador LTS da <a href="#eq-LTS" class="quarto-xref">Equação&nbsp;<span>3.10</span></a> utiliza aproximadamente apenas <span class="math inline">\(h\)</span> pontos da amostra (em geral, <span class="math inline">\(h \approx n/2\)</span>) para um ajuste mais estável, e calcula os resíduos de cada ponto da amostra em relação à esta reta de regressão robusta. Após o cálculo dos resíduos os pontos são classificados como “bons” (pontos cujos resíduos padronizados são menores que 2,5, em módulo) ou “ruins” (pontos cujos resíduos padronizados são maiores ou iguais a 2,5).</p>
 <p>O estimador LTS é famoso por apresentar <em>breakdown point</em> igual a 50% (máximo)<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, isto é, contanto que menos de metade dos pontos do conjunto de dados em análise consista de <em>outliers</em>, o algoritmo é eficaz em identificar esses pontos anômalos e ajustar um modelo que reflete o padrão verdadeiro dos dados.</p>
-<p>Para ilustrar, o gráfico da <a href="#fig-LTSvsLS" class="quarto-xref">Figura&nbsp;<span>3.4</span></a> mostra como a presença de <em>outliers</em>, especialmente aqueles dois pontos de maior e menor preço unitário, influenciam a estimação do coeficiente angular do modelo, mostrando um efeito maior (reta vermelha) do que o efeito “real” da variável área sobre os preços unitários (reta verde). Já a <a href="#fig-LTSvsLS2" class="quarto-xref">Figura&nbsp;<span>3.5</span></a> mostra que o ajuste da reta de regressão linear ordinária apenas aos pontos centrais (<em>i.e.</em>, sem a inclusão dos dois pontos extremos supramencionados), seria já suficiente para a obtenção de um modelo bem ajustado.</p>
+<p>Para ilustrar, o gráfico da <a href="#fig-LTSvsLS" class="quarto-xref">Figura&nbsp;<span>3.4</span></a> mostra como a presença de <em>outliers</em>, influenciam a estimação do coeficiente angular do modelo, mostrando um efeito maior (reta vermelha) do que o efeito “real” da variável área sobre os preços unitários (reta verde). Já a <a href="#fig-LTSvsLS2" class="quarto-xref">Figura&nbsp;<span>3.5</span></a> mostra que a reta de regressão linear ordinária (em vermelho) ajustada apenas aos pontos centrais da amostra (<em>i.e.</em>, sem a inclusão dos dois pontos extremos), seria já suficiente para a obtenção de um modelo de regressão relativamente bem ajustado, com inclinação próxima da obtida pelo modelo robusto. No entanto, a presença de</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-LTSvsLS" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
+<div id="fig-LTSvsLS" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-LTSvsLS-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="03_limpeza_files/figure-html/fig-LTSvsLS-1.png" id="fig-LTSvsLS" class="img-fluid figure-img" width="672">
+<img src="03_limpeza_files/figure-html/fig-LTSvsLS-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-LTSvsLS-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;3.4
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-LTSvsLS-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3.4: Modelo de Mínimos Quadrados Ordinários afetado por outliers.
 </figcaption>
 </figure>
 </div>
@@ -465,30 +465,55 @@ Figura&nbsp;3.4
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-LTSvsLS2" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
+<div id="fig-LTSvsLS2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-LTSvsLS2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="03_limpeza_files/figure-html/fig-LTSvsLS2-1.png" id="fig-LTSvsLS2" class="img-fluid figure-img" width="672">
+<img src="03_limpeza_files/figure-html/fig-LTSvsLS2-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-LTSvsLS2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;3.5
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-LTSvsLS2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3.5: Modelo de Mínimos Quadrados - outliers removidos.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Neste caso, seria fácil estimar um modelo de regressão linear ordinária e identificar os dois pontos extremos e removê-los do modelo, obtendo assim um modelo já mais confiável. No entanto, o estimador LTS ainda classifica como <em>outliers</em> outros pontos da amostra, ilustrados em vermelho na <a href="#fig-LTSvsLS3" class="quarto-xref">Figura&nbsp;<span>3.6</span></a>, melhorando assim o ajuste final do modelo.</p>
-<p>É importante destacar que não se trata de um processo para exclusão automática de <em>outliers</em>, no entanto: a aplicação do algoritmo LTS não dispensa a análise dos pontos classificados como <em>outliers</em> pelo avaliador, que deve decidir se retira realmente todos os pontos <em>flagados</em> pelo algoritmo.</p>
+<p>No entanto, a persistência dos outliers mesmo após a remoção dos dois pontos mais extremos ainda altera significativamente a inclinação da reta. O gráfico da <a href="#fig-StudFit" class="quarto-xref">Figura&nbsp;<span>3.6</span></a> mostra que, mesmo após a remoção dos dois <em>outliers</em> extremos, ainda restam 6 pontos com resíduo <em>studentizado</em> com valor maior do que 2, em módulo.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-LTSvsLS3" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
+<div id="fig-StudFit" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-LTSvsLS3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="03_limpeza_files/figure-html/fig-LTSvsLS3-1.png" id="fig-LTSvsLS3" class="img-fluid figure-img" width="672">
+<div aria-describedby="fig-StudFit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03_limpeza_files/figure-html/fig-StudFit-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-LTSvsLS3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;3.6
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-StudFit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3.6: Modelo de Mínimos Quadrados - outliers removidos.
 </figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>É importante destacar que não se trata de um processo para exclusão automática de <em>outliers</em>, no entanto: a aplicação do algoritmo LTS não dispensa a análise dos pontos classificados como <em>outliers</em> pelo avaliador, que deve decidir se retira realmente todos os pontos <em>flagados</em> pelo algoritmo.</p>
+<p>Ainda, é importante destacar que alguns M-estimadores podem não apresentar bons resultados quando os <em>outliers</em> encontram-se na variável explicativa. A <a href="#fig-LTSvsM" class="quarto-xref">Figura&nbsp;<span>3.7</span></a> mostra que o M-estimador apresenta resultado muito parecido com o obtido pelo método dos mínimos quadrados ordinários, distanciando-se da solução mais robusta, obtida pelo método dos mínimos quadrados aparados (LTS).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-LTSvsM" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-LTSvsM-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03_limpeza_files/figure-html/fig-LTSvsM-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-LTSvsM-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3.7: Mínimos Quadrados Aparados
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Já os MM-Estimadores podem ser tão robustos quanto o método dos mínimos quadrados aparados, como ilustra a <span class="quarto-unresolved-ref">?fig-LTSvsMM</span>: ambas os modelos apresentam praticamente a mesma inclinação da reta, indicando que o MM-estimador também é robusto à <em>outliers</em> nas variáveis explicativas, assim como o estimador de mínimos quadrados aparados. A próxima seção detalha o que são os MM-estimadores.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03_limpeza_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

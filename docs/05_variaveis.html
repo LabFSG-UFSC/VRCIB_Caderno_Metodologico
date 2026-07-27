@@ -95,6 +95,8 @@ div.csl-indent {
     "search-label": "Procurar"
   }
 }</script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -320,7 +322,11 @@ window.Quarto = {
   <li><a href="#sec-VUM2" id="toc-sec-VUM2" class="nav-link" data-scroll-target="#sec-VUM2"><span class="header-section-number">5.2</span> Valor Unitário do metro quadrado edificado</a>
   <ul>
   <li><a href="#modelo-linear" id="toc-modelo-linear" class="nav-link" data-scroll-target="#modelo-linear"><span class="header-section-number">5.2.1</span> Modelo Linear</a></li>
-  <li><a href="#geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído" id="toc-geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído" class="nav-link" data-scroll-target="#geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído"><span class="header-section-number">5.2.2</span> Geração da superfície de valores unitários de metro quadrado construído</a></li>
+  <li><a href="#geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído" id="toc-geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído" class="nav-link" data-scroll-target="#geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído"><span class="header-section-number">5.2.2</span> Geração da superfície de valores unitários de metro quadrado construído</a>
+  <ul class="collapse">
+  <li><a href="#método-1-idw" id="toc-método-1-idw" class="nav-link" data-scroll-target="#método-1-idw"><span class="header-section-number">5.2.2.1</span> Método 1: IDW</a></li>
+  <li><a href="#método-2-krigagem" id="toc-método-2-krigagem" class="nav-link" data-scroll-target="#método-2-krigagem"><span class="header-section-number">5.2.2.2</span> Método 2: Krigagem</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#clusters-de-localização" id="toc-clusters-de-localização" class="nav-link" data-scroll-target="#clusters-de-localização"><span class="header-section-number">5.3</span> Clusters de localização</a></li>
   <li><a href="#variáveis-de-localização-acessibilidade-e-centralidade" id="toc-variáveis-de-localização-acessibilidade-e-centralidade" class="nav-link" data-scroll-target="#variáveis-de-localização-acessibilidade-e-centralidade"><span class="header-section-number">5.4</span> Variáveis de localização – Acessibilidade e Centralidade</a>
@@ -821,14 +827,479 @@ window.Quarto = {
 <p>Conforme já explicitado no segundo capítulo, o método adotado neste projeto para a avaliação em massa dos imóveis é o <strong>método evolutivo</strong>. Assim, neste projeto, os dados coletados de imóveis edificados são utilizados de maneira secundária (ou auxiliar), de maneira que ajudem a explicar o fenômeno da <em>localização</em>.</p>
 <section id="modelo-linear" class="level3" data-number="5.2.1">
 <h3 data-number="5.2.1" class="anchored" data-anchor-id="modelo-linear"><span class="header-section-number">5.2.1</span> Modelo Linear</h3>
-<p>Para a obtenção da variável <code>VUM2</code> inicialmente é ajustado um modelo de regressão linear múltipla para descrever o comportamento do mercado imobiliário de casas e apartamentos.</p>
-<p>(CONTINUA)</p>
+<p>Para a obtenção da variável <code>VUM2</code> inicialmente são ajustados modelos de regressão linear múltipla para descrever o comportamento do mercado imobiliário de casas e apartamentos.</p>
+<div class="cell">
+<div id="tbl-CasasModel" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-CasasModel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;5.1: Modelo de casas. Florianópolis/SC.
+</figcaption>
+<div aria-describedby="tbl-CasasModel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Termo</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Coef.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Erro-padrão</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Estat. t</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p-valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">8.536,66</td>
+<td style="text-align: right;">0,01</td>
+<td style="text-align: right;">1.405,21</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(area/150)</td>
+<td style="text-align: right;">0,85</td>
+<td style="text-align: right;">0,01</td>
+<td style="text-align: right;">-29,50</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(area_total/150)</td>
+<td style="text-align: right;">1,05</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">15,34</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log1p(dist_litoral/100)</td>
+<td style="text-align: right;">1,00</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-2,59</td>
+<td style="text-align: right;">0,01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(renda_pct_krigada/1212)</td>
+<td style="text-align: right;">1,13</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">25,85</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">I(num_vagas_garagem - 2)</td>
+<td style="text-align: right;">1,01</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">8,42</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">I(num_suites - 1)</td>
+<td style="text-align: right;">1,04</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">22,49</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">I(num_banheiros - 2)</td>
+<td style="text-align: right;">1,01</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">4,05</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tipo_imovelCasa de Condomínio</td>
+<td style="text-align: right;">1,05</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">9,59</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PCBaixo</td>
+<td style="text-align: right;">0,63</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-111,03</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PCAlto</td>
+<td style="text-align: right;">1,52</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">85,77</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+</tbody><tfoot>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup>a</sup> Erro-padrão dos resíduos: 0,18 em 11199 graus de liberdade</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0;"><sup>b</sup> R2: 0,83</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup>c</sup> R2aj: 0,83</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0;"><sup>d</sup> AIC: -6.694,57</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tfoot>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-AptosModel" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-AptosModel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;5.2: Modelo de apartamentos. Florianópolis/SC.
+</figcaption>
+<div aria-describedby="tbl-AptosModel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Termo</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Coef.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Erro-padrão</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Estat. t</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p-valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">19.892,66</td>
+<td style="text-align: right;">0,01</td>
+<td style="text-align: right;">1.914,99</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(area/94)</td>
+<td style="text-align: right;">0,88</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-25,66</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(area_total/120)</td>
+<td style="text-align: right;">0,99</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-2,81</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log1p(dist_litoral/100)</td>
+<td style="text-align: right;">0,98</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-13,92</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(renda_pct_krigada/1212)</td>
+<td style="text-align: right;">1,09</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">27,04</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">I(num_vagas_garagem - 2)</td>
+<td style="text-align: right;">1,06</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">26,52</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">I(num_suites - 1)</td>
+<td style="text-align: right;">1,05</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">27,11</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">I(num_banheiros - 2)</td>
+<td style="text-align: right;">1,01</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">4,60</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tipo_imovelCobertura</td>
+<td style="text-align: right;">0,97</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-8,50</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tipo_imovelFlat</td>
+<td style="text-align: right;">0,98</td>
+<td style="text-align: right;">0,02</td>
+<td style="text-align: right;">-0,88</td>
+<td style="text-align: right;">0,38</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PCMédio</td>
+<td style="text-align: right;">0,65</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-147,07</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PCBaixo</td>
+<td style="text-align: right;">0,42</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-233,61</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+</tbody><tfoot>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup>a</sup> Erro-padrão dos resíduos: 0,16 em 20934 graus de liberdade</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0;"><sup>b</sup> R2: 0,84</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup>c</sup> R2aj: 0,84</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0;"><sup>d</sup> AIC: -16.377,12</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tfoot>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Alternativamente, pode ser ajustado um modelo único, utilizando-se interação entre variáveis:</p>
+<div class="cell">
+<div id="tbl-EdifModel" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-EdifModel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;5.3: Modelo de imóveis edificados. Florianópolis/SC.
+</figcaption>
+<div aria-describedby="tbl-EdifModel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Termo</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Coef.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Erro-padrão</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Estat. t</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p-valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">12.555,05</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">2.311,38</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log1p(dist_litoral/100)</td>
+<td style="text-align: right;">0,99</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-13,21</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(renda_pct_krigada/1212)</td>
+<td style="text-align: right;">1,10</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">35,59</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tipo_imovelCobertura</td>
+<td style="text-align: right;">0,97</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-7,73</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tipo_imovelFlat</td>
+<td style="text-align: right;">0,98</td>
+<td style="text-align: right;">0,02</td>
+<td style="text-align: right;">-0,90</td>
+<td style="text-align: right;">0,37</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tipo_imovelCasa</td>
+<td style="text-align: right;">0,76</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-65,96</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tipo_imovelCasa de Condomínio</td>
+<td style="text-align: right;">0,79</td>
+<td style="text-align: right;">0,01</td>
+<td style="text-align: right;">-41,15</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(area/100):TipologiaAptos</td>
+<td style="text-align: right;">0,88</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-32,86</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(area/100):TipologiaCasas</td>
+<td style="text-align: right;">0,90</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-26,73</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TipologiaAptos:I(num_banheiros - 2)</td>
+<td style="text-align: right;">1,01</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">3,86</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TipologiaCasas:I(num_banheiros - 2)</td>
+<td style="text-align: right;">1,01</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">4,03</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TipologiaAptos:I(num_vagas_garagem - 2)</td>
+<td style="text-align: right;">1,05</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">24,70</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TipologiaCasas:I(num_vagas_garagem - 2)</td>
+<td style="text-align: right;">1,01</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">11,23</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TipologiaAptos:I(num_suites - 1)</td>
+<td style="text-align: right;">1,05</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">26,68</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TipologiaCasas:I(num_suites - 1)</td>
+<td style="text-align: right;">1,04</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">22,50</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TipologiaAptos:PCAlto</td>
+<td style="text-align: right;">1,55</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">143,46</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TipologiaCasas:PCAlto</td>
+<td style="text-align: right;">1,54</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">95,65</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TipologiaAptos:PCBaixo</td>
+<td style="text-align: right;">0,64</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-146,19</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TipologiaCasas:PCBaixo</td>
+<td style="text-align: right;">0,62</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-125,52</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+</tbody><tfoot>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup>a</sup> Erro-padrão dos resíduos: 0,17 em 32128 graus de liberdade</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0;"><sup>b</sup> R2: 0,86</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup>c</sup> R2aj: 0,86</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0;"><sup>d</sup> AIC: -22.881,53</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tfoot>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Estes modelos são gerados sempre com a mesma especificação para cada capital, o que permitirá, no futuro, a metanálise dos coeficientes.</p>
 </section>
 <section id="geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído" class="level3" data-number="5.2.2">
 <h3 data-number="5.2.2" class="anchored" data-anchor-id="geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído"><span class="header-section-number">5.2.2</span> Geração da superfície de valores unitários de metro quadrado construído</h3>
-<p>Após o ajuste do modelo de mínimos quadrados ordinários, os dados da amostra utilizados para o ajuste do modelo foram homogeneizados de acordo com fatores de homogeneização estimados diretamente do modelo. Por exemplo, para a variável área, foi derivado o fator área, conforme a <a href="#eq-FatorArea" class="quarto-xref">Equação&nbsp;<span>5.1</span></a>:</p>
+<p>Após o ajuste do modelo de mínimos quadrados ordinários, visando a obtenção de uma <strong>Variável Regionalizada</strong> <span class="citation" data-cites="Andriotti">(<a href="references.html#ref-Andriotti" role="doc-biblioref">ANDRIOTTI, 2004, p. 93</a>)</span>, os dados da amostra utilizados para o ajuste do modelo foram <em>homogeneizados</em> de acordo com fatores de homogeneização estimados diretamente do modelo. Por exemplo, para a variável área, foi derivado o fator área, conforme a <a href="#eq-FatorArea" class="quarto-xref">Equação&nbsp;<span>5.1</span></a>:</p>
 <p><span id="eq-FatorArea"><span class="math display">\[F_{\text{Área}} = \left ( \frac{A_\text{imóvel}}{100} \right)^{-0,25} \tag{5.1}\]</span></span></p>
 <p>Veja <a href="#nte-fatores" class="quarto-xref">Note&nbsp;<span>5.2</span></a> para entender com é feita a derivação racional de fatores de homogeneização.</p>
+<section id="método-1-idw" class="level4" data-number="5.2.2.1">
+<h4 data-number="5.2.2.1" class="anchored" data-anchor-id="método-1-idw"><span class="header-section-number">5.2.2.1</span> Método 1: IDW</h4>
 <p>Após o procedimento de homoegeneização, foi gerada uma superfície de valores de metro quadrado construído com os dados homogeneizados através do algoritmo IDW (<em>inverse distance weighting</em>).</p>
 <div id="nte-idw" class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -879,15 +1350,20 @@ Nota&nbsp;5.2: Derivação Racional de Fatores
 </div>
 </div>
 </section>
+<section id="método-2-krigagem" class="level4" data-number="5.2.2.2">
+<h4 data-number="5.2.2.2" class="anchored" data-anchor-id="método-2-krigagem"><span class="header-section-number">5.2.2.2</span> Método 2: Krigagem</h4>
+<p>Outra maneira de gerar uma superfície de valores de metro quadrado construído é através da krigagem ordinária. Infelizmente, contudo, dado o grande número de dados da amostra e a sobreposição de alguns dados, a execução da krigagem pontualmente mostrou-se inviavel. Assim, foi efetuada a consolição dos valores medianos homogeneizados para cada setor censitário e, com estes valores medianos foi efetuada a krigagem ordinária de maneira mais eficiente.</p>
+</section>
+</section>
 </section>
 <section id="clusters-de-localização" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="clusters-de-localização"><span class="header-section-number">5.3</span> Clusters de localização</h2>
 <p>Tendo em vista a heterogeneidade espacial dos dados, em adição aos níveis espaciais “Distritos”” e “Setores censitários”“, foram gerados <em>clusters</em> espaciais para cada tipo de imóvel e para cada município com base no método de agrupamento não supervisionado <em>k-means</em>. As variáveis de entrada para a clusterização foram as coordenadas geográficas (<em>lat</em>, <em>lon</em>) padronizadas.</p>
-<p>Para tanto, as tipologias imobiliárias foram reclassificadas a partir das tipologias presentes na base de dados, de acordo com a <a href="#tbl-reclass" class="quarto-xref">Tabela&nbsp;<span>5.1</span></a>.</p>
+<p>Para tanto, as tipologias imobiliárias foram reclassificadas a partir das tipologias presentes na base de dados, de acordo com a <a href="#tbl-reclass" class="quarto-xref">Tabela&nbsp;<span>5.4</span></a>.</p>
 <div id="tbl-reclass" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-reclass-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabela&nbsp;5.1: Reclassificação das tipologias imobiliárias para geração dos clusters espaciais. Elaboração própria.
+Tabela&nbsp;5.4: Reclassificação das tipologias imobiliárias para geração dos clusters espaciais. Elaboração própria.
 </figcaption>
 <div aria-describedby="tbl-reclass-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -947,11 +1423,11 @@ k = \max(k,3)
 <p><span id="eq-kmin"><span class="math display">\[
 k = \min(k,30)
 \tag{5.9}\]</span></span></p>
-<p>A <a href="#tbl-clusters" class="quarto-xref">Tabela&nbsp;<span>5.2</span></a> identifica o número de clusters gerado por tipologia e município.</p>
+<p>A <a href="#tbl-clusters" class="quarto-xref">Tabela&nbsp;<span>5.5</span></a> identifica o número de clusters gerado por tipologia e município.</p>
 <div id="tbl-clusters" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-clusters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabela&nbsp;5.2: Número de clusters gerado por tipologia e município. Elaboração própria.
+Tabela&nbsp;5.5: Número de clusters gerado por tipologia e município. Elaboração própria.
 </figcaption>
 <div aria-describedby="tbl-clusters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -1072,6 +1548,9 @@ GF_k = \sum_{j:d_{ij\leq 7000}} \frac{W_i W_j}{d_{ij}}
 <div id="refs" class="references csl-bib-body" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-Aguilar" class="csl-entry" role="listitem">
 AGUILAR, R. L. <strong>Capital socioespacial e valorização imobiliária: uma análise baseada em modelos hedônicos de preços em Porto Alegre (RS)</strong>, 2026. tese de doutorado, Porto Alegre/RS: Universidade Federal do Rio Grande do Sul.
+</div>
+<div id="ref-Andriotti" class="csl-entry" role="listitem">
+ANDRIOTTI, J. L. S. <strong>Fundamentos de Estatística e Geostatística</strong>. São Leopoldo, RS: Editora Unisinos, 2004.
 </div>
 <div id="ref-Batty" class="csl-entry" role="listitem">
 BATTY, M. <strong>The New Science of Cities</strong>. MIT Press, 2013.

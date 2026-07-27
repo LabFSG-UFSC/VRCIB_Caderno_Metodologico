@@ -6,6 +6,13 @@ author:
   - "Vile Rodrigues"
 ---
 
+```{r, include = FALSE}
+library(ggplot2)
+library(broom)
+library(kableExtra)
+source("./Funcoes_Aux.R")
+```
+
 Além da variável `PC` (*Padrão Construtivo*), obtida através de algoritmos de
 *clusterização*, conforme capítulo anterior, outras variáveis explicativas foram
 criadas visando a obtenção de um melhor ajuste para os modelos estatísticos,
@@ -344,23 +351,101 @@ os dados coletados de imóveis edificados são utilizados de maneira secundária
 
 ### Modelo Linear
 
-Para a obtenção da variável `VUM2` inicialmente é ajustado um modelo de 
+Para a obtenção da variável `VUM2` inicialmente são ajustados modelos de 
 regressão linear múltipla para descrever o comportamento do mercado imobiliário 
 de casas e apartamentos. 
 
-(CONTINUA)
+```{r}
+#| label: tbl-CasasModel
+#| tbl-cap: "Modelo de casas. Florianópolis/SC."
+fitCasas <- readRDS("../POC-FLN/model/OLSCasas.rds")
+#summary(fitCasas)
+tab <- fitCasas |>
+  tidy(exponentiate = TRUE)
+
+tab[which(tab$term == "(Intercept)"), "term"] <- "Intercepto"
+
+tab |>
+  kable(digits = 2, format.args = list(decimal.mark = ",", big.mark = "."),
+        col.names = c("Termo", "Coef.", "Erro-padrão", "Estat. t", "p-valor"),
+        booktabs = TRUE) |>
+ # kable_styling() |>
+  footnote(alphabet = c(
+    paste("Erro-padrão dos resíduos: ", brf(sigma(fitCasas)), "em ", 
+          df.residual(fitCasas), "graus de liberdade"),
+    paste("R2: ", brf(R2(fitCasas))),
+    paste("R2aj: ", brf(adjR2(fitCasas))),
+    paste("AIC: ", brf(AIC(fitCasas)))
+  ))
+```
+
+```{r}
+#| label: tbl-AptosModel
+#| tbl-cap: "Modelo de apartamentos. Florianópolis/SC."
+fitAptos <- readRDS("../POC-FLN/model/OLSApto.rds")
+# summary(fitAptos)
+tab <- fitAptos |>
+  tidy(exponentiate = TRUE)
+
+tab[which(tab$term == "(Intercept)"), "term"] <- "Intercepto"
+
+tab |>
+  kable(digits = 2, format.args = list(decimal.mark = ",", big.mark = "."),
+        col.names = c("Termo", "Coef.", "Erro-padrão", "Estat. t", "p-valor"),
+        booktabs = TRUE) |>
+ # kable_styling() |>
+  footnote(alphabet = c(
+    paste("Erro-padrão dos resíduos: ", brf(sigma(fitAptos)), "em ", 
+          df.residual(fitAptos), "graus de liberdade"),
+    paste("R2: ", brf(R2(fitAptos))),
+    paste("R2aj: ", brf(adjR2(fitAptos))),
+    paste("AIC: ", brf(AIC(fitAptos)))
+  ))
+```
+
+Alternativamente, pode ser ajustado um modelo único, utilizando-se interação
+entre variáveis:
+
+```{r}
+#| label: tbl-EdifModel
+#| tbl-cap: "Modelo de imóveis edificados. Florianópolis/SC."
+load("../POC-FLN/model/Edif_OLS.rda")
+tab <- FinalFit |>
+  tidy(exponentiate = TRUE)
+
+tab[which(tab$term == "(Intercept)"), "term"] <- "Intercepto"
+
+tab |>
+  kable(digits = 2, format.args = list(decimal.mark = ",", big.mark = "."),
+        col.names = c("Termo", "Coef.", "Erro-padrão", "Estat. t", "p-valor"),
+        booktabs = TRUE) |>
+ # kable_styling() |>
+  footnote(alphabet = c(
+    paste("Erro-padrão dos resíduos: ", brf(sigma(FinalFit)), "em ", 
+          df.residual(FinalFit), "graus de liberdade"),
+    paste("R2: ", brf(R2(FinalFit))),
+    paste("R2aj: ", brf(adjR2(FinalFit))),
+    paste("AIC: ", brf(AIC(FinalFit)))
+  ))
+```
+
+Estes modelos são gerados sempre com a mesma especificação para cada
+capital, o que permitirá, no futuro, a metanálise dos coeficientes.
 
 ### Geração da superfície de valores unitários de metro quadrado construído
 
-Após o ajuste do modelo de mínimos quadrados ordinários, os dados da amostra
-utilizados para o ajuste do modelo foram homogeneizados de acordo com fatores de
-homogeneização estimados diretamente do modelo. Por exemplo, para a variável
+Após o ajuste do modelo de mínimos quadrados ordinários, visando a obtenção de 
+uma **Variável Regionalizada** [@Andriotti, 93], os dados da amostra
+utilizados para o ajuste do modelo foram *homogeneizados* de acordo com fatores
+de homogeneização estimados diretamente do modelo. Por exemplo, para a variável
 área, foi derivado o fator área, conforme a @eq-FatorArea:
 
 $$F_{\text{Área}} = \left ( \frac{A_\text{imóvel}}{100} \right)^{-0,25}$$ {#eq-FatorArea}
 
 Veja @nte-fatores para entender com é feita a derivação racional de fatores de 
 homogeneização.
+
+#### Método 1: IDW
 
 Após o procedimento de homoegeneização, foi gerada uma superfície de valores de
 metro quadrado construído com os dados homogeneizados através do algoritmo IDW
@@ -427,6 +512,17 @@ multiplicativos, pois, deste modelo, deduz-se:
 
 $$F_1 = \exp(\hat \beta_1 x_1); F_2 = \exp(\hat \beta_2 x_2); \ldots ; F_k =  \exp(\hat\beta_kx_k)$$
 :::
+
+#### Método 2: Krigagem
+
+Outra maneira de gerar uma superfície de valores de metro quadrado construído é
+através da krigagem ordinária. Infelizmente, contudo, dado o grande número de 
+dados da amostra e a sobreposição de alguns dados, a execução da krigagem 
+pontualmente mostrou-se inviavel. Assim, foi efetuada a consolição dos valores
+medianos homogeneizados para cada setor censitário e, com estes valores medianos
+foi efetuada a krigagem ordinária de maneira mais eficiente.
+
+
 
 ## Clusters de localização
 
