@@ -1,0 +1,253 @@
+---
+title: "Geração da variável Valor Unitário do Metro Quadrado Construído (VUM2)"
+author: 
+  - "Luiz Fernando Palin Droubi"
+---
+
+```{r, include = FALSE}
+library(ggplot2)
+library(broom)
+library(kableExtra)
+source("./Funcoes_Aux.R")
+```
+
+## Introdução
+
+Este capítulo trata de descrever os procedimentos para geração da variável
+`VUM2` (*Valor Unitário do Metro Quadrado construído*).
+
+Conforme já explicitado no segundo capítulo, o método adotado neste projeto para
+a avaliação em massa dos imóveis é o **método evolutivo**. Assim, neste projeto,
+os dados coletados de imóveis edificados são utilizados de maneira secundária
+(ou auxiliar), de maneira que ajudem a explicar o fenômeno da *localização*.
+
+## Ajuste do modelo linear
+
+Para a obtenção da variável `VUM2` inicialmente são ajustados modelos de 
+regressão linear múltipla como os da @tbl-CasasModel e @tbl-AptosModel, para 
+descrever o comportamento do mercado imobiliário de casas e apartamentos. 
+
+```{r}
+#| label: tbl-CasasModel
+#| tbl-cap: "Modelo de casas. Florianópolis/SC."
+fitCasas <- readRDS("../POC-FLN/model/OLSCasas.rds")
+#summary(fitCasas)
+tab <- fitCasas |>
+  tidy(exponentiate = TRUE)
+
+tab[which(tab$term == "(Intercept)"), "term"] <- "Intercepto"
+
+tab |>
+  kable(digits = 2, format.args = list(decimal.mark = ",", big.mark = "."),
+        col.names = c("Termo", "Coef.", "Erro-padrão", "Estat. t", "p-valor"),
+        booktabs = TRUE) |>
+ # kable_styling() |>
+  footnote(alphabet = c(
+    paste("Coeficientes exponenciados"),
+    paste("Erro-padrão dos resíduos: ", brf(sigma(fitCasas)), "em ", 
+          df.residual(fitCasas), "graus de liberdade"),
+    paste("R2: ", brf(R2(fitCasas))),
+    paste("R2aj: ", brf(adjR2(fitCasas))),
+    paste("AIC: ", brf(AIC(fitCasas)))
+  ))
+```
+
+```{r}
+#| label: tbl-AptosModel
+#| tbl-cap: "Modelo de apartamentos. Florianópolis/SC."
+fitAptos <- readRDS("../POC-FLN/model/OLSApto.rds")
+# summary(fitAptos)
+tab <- fitAptos |>
+  tidy(exponentiate = TRUE)
+
+tab[which(tab$term == "(Intercept)"), "term"] <- "Intercepto"
+
+tab |>
+  kable(digits = 2, format.args = list(decimal.mark = ",", big.mark = "."),
+        col.names = c("Termo", "Coef.", "Erro-padrão", "Estat. t", "p-valor"),
+        booktabs = TRUE) |>
+ # kable_styling() |>
+  footnote(alphabet = c(
+    paste("Coeficientes exponenciados"),
+    paste("Erro-padrão dos resíduos: ", brf(sigma(fitAptos)), "em ", 
+          df.residual(fitAptos), "graus de liberdade"),
+    paste("R2: ", brf(R2(fitAptos))),
+    paste("R2aj: ", brf(adjR2(fitAptos))),
+    paste("AIC: ", brf(AIC(fitAptos)))
+  ))
+```
+
+Tais modelos são mais fáceis de diagnosticar. Porém, alternativamente, pode ser
+ajustado um modelo único, utilizando-se interação entre variáveis, como 
+ilustrado na @tbl-EdifModel.
+
+```{r}
+#| label: tbl-EdifModel
+#| tbl-cap: "Modelo de imóveis edificados. Florianópolis/SC."
+load("../POC-FLN/model/Edif_OLS.rda")
+tab <- FinalFit |>
+  tidy(exponentiate = TRUE)
+
+tab[which(tab$term == "(Intercept)"), "term"] <- "Intercepto"
+
+tab |>
+  kable(digits = 2, format.args = list(decimal.mark = ",", big.mark = "."),
+        col.names = c("Termo", "Coef.", "Erro-padrão", "Estat. t", "p-valor"),
+        booktabs = TRUE) |>
+ # kable_styling() |>
+  footnote(alphabet = c(
+    paste("Coeficientes exponenciados"),
+    paste("Erro-padrão dos resíduos: ", brf(sigma(FinalFit)), "em ", 
+          df.residual(FinalFit), "graus de liberdade"),
+    paste("R2: ", brf(R2(FinalFit))),
+    paste("R2aj: ", brf(adjR2(FinalFit))),
+    paste("AIC: ", brf(AIC(FinalFit)))
+  ))
+```
+
+Estes modelos são gerados sempre com a mesma especificação para cada
+capital, o que permitirá, no futuro, a metanálise dos coeficientes.
+
+## Geração da superfície de valores unitários de metro quadrado construído
+
+### Homogeneização dos dados amostrais
+
+Após o ajuste do modelo de mínimos quadrados ordinários, visando a obtenção de 
+uma **Variável Regionalizada** [@Andriotti, 93], os dados da amostra
+utilizados para o ajuste do modelo foram *homogeneizados* de acordo com fatores
+de homogeneização estimados diretamente do modelo. Por exemplo, para a variável
+`log(area/100):TipologiaAptos`, foi obtido no modelo de regressão linear da
+@tbl-EdifModel o coeficiente `r brf(coef(FinalFit)["log(area/100):TipologiaAptos"])`.
+Assim, o fator área (para homogeneização dos apartamentos) derivado desse modelo
+deve obedecer a @eq-FatorAreaAptos:
+
+$$F_{\text{Área}} = \left ( \frac{A_\text{apto}}{100} \right)^{-0,13}$$ {#eq-FatorAreaAptos}
+
+Já para as casas, o coeficiente obtido no modelo da @tbl-EdifModel resultou em
+`r brf(coef(FinalFit)["log(area/100):TipologiaCasas"])`. Assim, para as casas
+o fator de homogeneização resulta como visto na @eq-FatorAreaCasas:
+
+$$F_{\text{Área}} = \left ( \frac{A_\text{casa}}{100} \right)^{-0,11}$$ {#eq-FatorAreaCasas}
+
+Veja @nte-fatores para entender com é feita a derivação racional de fatores de 
+homogeneização.
+
+::: {#nte-fatores .callout-note}
+## Derivação Racional de Fatores
+
+A derivação racional de fatores de homogeneização é feita de acordo com os
+coeficientes estimados em um modelo de regressão linear múltipla (RLM).
+
+Os fatores serão aditivos quando o modelo RLM for ajustado na escala de preços
+unitários (PU), ou serão multiplicativos quando o modelo RLM for ajustado com a
+transformação da variável dependente para a escala logaritmica, o que é usual na
+Engenharia de Avaliações.
+
+Para entender, basta perceber que, para um modelo ajustado na escala 
+logaritmica, tem-se:
+
+$$\widehat{\log(PU)} = \hat \beta_0 + \hat \beta_1 x_1 + \ldots + \hat\beta_kx_k$$ {#eq-ModeloMultiplicativo}
+
+Efetuando a exponenciação em ambos os lados de @eq-ModeloMultiplicativo, tem-se:
+
+$$\widehat{PU} = \exp(\hat \beta_0 + \hat \beta_1 x_1 + \ldots + \hat\beta_kx_k)$$ {#eq-ModeloMultiplicativo2}
+
+Como a exponencial da soma é o produto das exponenciais, a 
+@eq-ModeloMultiplicativo2 torna-se:
+
+$$\widehat{PU} = \exp(\hat \beta_0)\cdot\exp(\hat \beta_1 x_1)\cdot \ldots \cdot \exp(\hat\beta_kx_k)$$ {#eq-ModeloMultiplicativo3}
+
+Donde entende-se o motivo dos fatores derivados com este modelo serem 
+multiplicativos, pois, deste modelo, deduz-se:
+
+$$F_1 = \exp(\hat \beta_1 x_1); F_2 = \exp(\hat \beta_2 x_2); \ldots ; F_k =  \exp(\hat\beta_kx_k)$$
+:::
+
+### Interpolação
+
+A homogeneização dos dados permite a posterior interpolação espacial dos preços
+unitários homogeneizados (`PUHom`), pois entende-se que, após a homogeneização,
+a variável obtida, `PUHom`, é uma variável regionalizada, que representa os
+valores unitários de venda de imóveis edificados *padronizados* para um imóvel
+de características pré-definidas (no caso, uma casa ou apartamento com 100 $m^2$,
+2 vagas de garagem, 1 suíte e 2 banheiros). Os dados amostrais não são 
+homogeneizados quanto a sua tipologia ou padrão construtivo, assim a variável
+obtida representa o valor unitário do metro quadrado realmente existente na 
+região. 
+
+Após a obtenção de `PUHom`, *i.e.* a variável dos preços unitários 
+homogeneizados, a interpolação pode ser feita de acordo com diversos 
+procedimentos da análise espacial de superfícies, tais como [@Embrapa2004, p. 80]:
+
+- *Modelos determinísticos de efeitos locais*: cada ponto da superfície é 
+estimado com base apenas na interpolação de valores das amostrais mais próximas,
+utilizando funções como *inverso da medida do quadrado da distância*. A suposição
+implícita é de que predominam os efeitos puramente locais. Nesse caso, não é
+levantada qualquer hipótese estatística sobre a variabilidade espacial.
+
+- *Modelos determinísticos de efeitos globais*: a suposição implícita, nessa
+classe de interpoladores, é de que, para a caracterização do fenômeno em estudo,
+predomina a variação em larga escala, e a variabilidade local não é relevante.
+Esse é o caso dos interpoladores por superfícies de tendência.
+
+- *Modelos estatísticos de efeitos globais e locais (krigeagem)*: cada ponto
+da superfície é estimado apenas tendo como fundamento a interpolação dos valores
+das amostras mais próximas, utilizando um estimador estatístico. Esses
+procedimentos requerem que as variabilidades local e global sejam modeladas.
+
+Considera-se que os mercados imobiliários em geral apresentam predomínio dos
+efeitos locais. Neste caso, portanto, são viáveis os modelos determinísticos de
+efeitos locais, como o *IDW*, apresentado abaixo, e os modelos estatísticos
+de efeitos locais e globais (krigeagem, descritos ao final do capítulo), sendo
+estes últimos considerados a escolha ideal para o projeto `VRCIB`.
+
+#### Método 1: IDW
+
+Após o procedimento de homoegeneização, foi gerada uma superfície de valores de
+metro quadrado construído com os dados homogeneizados através do algoritmo IDW
+(*inverse distance weighting*).
+
+::: {#nte-idw .callout-note}
+## Inverse Distance Weighting
+
+Segundo @Embrapa2004 [p. 83], "uma alternativa simples para gerar uma
+superfície bidimensional" consiste em ajustar uma função bidimensional sobre as
+amostras, prevendo valores em uma grade ($\hat z_i$), com a seguinte formulação:
+
+$$
+\hat z_i = \frac{\sum_{j = 1}^n w_{ij}z_j}{\sum_{j=1}^n w_{ij}}
+$$ {#eq-IDW}
+
+Em que:
+
+- $z_j$ é o valor da cota (VU) de uma amostra vizinha do ponto $i$ da grade;
+- $w_{ij}$ é um fator de ponderação.
+
+Com base neste esquema básico supra-mencionado, é possível gerar vários
+interpoladores (vizinho mais próximo, média simples ou média ponderada). A 
+ponderação mais usada consiste em adotar pesos que variam com o inverso de uma 
+potência $k$ da distância euclidiana do ponto da amostra ao ponto da grade em 
+que se deseja prever valores ($d_{ij}$), assim:
+
+$$
+w_{ij} = \frac{1}{d_{ij}^k}
+$$ {#eq-IDW2}
+
+Em que:
+  - $d_{ij} = \sqrt{(x_i-x_j)^2 + (y_i - y_j)^2}$
+:::
+
+
+#### Método 2: Krigagem
+
+Outra maneira de gerar uma superfície de valores de metro quadrado construído é
+através da krigagem ordinária. Infelizmente, contudo, dado o grande número de 
+dados da amostra e a sobreposição de alguns dados, a execução da krigagem 
+pontualmente mostrou-se inviável. Assim, para possibilitar a utilização da 
+krigagem ordinária, foi efetuada a consolição dos valores homogeneizados por 
+setor censitário através do cálculo dos seus valores medianos por setor. Com 
+estes valores medianos, posteriormente, foi efetuada a krigagem ordinária de 
+maneira mais eficiente, tal como no caso da renda per capita por setor 
+mostrada no capítulo anterior.
+
+

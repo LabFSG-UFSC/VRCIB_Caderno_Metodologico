@@ -6,11 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Luiz Fernando Palin Droubi">
-<meta name="author" content="Vinícius Lohn da Silva">
 <meta name="author" content="Caroline Bernardo Silva">
 
-<title>4&nbsp; Métodos de classificação – Caderno Metodológico</title>
+<title>8&nbsp; Análise de dados com modelos de aprendizado de máquina – Caderno Metodológico</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,27 +24,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -56,8 +34,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./05_renda_krigada.html" rel="next">
-<link href="./03_limpeza.html" rel="prev">
+<link href="./09_lotes.html" rel="next">
+<link href="./07_variaveis.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -96,35 +74,6 @@ div.csl-indent {
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="cover-style.css">
@@ -139,7 +88,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04_classificacao.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Métodos de classificação</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./08_ML.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Análise de dados com modelos de aprendizado de máquina</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Procurar" onclick="window.quartoOpenSearch();">
@@ -227,7 +176,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04_classificacao.html" class="sidebar-item-text sidebar-link active">
+  <a href="./04_classificacao.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Métodos de classificação</span></span></a>
   </div>
 </li>
@@ -251,7 +200,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08_ML.html" class="sidebar-item-text sidebar-link">
+  <a href="./08_ML.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Análise de dados com modelos de aprendizado de máquina</span></span></a>
   </div>
 </li>
@@ -307,23 +256,15 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Índice</h2>
-   
-  <ul>
-  <li><a href="#k-means" id="toc-k-means" class="nav-link active" data-scroll-target="#k-means"><span class="header-section-number">4.1</span> <em>K-means</em></a></li>
-  <li><a href="#k-tau" id="toc-k-tau" class="nav-link" data-scroll-target="#k-tau"><span class="header-section-number">4.2</span> <em>K-TAU</em></a></li>
-  <li><a href="#k-medoids" id="toc-k-medoids" class="nav-link" data-scroll-target="#k-medoids"><span class="header-section-number">4.3</span> <em>K-medoids</em></a></li>
-  </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/edit/main/04_classificacao.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Métodos de classificação</span></h1>
+<h1 class="title"><span id="sec-ML" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Análise de dados com modelos de aprendizado de máquina</span></span></h1>
 </div>
 
 
@@ -331,10 +272,8 @@ window.Quarto = {
 <div class="quarto-title-meta">
 
     <div>
-    <div class="quarto-title-meta-heading">Autores</div>
+    <div class="quarto-title-meta-heading">Autor</div>
     <div class="quarto-title-meta-contents">
-             <p>Luiz Fernando Palin Droubi </p>
-             <p>Vinícius Lohn da Silva </p>
              <p>Caroline Bernardo Silva </p>
           </div>
   </div>
@@ -348,110 +287,8 @@ window.Quarto = {
 </header>
 
 
-<p>Para este projeto foram utilizados métodos robustos de classificação (ou <em>clusterização</em>). Assim como no caso da regressão robusta, é mais fácil compreender os métodos de classificação robusta quando comparámo-los aos métodos clássicos de classificação, como o método <em>K-means</em>.</p>
-<section id="k-means" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="k-means"><span class="header-section-number">4.1</span> <em>K-means</em></h2>
-<p>O método <em>K-means</em> é um método de <em>clusterização</em> de dados que consiste na minimização da distância quadrática entre os pontos da amostras e <em>K</em> centros <span class="math inline">\(\mu_1, \mu_2, \ldots, \mu_k\)</span>. Sejam as distâncias definidas conforme a <a href="#eq-distances" class="quarto-xref">Equação&nbsp;<span>4.1</span></a> abaixo</p>
-<p><span id="eq-distances"><span class="math display">\[
-D(\mathbf x_i,\boldsymbol{\mu_1}, \ldots, \boldsymbol \mu_K) = \min_{1\leq i\leq K} ||\mathbf x_i - \boldsymbol \mu_j||, \, 1\leq i, \leq k
-\tag{4.1}\]</span></span></p>
-<p>Os centros dos clusters, dessa forma, são obtidos conforme a <a href="#eq-kmeans" class="quarto-xref">Equação&nbsp;<span>4.2</span></a>:</p>
-<p><span id="eq-kmeans"><span class="math display">\[
-(\boldsymbol{\hat \mu_1}, \ldots, \boldsymbol{\hat \mu_k}) = \arg\min\limits_{\boldsymbol{\mu_1}, \ldots, \boldsymbol{\mu_k}} \sum_{i=1}^n D^2(\mathbf x_i,\boldsymbol{\mu_1}, \ldots, \boldsymbol \mu_K)
-\tag{4.2}\]</span></span></p>
-<p>O problema com o método <em>K-means</em> é que, a exemplo do que ocorre com o método dos mínimos quadrados ordinários, este método é muito sensível à presença de <em>outliers</em> <span class="citation" data-cites="Gonzalez2019">(<a href="references.html#ref-Gonzalez2019" role="doc-biblioref">GONZALEZ et al., 2019, p. 2</a>)</span>. A <a href="#fig-kmeans" class="quarto-xref">Figura&nbsp;<span>4.1</span></a> (A) mostra que o método é eficiente em estimar as k-médias, porém, na presença de <em>outliers</em> (<a href="#fig-kmeans" class="quarto-xref">Figura&nbsp;<span>4.1</span></a> (B)), os resultados ficam comprometidos.</p>
-<div id="fig-kmeans" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-kmeans-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="./img/K-means.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-kmeans-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;4.1: Problema com <em>K-means</em>: sensibilidade à <em>outliers</em>. Fonte: <span class="citation" data-cites="Gonzalez2019">GONZALEZ et al. (<a href="references.html#ref-Gonzalez2019" role="doc-biblioref">2019</a>)</span>
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="k-tau" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="k-tau"><span class="header-section-number">4.2</span> <em>K-TAU</em></h2>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>Driver: GPKG 
-Available layers:
-                             layer_name     geometry_type features fields
-1                       face_logradouro Multi Line String    20329      8
-2                            logradouro Multi Line String    14261      8
-3                             municipio     Multi Polygon        1     15
-4            regiao_geografica_imediata     Multi Polygon        1     11
-5       regiao_geografica_intermediaria     Multi Polygon        1      9
-6                      setor_censitario     Multi Polygon     1004     29
-7               setor_censitario_urbano     Multi Polygon      930     29
-8                       subsetor_urbano     Multi Polygon     4360      1
-9                                    uf     Multi Polygon        1      6
-10              limite_perimetro_urbano     Multi Polygon        9     12
-11                           edificacao             Point   258267      6
-12                          amostra_omi             Point    83869     62
-13 variavel_geografica_setor_censitario     Multi Polygon     1004     68
-14      variavel_geografica_amostra_omi             Point    83600    121
-15                         layer_styles                NA       12     12
-      crs_name
-1  SIRGAS 2000
-2  SIRGAS 2000
-3  SIRGAS 2000
-4  SIRGAS 2000
-5  SIRGAS 2000
-6  SIRGAS 2000
-7  SIRGAS 2000
-8  SIRGAS 2000
-9  SIRGAS 2000
-10 SIRGAS 2000
-11 SIRGAS 2000
-12 SIRGAS 2000
-13 SIRGAS 2000
-14 SIRGAS 2000
-15        &lt;NA&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Reading layer `variavel_geografica_amostra_omi' from data source 
-  `/Users/droubi/Documents/LabFSG/Caderno_Metodologico/data/4205407_Florianopolis_r007_2026-04-06.gpkg' 
-  using driver `GPKG'
-Simple feature collection with 83600 features and 121 fields
-Geometry type: POINT
-Dimension:     XY
-Bounding box:  xmin: -48.60608 ymin: -27.81767 xmax: -48.37625 ymax: -27.38705
-Geodetic CRS:  SIRGAS 2000</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="04_classificacao_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="04_classificacao_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p><span class="citation" data-cites="Gonzalez2019">GONZALEZ et al. (<a href="references.html#ref-Gonzalez2019" role="doc-biblioref">2019</a>)</span> propuseram</p>
-</section>
-<section id="k-medoids" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="k-medoids"><span class="header-section-number">4.3</span> <em>K-medoids</em></h2>
-<p><em>K-medoids</em> é um método robusto de <em>clusterização</em> que</p>
 
 
-<div id="refs" class="references csl-bib-body" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-Gonzalez2019" class="csl-entry" role="listitem">
-GONZALEZ, J. D.; YOHAI, V. J.; ZAMAR, R. H. Robust Clustering Using Tau-Scales., 2019. Disponível em: &lt;<a href="https://arxiv.org/abs/1906.08198">https://arxiv.org/abs/1906.08198</a>&gt;.
-</div>
-</div>
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -856,13 +693,13 @@ GONZALEZ, J. D.; YOHAI, V. J.; ZAMAR, R. H. Robust Clustering Using Tau-Scales.,
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./03_limpeza.html" class="pagination-link" aria-label="Limpeza de dados">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Limpeza de dados</span></span>
+      <a href="./07_variaveis.html" class="pagination-link" aria-label="Geração de variáveis explicativas de localização">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Geração de variáveis explicativas de localização</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./05_renda_krigada.html" class="pagination-link" aria-label="Geração da renda per capita krigada">
-        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Geração da renda per capita krigada</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./09_lotes.html" class="pagination-link" aria-label="Análise de dados de lotes urbanos">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Análise de dados de lotes urbanos</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -874,7 +711,7 @@ GONZALEZ, J. D.; YOHAI, V. J.; ZAMAR, R. H. Robust Clustering Using Tau-Scales.,
 </div>   
     <div class="nav-footer-center">
 <p><img src="img/Logo com RFB e UFSC.png" class="img-fluid" width="250"></p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/edit/main/04_classificacao.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></div>
+<div class="toc-actions"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/edit/main/08_ML.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>

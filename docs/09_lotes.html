@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ramon Lucato de Aguilar">
 <meta name="author" content="Luiz Fernando Palin Droubi">
 
-<title>7&nbsp; Análise de dados de lotes urbanos – Caderno Metodológico</title>
+<title>9&nbsp; Análise de dados de lotes urbanos – Caderno Metodológico</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -90,15 +90,15 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./08_equacoes.html" rel="next">
-<link href="./06_ML.html" rel="prev">
+<link href="./10_equacoes.html" rel="next">
+<link href="./08_ML.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-5ccb035bea26c1e21f80f44cf7c27909.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -173,7 +173,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07_lotes.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Análise de dados de lotes urbanos</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09_lotes.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Análise de dados de lotes urbanos</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Procurar" onclick="window.quartoOpenSearch();">
@@ -267,38 +267,50 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05_variaveis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Geração de variáveis explicativas</span></span></a>
+  <a href="./05_renda_krigada.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Geração da renda per capita krigada</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06_ML.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Análise de dados com modelos de aprendizado de máquina</span></span></a>
+  <a href="./06_VUM2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Geração da variável Valor Unitário do Metro Quadrado Construído (VUM2)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07_lotes.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Análise de dados de lotes urbanos</span></span></a>
+  <a href="./07_variaveis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Geração de variáveis explicativas de localização</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08_equacoes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Equações de Estimação</span></span></a>
+  <a href="./08_ML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Análise de dados com modelos de aprendizado de máquina</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./09_municipios.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Classificação de Municípios</span></span></a>
+  <a href="./09_lotes.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Análise de dados de lotes urbanos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10_equacoes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Equações de Estimação</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_municipios.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Classificação de Municípios</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./99_conclusao.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Conclusão</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conclusão</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -334,19 +346,19 @@ window.Quarto = {
     <h2 id="toc-title">Índice</h2>
    
   <ul>
-  <li><a href="#modelo-linear-hierárquico-mlh" id="toc-modelo-linear-hierárquico-mlh" class="nav-link active" data-scroll-target="#modelo-linear-hierárquico-mlh"><span class="header-section-number">7.1</span> Modelo Linear Hierárquico (MLH)</a></li>
-  <li><a href="#homogeneização" id="toc-homogeneização" class="nav-link" data-scroll-target="#homogeneização"><span class="header-section-number">7.2</span> Homogeneização</a></li>
-  <li><a href="#geração-da-superfície-de-valores-unitários-de-lotes" id="toc-geração-da-superfície-de-valores-unitários-de-lotes" class="nav-link" data-scroll-target="#geração-da-superfície-de-valores-unitários-de-lotes"><span class="header-section-number">7.3</span> Geração da superfície de valores unitários de lotes</a></li>
-  <li><a href="#modelo-final" id="toc-modelo-final" class="nav-link" data-scroll-target="#modelo-final"><span class="header-section-number">7.4</span> Modelo final</a></li>
+  <li><a href="#modelo-linear-hierárquico-mlh" id="toc-modelo-linear-hierárquico-mlh" class="nav-link active" data-scroll-target="#modelo-linear-hierárquico-mlh"><span class="header-section-number">9.1</span> Modelo Linear Hierárquico (MLH)</a></li>
+  <li><a href="#homogeneização" id="toc-homogeneização" class="nav-link" data-scroll-target="#homogeneização"><span class="header-section-number">9.2</span> Homogeneização</a></li>
+  <li><a href="#geração-da-superfície-de-valores-unitários-de-lotes" id="toc-geração-da-superfície-de-valores-unitários-de-lotes" class="nav-link" data-scroll-target="#geração-da-superfície-de-valores-unitários-de-lotes"><span class="header-section-number">9.3</span> Geração da superfície de valores unitários de lotes</a></li>
+  <li><a href="#modelo-final" id="toc-modelo-final" class="nav-link" data-scroll-target="#modelo-final"><span class="header-section-number">9.4</span> Modelo final</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/edit/main/07_lotes.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/edit/main/09_lotes.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Análise de dados de lotes urbanos</span></h1>
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Análise de dados de lotes urbanos</span></h1>
 </div>
 
 
@@ -371,8 +383,8 @@ window.Quarto = {
 
 
 <p>Os dados de lotes urbanos foram analisados a partir de modelos de regressão linear generalizada, seguido de krigagem ordinária dos resíduos, resultando num modelo final de regressão linear ordinária com os resíduos krigados como variável explicativa. Nas seções abaixo esse procedimento é detalhado.</p>
-<section id="modelo-linear-hierárquico-mlh" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="modelo-linear-hierárquico-mlh"><span class="header-section-number">7.1</span> Modelo Linear Hierárquico (MLH)</h2>
+<section id="modelo-linear-hierárquico-mlh" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="modelo-linear-hierárquico-mlh"><span class="header-section-number">9.1</span> Modelo Linear Hierárquico (MLH)</h2>
 <p>Antes do ajuste dos modelos previsores foi necessário o tratamento de variáveis. Merece destaque o fato de que a distância ao litoral (“dist_litoral”) somente foi calculada para municípios costeiros, possuindo valores ausentes nos demais contextos. Para lidar com esse inconveniente, foi incluída a variável dicotômica “litoraneo” (1 = município costeiro; 0 = município interiorano) e os valores ausentes de “dist_litoral” (todos com “litorâneo” = 0) foram substituídos por 0.</p>
 <p>Em seguida foi ajustado um modelo linear hierárquico (MLH, pacote <em>lme4</em>) condicionado à verificação de multicolinearidade, a partir dos valores de <em>Variance Inflation Factor</em> (VIF). O MLH captura a relação entre variáveis explicativas (efeitos fixos) e a variável explicada, considerando a estrutura hierárquica dos dados por meio de efeitos aleatórios, neste trabalho definidos a partir de agrupamentos espaciais <span class="citation" data-cites="Raudenbush2002">(<a href="references.html#ref-Raudenbush2002" role="doc-biblioref">RAUDENBUSH, 2002</a>)</span>. Foram empregados como níveis hierárquicos os municípios (“cd_mun”), os <em>clusters</em> de localização para lotes (“cluster”), e os setores censitários (“cd_setor”). A especificação do MLH é:</p>
 <div class="cell">
@@ -478,11 +490,11 @@ window.Quarto = {
 </tbody>
 </table>
 <p>Foram sucessivamente removidas as variáveis com maiores valores (para <span class="math inline">\(VIF \geq 10\)</span>) e coeficientes menos significativos, o que resultou na exclusão de <code>ndbi_media</code> (<span class="math inline">\(VIF = 145,1532;\; t = -0,809\)</span>), <code>rndsi_media</code> (<span class="math inline">\(VIF = 50,6742;\; t = 2,742\)</span>) e <code>ui_media</code> (<span class="math inline">\(VIF = 191,4915;\; t = -3,014\)</span>).</p>
-<p>As. Tabelas <a href="#tbl-MLH" class="quarto-xref"><span>7.1</span></a>, <a href="#tbl-QualFit" class="quarto-xref"><span>7.2</span></a> e <a href="#tbl-VarNiveis" class="quarto-xref"><span>7.3</span></a> exibem os resultados do modelo definitivo empregado.</p>
+<p>As. Tabelas <a href="#tbl-MLH" class="quarto-xref"><span>9.1</span></a>, <a href="#tbl-QualFit" class="quarto-xref"><span>9.2</span></a> e <a href="#tbl-VarNiveis" class="quarto-xref"><span>9.3</span></a> exibem os resultados do modelo definitivo empregado.</p>
 <div id="tbl-MLH" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-MLH-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabela&nbsp;7.1: Modelo linear hierárquico para lotes das capitais dos Lotes 1 e 2. Elaboração própria.
+Tabela&nbsp;9.1: Modelo linear hierárquico para lotes das capitais dos Lotes 1 e 2. Elaboração própria.
 </figcaption>
 <div aria-describedby="tbl-MLH-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -630,7 +642,7 @@ Tabela&nbsp;7.1: Modelo linear hierárquico para lotes das capitais dos Lotes 1 
 <div id="tbl-QualFit" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-QualFit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabela&nbsp;7.2: Estatísticas de qualidade de ajuste para o modelo MLH. Elaboração própria.
+Tabela&nbsp;9.2: Estatísticas de qualidade de ajuste para o modelo MLH. Elaboração própria.
 </figcaption>
 <div aria-describedby="tbl-QualFit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -661,7 +673,7 @@ Tabela&nbsp;7.2: Estatísticas de qualidade de ajuste para o modelo MLH. Elabora
 <div id="tbl-VarNiveis" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-VarNiveis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabela&nbsp;7.3: Variância dos efeitos aleatórios. Elaboração própria.
+Tabela&nbsp;9.3: Variância dos efeitos aleatórios. Elaboração própria.
 </figcaption>
 <div aria-describedby="tbl-VarNiveis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -694,11 +706,11 @@ Tabela&nbsp;7.3: Variância dos efeitos aleatórios. Elaboração própria.
 </figure>
 </div>
 <p>Foi efetuada análise dos resíduos, indicando que existe desvio da distribuição teórica (<span class="math inline">\(D = 0,0710; \; p &lt; 2,2e-16\)</span>), mas ele é muito pequeno, o que é normal, diante do grande número de observações. Existe dispersão de 4,61% (<span class="math inline">\(p &lt; 2,2e-16\)</span>), acima do esperado, porém o valor é pequeno e não preocupante. Por fim, revelou-se 0,30% de outliers (<span class="math inline">\(p &lt; 2,2e-16\)</span>), cifra plausível para quase 15 mil observações em nove cidades.</p>
-<p>Além do <span class="math inline">\(R^2\)</span> e do AIC, o ajuste do modelo foi avaliado por meio das métricas <em>Raiz do Erro Quadrático Médio</em> (<strong>RMSE</strong>) e <em>Erro Percentual Absoluto Médio</em> (<strong>MAPE</strong>), que apresentaram valores de 578,46 e 0,1529, respectivamente. O <strong>RMSE</strong> indica que, em média, as estimativas apresentam desvios da ordem de R$ 578,46 em relação aos valores observados, enquanto o <strong>MAPE</strong> indica um erro percentual absoluto médio de aproximadamente 15,3%. A <a href="#tbl-Metricas" class="quarto-xref">Tabela&nbsp;<span>7.4</span></a> demonstra essas métricas segregadas por município:</p>
+<p>Além do <span class="math inline">\(R^2\)</span> e do AIC, o ajuste do modelo foi avaliado por meio das métricas <em>Raiz do Erro Quadrático Médio</em> (<strong>RMSE</strong>) e <em>Erro Percentual Absoluto Médio</em> (<strong>MAPE</strong>), que apresentaram valores de 578,46 e 0,1529, respectivamente. O <strong>RMSE</strong> indica que, em média, as estimativas apresentam desvios da ordem de R$ 578,46 em relação aos valores observados, enquanto o <strong>MAPE</strong> indica um erro percentual absoluto médio de aproximadamente 15,3%. A <a href="#tbl-Metricas" class="quarto-xref">Tabela&nbsp;<span>9.4</span></a> demonstra essas métricas segregadas por município:</p>
 <div id="tbl-Metricas" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-Metricas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabela&nbsp;7.4: RMSE e MAPE por município dos Lotes 1 e 2. Elaboração própria.
+Tabela&nbsp;9.4: RMSE e MAPE por município dos Lotes 1 e 2. Elaboração própria.
 </figcaption>
 <div aria-describedby="tbl-Metricas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -772,14 +784,14 @@ Tabela&nbsp;7.4: RMSE e MAPE por município dos Lotes 1 e 2. Elaboração própr
 </div>
 <p>Nota-se que embora o município com maior erro (Manaus) apresente raiz do erro quadrático médio de R$ 1901,00, em termos de erro percentual absoluto médio esse valor é inferior a 20%, cifra considerada aceitável para o fim de avaliação em massa e em sintonia com a literatura <span class="citation" data-cites="idecor2025 Oliveira2022">(<a href="references.html#ref-Oliveira2022" role="doc-biblioref">OLIVEIRA et al., 2022</a>; <a href="references.html#ref-idecor2025" role="doc-biblioref">PROVÍNCIA DE CÓRDOBA, 2025</a>)</span>.</p>
 </section>
-<section id="homogeneização" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="homogeneização"><span class="header-section-number">7.2</span> Homogeneização</h2>
+<section id="homogeneização" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="homogeneização"><span class="header-section-number">9.2</span> Homogeneização</h2>
 </section>
-<section id="geração-da-superfície-de-valores-unitários-de-lotes" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="geração-da-superfície-de-valores-unitários-de-lotes"><span class="header-section-number">7.3</span> Geração da superfície de valores unitários de lotes</h2>
+<section id="geração-da-superfície-de-valores-unitários-de-lotes" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="geração-da-superfície-de-valores-unitários-de-lotes"><span class="header-section-number">9.3</span> Geração da superfície de valores unitários de lotes</h2>
 </section>
-<section id="modelo-final" class="level2" data-number="7.4">
-<h2 data-number="7.4" class="anchored" data-anchor-id="modelo-final"><span class="header-section-number">7.4</span> Modelo final</h2>
+<section id="modelo-final" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="modelo-final"><span class="header-section-number">9.4</span> Modelo final</h2>
 
 
 <div id="refs" class="references csl-bib-body" data-entry-spacing="0" role="list" style="display: none">
@@ -1198,13 +1210,13 @@ RAUDENBUSH, A. S., S. W.; Bryk. <strong>Hierarchical Linear Models: Applications
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./06_ML.html" class="pagination-link" aria-label="Análise de dados com modelos de aprendizado de máquina">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Análise de dados com modelos de aprendizado de máquina</span></span>
+      <a href="./08_ML.html" class="pagination-link" aria-label="Análise de dados com modelos de aprendizado de máquina">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Análise de dados com modelos de aprendizado de máquina</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./08_equacoes.html" class="pagination-link" aria-label="Equações de Estimação">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Equações de Estimação</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./10_equacoes.html" class="pagination-link" aria-label="Equações de Estimação">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Equações de Estimação</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1216,7 +1228,7 @@ RAUDENBUSH, A. S., S. W.; Bryk. <strong>Hierarchical Linear Models: Applications
 </div>   
     <div class="nav-footer-center">
 <p><img src="img/Logo com RFB e UFSC.png" class="img-fluid" width="250"></p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/edit/main/07_lotes.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/edit/main/09_lotes.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>

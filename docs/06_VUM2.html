@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Luiz Fernando Palin Droubi">
+
+<title>6&nbsp; Geração da variável Valor Unitário do Metro Quadrado Construído (VUM2) – Caderno Metodológico</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./07_variaveis.html" rel="next">
+<link href="./05_renda_krigada.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-5ccb035bea26c1e21f80f44cf7c27909.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nenhum resultado",
+    "search-matching-documents-text": "documentos correspondentes",
+    "search-copy-link-title": "Copiar link para a busca",
+    "search-hide-matches-text": "Esconder correspondências adicionais",
+    "search-more-match-text": "mais correspondência neste documento",
+    "search-more-matches-text": "mais correspondências neste documento",
+    "search-clear-button-title": "Limpar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Procurar"
+  }
+}</script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="cover-style.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06_VUM2.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Geração da variável Valor Unitário do Metro Quadrado Construído (VUM2)</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Procurar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Caderno Metodológico</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/" title="Código fonte" class="quarto-navigation-tool px-1" aria-label="Código fonte"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Baixar" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Baixar"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Caderno-Metodológico.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Baixar PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Caderno-Metodológico.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Baixar ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <a href="" title="Compartilhar" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Compartilhar"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Procurar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Apresentação</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introdução</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_basico.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Metodologia Geral</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_limpeza.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Limpeza de dados</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_classificacao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Métodos de classificação</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_renda_krigada.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Geração da renda per capita krigada</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_VUM2.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Geração da variável Valor Unitário do Metro Quadrado Construído (VUM2)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07_variaveis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Geração de variáveis explicativas de localização</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08_ML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Análise de dados com modelos de aprendizado de máquina</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09_lotes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Análise de dados de lotes urbanos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10_equacoes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Equações de Estimação</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_municipios.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Classificação de Municípios</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./99_conclusao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conclusão</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Referências</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Apêndices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar seção">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./98_apendice1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Apêndice 1: Scripts</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Índice</h2>
+   
+  <ul>
+  <li><a href="#introdução" id="toc-introdução" class="nav-link active" data-scroll-target="#introdução"><span class="header-section-number">6.1</span> Introdução</a></li>
+  <li><a href="#ajuste-do-modelo-linear" id="toc-ajuste-do-modelo-linear" class="nav-link" data-scroll-target="#ajuste-do-modelo-linear"><span class="header-section-number">6.2</span> Ajuste do modelo linear</a></li>
+  <li><a href="#geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído" id="toc-geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído" class="nav-link" data-scroll-target="#geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído"><span class="header-section-number">6.3</span> Geração da superfície de valores unitários de metro quadrado construído</a>
+  <ul>
+  <li><a href="#homogeneização-dos-dados-amostrais" id="toc-homogeneização-dos-dados-amostrais" class="nav-link" data-scroll-target="#homogeneização-dos-dados-amostrais"><span class="header-section-number">6.3.1</span> Homogeneização dos dados amostrais</a></li>
+  <li><a href="#interpolação" id="toc-interpolação" class="nav-link" data-scroll-target="#interpolação"><span class="header-section-number">6.3.2</span> Interpolação</a>
+  <ul class="collapse">
+  <li><a href="#método-1-idw" id="toc-método-1-idw" class="nav-link" data-scroll-target="#método-1-idw"><span class="header-section-number">6.3.2.1</span> Método 1: IDW</a></li>
+  <li><a href="#método-2-krigagem" id="toc-método-2-krigagem" class="nav-link" data-scroll-target="#método-2-krigagem"><span class="header-section-number">6.3.2.2</span> Método 2: Krigagem</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/edit/main/06_VUM2.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Geração da variável Valor Unitário do Metro Quadrado Construído (VUM2)</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Autor</div>
+    <div class="quarto-title-meta-contents">
+             <p>Luiz Fernando Palin Droubi </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introdução" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="introdução"><span class="header-section-number">6.1</span> Introdução</h2>
+<p>Este capítulo trata de descrever os procedimentos para geração da variável <code>VUM2</code> (<em>Valor Unitário do Metro Quadrado construído</em>).</p>
+<p>Conforme já explicitado no segundo capítulo, o método adotado neste projeto para a avaliação em massa dos imóveis é o <strong>método evolutivo</strong>. Assim, neste projeto, os dados coletados de imóveis edificados são utilizados de maneira secundária (ou auxiliar), de maneira que ajudem a explicar o fenômeno da <em>localização</em>.</p>
+</section>
+<section id="ajuste-do-modelo-linear" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="ajuste-do-modelo-linear"><span class="header-section-number">6.2</span> Ajuste do modelo linear</h2>
+<p>Para a obtenção da variável <code>VUM2</code> inicialmente são ajustados modelos de regressão linear múltipla como os da <a href="#tbl-CasasModel" class="quarto-xref">Tabela&nbsp;<span>6.1</span></a> e <a href="#tbl-AptosModel" class="quarto-xref">Tabela&nbsp;<span>6.2</span></a>, para descrever o comportamento do mercado imobiliário de casas e apartamentos.</p>
+<div class="cell">
+<div id="tbl-CasasModel" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-CasasModel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;6.1: Modelo de casas. Florianópolis/SC.
+</figcaption>
+<div aria-describedby="tbl-CasasModel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Termo</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Coef.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Erro-padrão</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Estat. t</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p-valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">8.536,66</td>
+<td style="text-align: right;">0,01</td>
+<td style="text-align: right;">1.405,21</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(area/150)</td>
+<td style="text-align: right;">0,85</td>
+<td style="text-align: right;">0,01</td>
+<td style="text-align: right;">-29,50</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(area_total/150)</td>
+<td style="text-align: right;">1,05</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">15,34</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log1p(dist_litoral/100)</td>
+<td style="text-align: right;">1,00</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-2,59</td>
+<td style="text-align: right;">0,01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(renda_pct_krigada/1212)</td>
+<td style="text-align: right;">1,13</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">25,85</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">I(num_vagas_garagem - 2)</td>
+<td style="text-align: right;">1,01</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">8,42</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">I(num_suites - 1)</td>
+<td style="text-align: right;">1,04</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">22,49</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">I(num_banheiros - 2)</td>
+<td style="text-align: right;">1,01</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">4,05</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tipo_imovelCasa de Condomínio</td>
+<td style="text-align: right;">1,05</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">9,59</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PCBaixo</td>
+<td style="text-align: right;">0,63</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-111,03</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PCAlto</td>
+<td style="text-align: right;">1,52</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">85,77</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+</tbody><tfoot>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup>a</sup> Coeficientes exponenciados</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0;"><sup>b</sup> Erro-padrão dos resíduos: 0,18 em 11199 graus de liberdade</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup>c</sup> R2: 0,83</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0;"><sup>d</sup> R2aj: 0,83</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup>e</sup> AIC: -6.694,57</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tfoot>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-AptosModel" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-AptosModel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;6.2: Modelo de apartamentos. Florianópolis/SC.
+</figcaption>
+<div aria-describedby="tbl-AptosModel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Termo</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Coef.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Erro-padrão</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Estat. t</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p-valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">19.892,66</td>
+<td style="text-align: right;">0,01</td>
+<td style="text-align: right;">1.914,99</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(area/94)</td>
+<td style="text-align: right;">0,88</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-25,66</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(area_total/120)</td>
+<td style="text-align: right;">0,99</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-2,81</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log1p(dist_litoral/100)</td>
+<td style="text-align: right;">0,98</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-13,92</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(renda_pct_krigada/1212)</td>
+<td style="text-align: right;">1,09</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">27,04</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">I(num_vagas_garagem - 2)</td>
+<td style="text-align: right;">1,06</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">26,52</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">I(num_suites - 1)</td>
+<td style="text-align: right;">1,05</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">27,11</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">I(num_banheiros - 2)</td>
+<td style="text-align: right;">1,01</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">4,60</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tipo_imovelCobertura</td>
+<td style="text-align: right;">0,97</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-8,50</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tipo_imovelFlat</td>
+<td style="text-align: right;">0,98</td>
+<td style="text-align: right;">0,02</td>
+<td style="text-align: right;">-0,88</td>
+<td style="text-align: right;">0,38</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PCMédio</td>
+<td style="text-align: right;">0,65</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-147,07</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PCBaixo</td>
+<td style="text-align: right;">0,42</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-233,61</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+</tbody><tfoot>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup>a</sup> Coeficientes exponenciados</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0;"><sup>b</sup> Erro-padrão dos resíduos: 0,16 em 20934 graus de liberdade</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup>c</sup> R2: 0,84</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0;"><sup>d</sup> R2aj: 0,84</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup>e</sup> AIC: -16.377,12</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tfoot>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Tais modelos são mais fáceis de diagnosticar. Porém, alternativamente, pode ser ajustado um modelo único, utilizando-se interação entre variáveis, como ilustrado na <a href="#tbl-EdifModel" class="quarto-xref">Tabela&nbsp;<span>6.3</span></a>.</p>
+<div class="cell">
+<div id="tbl-EdifModel" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-EdifModel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;6.3: Modelo de imóveis edificados. Florianópolis/SC.
+</figcaption>
+<div aria-describedby="tbl-EdifModel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Termo</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Coef.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Erro-padrão</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Estat. t</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p-valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">12.555,05</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">2.311,38</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log1p(dist_litoral/100)</td>
+<td style="text-align: right;">0,99</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-13,21</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(renda_pct_krigada/1212)</td>
+<td style="text-align: right;">1,10</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">35,59</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tipo_imovelCobertura</td>
+<td style="text-align: right;">0,97</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-7,73</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tipo_imovelFlat</td>
+<td style="text-align: right;">0,98</td>
+<td style="text-align: right;">0,02</td>
+<td style="text-align: right;">-0,90</td>
+<td style="text-align: right;">0,37</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tipo_imovelCasa</td>
+<td style="text-align: right;">0,76</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-65,96</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tipo_imovelCasa de Condomínio</td>
+<td style="text-align: right;">0,79</td>
+<td style="text-align: right;">0,01</td>
+<td style="text-align: right;">-41,15</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(area/100):TipologiaAptos</td>
+<td style="text-align: right;">0,88</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-32,86</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(area/100):TipologiaCasas</td>
+<td style="text-align: right;">0,90</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-26,73</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TipologiaAptos:I(num_banheiros - 2)</td>
+<td style="text-align: right;">1,01</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">3,86</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TipologiaCasas:I(num_banheiros - 2)</td>
+<td style="text-align: right;">1,01</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">4,03</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TipologiaAptos:I(num_vagas_garagem - 2)</td>
+<td style="text-align: right;">1,05</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">24,70</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TipologiaCasas:I(num_vagas_garagem - 2)</td>
+<td style="text-align: right;">1,01</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">11,23</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TipologiaAptos:I(num_suites - 1)</td>
+<td style="text-align: right;">1,05</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">26,68</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TipologiaCasas:I(num_suites - 1)</td>
+<td style="text-align: right;">1,04</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">22,50</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TipologiaAptos:PCAlto</td>
+<td style="text-align: right;">1,55</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">143,46</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TipologiaCasas:PCAlto</td>
+<td style="text-align: right;">1,54</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">95,65</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TipologiaAptos:PCBaixo</td>
+<td style="text-align: right;">0,64</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-146,19</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TipologiaCasas:PCBaixo</td>
+<td style="text-align: right;">0,62</td>
+<td style="text-align: right;">0,00</td>
+<td style="text-align: right;">-125,52</td>
+<td style="text-align: right;">0,00</td>
+</tr>
+</tbody><tfoot>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup>a</sup> Coeficientes exponenciados</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0;"><sup>b</sup> Erro-padrão dos resíduos: 0,17 em 32128 graus de liberdade</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup>c</sup> R2: 0,86</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0;"><sup>d</sup> R2aj: 0,86</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup>e</sup> AIC: -22.881,53</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tfoot>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Estes modelos são gerados sempre com a mesma especificação para cada capital, o que permitirá, no futuro, a metanálise dos coeficientes.</p>
+</section>
+<section id="geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído"><span class="header-section-number">6.3</span> Geração da superfície de valores unitários de metro quadrado construído</h2>
+<section id="homogeneização-dos-dados-amostrais" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="homogeneização-dos-dados-amostrais"><span class="header-section-number">6.3.1</span> Homogeneização dos dados amostrais</h3>
+<p>Após o ajuste do modelo de mínimos quadrados ordinários, visando a obtenção de uma <strong>Variável Regionalizada</strong> <span class="citation" data-cites="Andriotti">(<a href="references.html#ref-Andriotti" role="doc-biblioref">ANDRIOTTI, 2004, p. 93</a>)</span>, os dados da amostra utilizados para o ajuste do modelo foram <em>homogeneizados</em> de acordo com fatores de homogeneização estimados diretamente do modelo. Por exemplo, para a variável <code>log(area/100):TipologiaAptos</code>, foi obtido no modelo de regressão linear da <a href="#tbl-EdifModel" class="quarto-xref">Tabela&nbsp;<span>6.3</span></a> o coeficiente -0,13. Assim, o fator área (para homogeneização dos apartamentos) derivado desse modelo deve obedecer a <a href="#eq-FatorAreaAptos" class="quarto-xref">Equação&nbsp;<span>6.1</span></a>:</p>
+<p><span id="eq-FatorAreaAptos"><span class="math display">\[F_{\text{Área}} = \left ( \frac{A_\text{apto}}{100} \right)^{-0,13} \tag{6.1}\]</span></span></p>
+<p>Já para as casas, o coeficiente obtido no modelo da <a href="#tbl-EdifModel" class="quarto-xref">Tabela&nbsp;<span>6.3</span></a> resultou em -0,11. Assim, para as casas o fator de homogeneização resulta como visto na <a href="#eq-FatorAreaCasas" class="quarto-xref">Equação&nbsp;<span>6.2</span></a>:</p>
+<p><span id="eq-FatorAreaCasas"><span class="math display">\[F_{\text{Área}} = \left ( \frac{A_\text{casa}}{100} \right)^{-0,11} \tag{6.2}\]</span></span></p>
+<p>Veja <a href="#nte-fatores" class="quarto-xref">Note&nbsp;<span>6.1</span></a> para entender com é feita a derivação racional de fatores de homogeneização.</p>
+<div id="nte-fatores" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota&nbsp;6.1: Derivação Racional de Fatores
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A derivação racional de fatores de homogeneização é feita de acordo com os coeficientes estimados em um modelo de regressão linear múltipla (RLM).</p>
+<p>Os fatores serão aditivos quando o modelo RLM for ajustado na escala de preços unitários (PU), ou serão multiplicativos quando o modelo RLM for ajustado com a transformação da variável dependente para a escala logaritmica, o que é usual na Engenharia de Avaliações.</p>
+<p>Para entender, basta perceber que, para um modelo ajustado na escala logaritmica, tem-se:</p>
+<p><span id="eq-ModeloMultiplicativo"><span class="math display">\[\widehat{\log(PU)} = \hat \beta_0 + \hat \beta_1 x_1 + \ldots + \hat\beta_kx_k \tag{6.3}\]</span></span></p>
+<p>Efetuando a exponenciação em ambos os lados de <a href="#eq-ModeloMultiplicativo" class="quarto-xref">Equação&nbsp;<span>6.3</span></a>, tem-se:</p>
+<p><span id="eq-ModeloMultiplicativo2"><span class="math display">\[\widehat{PU} = \exp(\hat \beta_0 + \hat \beta_1 x_1 + \ldots + \hat\beta_kx_k) \tag{6.4}\]</span></span></p>
+<p>Como a exponencial da soma é o produto das exponenciais, a <a href="#eq-ModeloMultiplicativo2" class="quarto-xref">Equação&nbsp;<span>6.4</span></a> torna-se:</p>
+<p><span id="eq-ModeloMultiplicativo3"><span class="math display">\[\widehat{PU} = \exp(\hat \beta_0)\cdot\exp(\hat \beta_1 x_1)\cdot \ldots \cdot \exp(\hat\beta_kx_k) \tag{6.5}\]</span></span></p>
+<p>Donde entende-se o motivo dos fatores derivados com este modelo serem multiplicativos, pois, deste modelo, deduz-se:</p>
+<p><span class="math display">\[F_1 = \exp(\hat \beta_1 x_1); F_2 = \exp(\hat \beta_2 x_2); \ldots ; F_k =  \exp(\hat\beta_kx_k)\]</span></p>
+</div>
+</div>
+</section>
+<section id="interpolação" class="level3" data-number="6.3.2">
+<h3 data-number="6.3.2" class="anchored" data-anchor-id="interpolação"><span class="header-section-number">6.3.2</span> Interpolação</h3>
+<p>A homogeneização dos dados permite a posterior interpolação espacial dos preços unitários homogeneizados (<code>PUHom</code>), pois entende-se que, após a homogeneização, a variável obtida, <code>PUHom</code>, é uma variável regionalizada, que representa os valores unitários de venda de imóveis edificados <em>padronizados</em> para um imóvel de características pré-definidas (no caso, uma casa ou apartamento com 100 <span class="math inline">\(m^2\)</span>, 2 vagas de garagem, 1 suíte e 2 banheiros). Os dados amostrais não são homogeneizados quanto a sua tipologia ou padrão construtivo, assim a variável obtida representa o valor unitário do metro quadrado realmente existente na região.</p>
+<p>Após a obtenção de <code>PUHom</code>, <em>i.e.</em> a variável dos preços unitários homogeneizados, a interpolação pode ser feita de acordo com diversos procedimentos da análise espacial de superfícies, tais como <span class="citation" data-cites="Embrapa2004">(<a href="references.html#ref-Embrapa2004" role="doc-biblioref">DRUCK et al., 2004, p. 80</a>)</span>:</p>
+<ul>
+<li><p><em>Modelos determinísticos de efeitos locais</em>: cada ponto da superfície é estimado com base apenas na interpolação de valores das amostrais mais próximas, utilizando funções como <em>inverso da medida do quadrado da distância</em>. A suposição implícita é de que predominam os efeitos puramente locais. Nesse caso, não é levantada qualquer hipótese estatística sobre a variabilidade espacial.</p></li>
+<li><p><em>Modelos determinísticos de efeitos globais</em>: a suposição implícita, nessa classe de interpoladores, é de que, para a caracterização do fenômeno em estudo, predomina a variação em larga escala, e a variabilidade local não é relevante. Esse é o caso dos interpoladores por superfícies de tendência.</p></li>
+<li><p><em>Modelos estatísticos de efeitos globais e locais (krigeagem)</em>: cada ponto da superfície é estimado apenas tendo como fundamento a interpolação dos valores das amostras mais próximas, utilizando um estimador estatístico. Esses procedimentos requerem que as variabilidades local e global sejam modeladas.</p></li>
+</ul>
+<p>Considera-se que os mercados imobiliários em geral apresentam predomínio dos efeitos locais. Neste caso, portanto, são viáveis os modelos determinísticos de efeitos locais, como o <em>IDW</em>, apresentado abaixo, e os modelos estatísticos de efeitos locais e globais (krigeagem, descritos ao final do capítulo), sendo estes últimos considerados a escolha ideal para o projeto <code>VRCIB</code>.</p>
+<section id="método-1-idw" class="level4" data-number="6.3.2.1">
+<h4 data-number="6.3.2.1" class="anchored" data-anchor-id="método-1-idw"><span class="header-section-number">6.3.2.1</span> Método 1: IDW</h4>
+<p>Após o procedimento de homoegeneização, foi gerada uma superfície de valores de metro quadrado construído com os dados homogeneizados através do algoritmo IDW (<em>inverse distance weighting</em>).</p>
+<div id="nte-idw" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota&nbsp;6.2: Inverse Distance Weighting
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Segundo <span class="citation" data-cites="Embrapa2004">DRUCK et al. (<a href="references.html#ref-Embrapa2004" role="doc-biblioref">2004, p. 83</a>)</span>, “uma alternativa simples para gerar uma superfície bidimensional” consiste em ajustar uma função bidimensional sobre as amostras, prevendo valores em uma grade (<span class="math inline">\(\hat z_i\)</span>), com a seguinte formulação:</p>
+<p><span id="eq-IDW"><span class="math display">\[
+\hat z_i = \frac{\sum_{j = 1}^n w_{ij}z_j}{\sum_{j=1}^n w_{ij}}
+\tag{6.6}\]</span></span></p>
+<p>Em que:</p>
+<ul>
+<li><span class="math inline">\(z_j\)</span> é o valor da cota (VU) de uma amostra vizinha do ponto <span class="math inline">\(i\)</span> da grade;</li>
+<li><span class="math inline">\(w_{ij}\)</span> é um fator de ponderação.</li>
+</ul>
+<p>Com base neste esquema básico supra-mencionado, é possível gerar vários interpoladores (vizinho mais próximo, média simples ou média ponderada). A ponderação mais usada consiste em adotar pesos que variam com o inverso de uma potência <span class="math inline">\(k\)</span> da distância euclidiana do ponto da amostra ao ponto da grade em que se deseja prever valores (<span class="math inline">\(d_{ij}\)</span>), assim:</p>
+<p><span id="eq-IDW2"><span class="math display">\[
+w_{ij} = \frac{1}{d_{ij}^k}
+\tag{6.7}\]</span></span></p>
+<p>Em que: - <span class="math inline">\(d_{ij} = \sqrt{(x_i-x_j)^2 + (y_i - y_j)^2}\)</span></p>
+</div>
+</div>
+</section>
+<section id="método-2-krigagem" class="level4" data-number="6.3.2.2">
+<h4 data-number="6.3.2.2" class="anchored" data-anchor-id="método-2-krigagem"><span class="header-section-number">6.3.2.2</span> Método 2: Krigagem</h4>
+<p>Outra maneira de gerar uma superfície de valores de metro quadrado construído é através da krigagem ordinária. Infelizmente, contudo, dado o grande número de dados da amostra e a sobreposição de alguns dados, a execução da krigagem pontualmente mostrou-se inviável. Assim, para possibilitar a utilização da krigagem ordinária, foi efetuada a consolição dos valores homogeneizados por setor censitário através do cálculo dos seus valores medianos por setor. Com estes valores medianos, posteriormente, foi efetuada a krigagem ordinária de maneira mais eficiente, tal como no caso da renda per capita por setor mostrada no capítulo anterior.</p>
+
+
+<div id="refs" class="references csl-bib-body" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Andriotti" class="csl-entry" role="listitem">
+ANDRIOTTI, J. L. S. <strong>Fundamentos de Estatística e Geostatística</strong>. São Leopoldo, RS: Editora Unisinos, 2004.
+</div>
+<div id="ref-Embrapa2004" class="csl-entry" role="listitem">
+DRUCK, S.; CARVALHO, M. S.; CÂMARA, G.; MONTEIRO, A. MI. V. (ORG.). <strong>Análise Espacial de Dados Geográficos</strong>. Planaltina, DF: Embrapa Cerrados, 2004.
+</div>
+</div>
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiada");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiada");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./05_renda_krigada.html" class="pagination-link" aria-label="Geração da renda per capita krigada">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Geração da renda per capita krigada</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./07_variaveis.html" class="pagination-link" aria-label="Geração de variáveis explicativas de localização">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Geração de variáveis explicativas de localização</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026 UFSC</p>
+</div>   
+    <div class="nav-footer-center">
+<p><img src="img/Logo com RFB e UFSC.png" class="img-fluid" width="250"></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/edit/main/06_VUM2.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

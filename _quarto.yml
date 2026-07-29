@@ -24,11 +24,13 @@ book:
     - 02_basico.qmd
     - 03_limpeza.qmd
     - 04_classificacao.qmd
-    - 05_variaveis.qmd
-    - 06_ML.qmd
-    - 07_lotes.qmd
-    - 08_equacoes.qmd
-    - 09_municipios.qmd
+    - 05_renda_krigada.qmd
+    - 06_VUM2.qmd
+    - 07_variaveis.qmd
+    - 08_ML.qmd
+    - 09_lotes.qmd
+    - 10_equacoes.qmd
+    - 11_municipios.qmd
     - 99_conclusao.qmd
     - references.qmd
   appendices:

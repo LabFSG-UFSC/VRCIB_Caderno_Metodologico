@@ -1,0 +1,343 @@
+---
+title: "Geração da renda per capita krigada"
+author: 
+  - "Vile Rodrigues"
+---
+
+```{r, include = FALSE}
+library(ggplot2)
+library(broom)
+library(kableExtra)
+source("./Funcoes_Aux.R")
+```
+
+Além da variável `PC` (*Padrão Construtivo*), obtida através de algoritmos de
+*clusterização*, conforme capítulo anterior, outras variáveis explicativas foram
+criadas visando a obtenção de um melhor ajuste para os modelos estatísticos,
+como a variável `RPCSMK` (*Renda per papita, em salários mínimos, krigada*) e
+`VUM2` (*Valor Unitário do metro quadrado edificado*). Neste capítulo trata-se
+de descrever como foi gerada a renda krigada.
+
+## Renda Krigada
+
+O processo de krigagem dos Lotes 1 e 2 teve como objetivo gerar superfícies 
+interpoladas de renda média atribida aos setores censitários para os municípios 
+selecionados e associar os valores estimados dessas superfícies aos pontos dos 
+imóveis/anúncios OMI.
+
+A krigagem foi realizada a partir da variável geográfica `renda_med_pct`, 
+descrita como `Renda média do familiar responsável pelo domicílio (por setor)`, 
+posteriormente transformada em escala logarítmica para favorecer o ajuste 
+geoestatístico. Após a geração das superfícies krigadas raster em GeoTIFF, os 
+valores interpolados foram extraídos para os pontos dos imóveis, compondo o 
+resultado consolidado `dna_estimacao_consolidado_renda_krigada` com a coluna 
+final `renda_krigada_ln`.
+
+O escopo final da consolidação considerou 8 municípios:
+
+- Lote 1: `belo_horizonte`, `campo_grande`, `fortaleza`, `porto_velho`.
+- Lote 2: `cuiaba`, `curitiba`, `manaus`, `salvador`.
+
+### Metodologia
+
+O processo metodológico combinou etapas de preparação da base, ajuste 
+geoestatístico, interpolação por krigagem ordinária local e extração dos valores
+interpolados para os pontos dos imóveis/anúncios OMI.
+
+Foram utilizados os seguintes softwares e ferramentas:
+
+- QGIS 3.44.10;
+- plugin Smart-Map no QGIS;
+- SAGA GIS 2.1.2.
+
+O ajuste dos semivariogramas foi realizado no Smart-Map, no ambiente do QGIS 
+3.44.10. A interpolação foi executada no SAGA GIS 2.1.2, com inserção manual dos
+parâmetros previamente ajustados, sem reajuste do variograma no SAGA.
+
+#### Base de entrada e preparação da variável
+
+Em cada município, a estrutura geral de trabalho foi organizada nas seguintes 
+pastas:
+
+- `entrada`: camada dos centróides dos setores censitários dos municípios;
+- `pontos_anuncios_OMI`: camada de pontos dos dados de imóveis do OMI;
+- `projeto`: arquivos do QGIS, Smart-Map, centroides, buffer e projeto SAGA;
+- `parametros`: imagens e registros auxiliares dos parâmetros usados no ajuste do semivariograma;
+- `saida`: arquivos finais, incluindo os GeoTIFF das superfícies krigadas raster e as camadas vetoriais com a coluna resultante `renda_krigada_ln`, posteriormente consolidadas em `dna_estimacao_consolidado_renda_krigada`.
+
+A base pontual utilizada no ajuste geoestatístico foi a camada de centroides dos
+setores censitários previamente disponível no acervo do projeto. Portanto, os
+centroides não foram gerados nesta etapa; eles foram utilizados como insumo já
+existente.
+
+A preparação da base incluiu:
+
+1. seleção da variável geográfica `renda_med_pct` (`Renda média do familiar responsável pelo domicílio (por setor)`);
+2. limpeza da base;
+3. remoção de outliers;
+4. remoção de valores nulos, iguais a zero ou negativos;
+5. transformação logarítmica dos valores válidos de `renda_med_pct`.
+
+A logaritmização foi aplicada para reduzir a assimetria da distribuição dos
+valores de `renda_med_pct` e favorecer melhor ajuste do semivariograma. Assim, a
+krigagem foi realizada sobre a variável logaritmizada, e não diretamente sobre
+os valores brutos de renda média.
+
+#### Construção da área de interpolação
+
+Com a base limpa e logaritmizada, foi utilizado o conjunto de pontos válidos dos
+centroides dos setores censitários.
+
+A partir desses pontos, foi construído um envoltório convexo. Em seguida, foi 
+gerado um buffer de `1.500 metros` ao redor desse envoltório.
+
+Esse buffer foi utilizado como máscara espacial para recortar a superfície 
+krigada, delimitando a área de interpolação e evitando extrapolações excessivas 
+para regiões afastadas da distribuição dos pontos de entrada.
+
+As superfícies krigadas raster resultantes da krigagem foram exportadas no SAGA 
+GIS em formato GeoTIFF. Esses arquivos serviram como base para o recorte 
+espacial e para a extração posterior dos valores interpolados para os pontos dos
+imóveis/anúncios OMI.
+
+#### Ajuste do semivariograma
+
+O ajuste dos semivariogramas foi realizado no plugin Smart-Map, no QGIS.
+
+Os parâmetros finais de cada município foram registrados na tabela oficial:
+
+`documentacao_variogramas_krigagem\01_tabela_parametros\tabela_parametros_krigagem_final.csv`
+
+Também foram preservados arquivos de imagem dos semivariogramas nas pastas 
+municipais de `Lote_1` e `Lote_2`, especialmente nos diretórios `parametros`, 
+que foram utilizados como evidência visual neste relatório.
+
+Os parâmetros principais registrados foram:
+
+- modelo de semivariograma;
+- efeito pepita;
+- patamar;
+- alcance;
+- distância máxima;
+- lag.
+
+#### Execução da krigagem no SAGA GIS
+
+Após o ajuste no Smart-Map, os parâmetros do semivariograma foram inseridos 
+manualmente no SAGA GIS 2.1.2.
+
+A interpolação foi realizada por krigagem ordinária local.
+
+A sequência operacional foi:
+
+1. preparação da base de setores censitários e definição da variável geográfica `renda_med_pct`;
+2. limpeza da base, com remoção de outliers;
+3. remoção de valores nulos, iguais a zero ou negativos;
+4. logaritmização dos valores válidos de `renda_med_pct`;
+5. uso da camada de centroides dos setores censitários previamente disponível;
+6. criação do envoltório convexo dos pontos válidos;
+7. geração de buffer de `1.500 metros`;
+8. ajuste do semivariograma no Smart-Map/QGIS;
+9. inserção manual dos parâmetros no SAGA GIS 2.1.2;
+10. execução da krigagem ordinária local;
+11. exportação da superfície krigada raster em formato GeoTIFF no SAGA GIS;
+12. recorte da superfície krigada raster pela máscara espacial do buffer;
+13. extração dos valores da superfície krigada raster para os pontos dos imóveis/anúncios OMI;
+14. criação da coluna `renda_krigada_ln` na base de imóveis;
+15. integração do resultado final às camadas municipais em `saida`.
+
+#### Extração dos valores krigados para os imóveis
+
+A superfície krigada raster não foi utilizada apenas como produto de
+interpolação. As superfícies krigadas raster foram exportadas pelo SAGA GIS em
+formato GeoTIFF antes das etapas de recorte e integração com a base de imóveis.
+
+Após sua geração e recorte pelo buffer, os valores interpolados foram associados
+espacialmente aos pontos da base de imóveis/anúncios OMI. Para cada imóvel, foi
+extraído o valor da célula ou posição correspondente da superfície krigada
+raster.
+
+Esse valor foi incorporado à base final como a coluna:
+
+`renda_krigada_ln`
+
+A coluna foi mantida em escala logarítmica. Portanto, o produto final não
+corresponde à renda em escala original, mas ao valor interpolado de
+`renda_med_pct` após logaritmização.
+
+Essa etapa permitiu transformar a superfície interpolada em um atributo tabular
+associado a cada imóvel, viabilizando análises posteriores que relacionem os
+anúncios OMI aos valores estimados de renda no entorno de sua localização.
+
+#### Validação
+
+Foram realizadas validações visuais das superfícies krigadas por meio da 
+sobreposição das superfícies geradas sobre imagens de satélite dos municípios.
+
+Essa validação teve caráter exploratório e permitiu avaliar a coerência espacial
+geral dos resultados interpolados em relação à configuração territorial 
+observada visualmente.
+
+Além da validação visual, também foi utilizado o cálculo da significância como 
+procedimento de validação dos ajustes realizados, em conjunto com os demais 
+parâmetros documentados dos semivariogramas. A significância foi definida pela 
+razão entre o efeito pepita e o patamar do ajuste. Considerou-se aceitável a 
+significância no intervalo de `0,15` a `0,30`, buscando-se manter esse valor o 
+mais próximo possível de `0,15`.
+
+### Resultados
+
+O processo resultou em superfícies krigadas raster em GeoTIFF para os municípios
+selecionados dos Lotes 1 e 2 e em camadas municipais de imóveis/anúncios OMI com
+a renda krigada incorporada como atributo.
+
+Os três produtos principais foram:
+
+1. superfície krigada raster de renda exportada em GeoTIFF;
+2. superfície krigada raster recortada pelo buffer;
+3. base de imóveis/anúncios OMI com a coluna `renda_krigada_ln`, consolidada em
+`dna_estimacao_consolidado_renda_krigada`.
+
+| Município      | Lote | Modelo      | Efeito pepita (C0) | Patamar (C0+C) | Alcance  | Distância máxima | Lag     |
+| -------------- | ---: | ----------- | -----------------: | -------------: | -------: | ---------------: | ------: |
+| belo_horizonte |    1 | esférico    |              0.113 |          0.556 | 4278.831 |             6000 | 250     |
+| campo_grande   |    1 | gaussiano   |              0.085 |          0.366 | 5832.829 |             6000 | 400     |
+| fortaleza      |    1 | exponencial |              0.109 |          0.419 | 5716.310 |             6000 | 250     |
+| porto_velho    |    1 | esférico    |              0.059 |          0.285 | 4324.974 |             4500 | 371.389 |
+| cuiaba         |    2 | exponencial |              0.072 |          0.479 | 5555.004 |             7200 | 400     |
+| curitiba       |    2 | gaussiano   |              0.116 |          0.482 | 8896.143 |             9000 | 250.748 |
+| manaus         |    2 | exponencial |              0.073 |          0.467 | 6587.048 |             8000 | 229.627 |
+| salvador       |    2 | exponencial |              0.092 |          0.475 | 3926.684 |             5500 | 161.020 |
+
+: Parâmetros finais dos semivariogramas. Fonte: Elaboração própria.
+
+#### Ajustes dos semivariogramas
+
+Além da tabela de parâmetros finais, foram inseridos no relatório os prints dos
+semivariogramas ajustados no Smart-Map/QGIS. Essas imagens funcionam como
+evidência visual complementar dos modelos adotados e permitem conferir
+graficamente os ajustes realizados antes da inserção manual dos parâmetros no
+SAGA GIS 2.1.2.
+
+##### Belo Horizonte
+
+- Modelo adotado: esférico.  
+- Efeito pepita (C0): 0.113.  
+- Patamar (C0+C): 0.556.  
+- Alcance: 4278.831 m.  
+- Distância máxima: 6000 m.  
+- Lag: 250 m.
+
+![Semivariograma ajustado — Belo Horizonte](img/semivariogramas/belo_horizonte_semivariograma.png)
+
+![Layout da superfície krigada — Belo Horizonte](img/layouts/belo_horizonte_layout.png)
+
+##### Campo Grande
+
+- Modelo adotado: gaussiano.  
+- Efeito pepita (C0): 0.085.  
+- Patamar (C0+C): 0.366.  
+- Alcance: 5832.829 m.  
+- Distância máxima: 6000 m.  
+- Lag: 400 m.
+
+![Semivariograma ajustado — Campo Grande](img/semivariogramas/campo_grande_semivariograma.png)
+
+![Layout da superfície krigada — Campo Grande](img/layouts/campo_grande_layout.png)
+
+##### Fortaleza
+
+- Modelo adotado: exponencial.  
+- Efeito pepita (C0): 0.109.  
+- Patamar (C0+C): 0.419.  
+- Alcance: 5716.310 m.  
+- Distância máxima: 6000 m.  
+- Lag: 250 m.
+
+![Semivariograma ajustado — Fortaleza](img/semivariogramas/fortaleza_semivariograma.png)
+
+![Layout da superfície krigada — Fortaleza](img/layouts/fortaleza_layout.png)
+
+##### Porto Velho
+
+- Modelo adotado: esférico.  
+- Efeito pepita (C0): 0.059.  
+- Patamar (C0+C): 0.285.  
+- Alcance: 4324.974 m.  
+- Distância máxima: 4500 m.  
+- Lag: 371.389 m.
+
+![Semivariograma ajustado — Porto Velho](img/semivariogramas/porto_velho_semivariograma.png)
+
+![Layout da superfície krigada — Porto Velho](img/layouts/porto_velho_layout.png)
+
+##### Cuiabá
+
+- Modelo adotado: exponencial.  
+- Efeito pepita (C0): 0.072.  
+- Patamar (C0+C): 0.479.  
+- Alcance: 5555.004 m.  
+- Distância máxima: 7200 m.  
+- Lag: 400 m.
+
+![Semivariograma ajustado — Cuiabá](img/semivariogramas/cuiaba_semivariograma.png)
+
+![Layout da superfície krigada — Cuiabá](img/layouts/cuiaba_layout.png)
+
+##### Curitiba
+
+- Modelo adotado: gaussiano.  
+- Efeito pepita (C0): 0.116.  
+- Patamar (C0+C): 0.482.  
+- Alcance: 8896.143 m.  
+- Distância máxima: 9000 m.  
+- Lag: 250.748 m.
+
+![Semivariograma ajustado — Curitiba](img/semivariogramas/curitiba_semivariograma.png)
+
+![Layout da superfície krigada — Curitiba](img/layouts/curitiba_layout.png)
+
+##### Manaus
+
+- Modelo adotado: exponencial.  
+- Efeito pepita (C0): 0.073.  
+- Patamar (C0+C): 0.467.  
+- Alcance: 6587.048 m.  
+- Distância máxima: 8000 m.  
+- Lag: 229.627 m.
+
+![Semivariograma ajustado — Manaus](img/semivariogramas/manaus_semivariograma.png)
+
+![Layout da superfície krigada — Manaus](img/layouts/manaus_layout.png)
+
+##### Salvador
+
+- Modelo adotado: exponencial.  
+- Efeito pepita (C0): 0.092.  
+- Patamar (C0+C): 0.475.  
+- Alcance: 3926.684 m.  
+- Distância máxima: 5500 m.  
+- Lag: 161.020 m.
+
+![Semivariograma ajustado — Salvador](img/semivariogramas/salvador_semivariograma.png)
+
+![Layout da superfície krigada — Salvador](img/layouts/salvador_layout.png)
+
+### Síntese dos resultados
+
+O produto final efetivo do processo corresponde às bases municipais de
+imóveis/anúncios OMI com uma nova coluna de renda krigada, denominada
+`renda_krigada_ln`, em escala logarítmica, consolidada em
+`dna_estimacao_consolidado_renda_krigada`.
+
+Essa coluna foi obtida a partir da extração dos valores das superfícies krigadas
+raster geradas por krigagem ordinária local e exportadas em GeoTIFF no SAGA GIS.
+As superfícies foram ajustadas a partir dos centroides dos setores censitários,
+com base na variável geográfica `renda_med_pct`, previamente limpa e
+logaritmizada.
+
+As superfícies krigadas foram recortadas pelo buffer de `1.500 metros`
+construído ao redor do envoltório convexo dos pontos válidos e avaliadas
+visualmente por sobreposição a imagens de satélite dos municípios.
+
+

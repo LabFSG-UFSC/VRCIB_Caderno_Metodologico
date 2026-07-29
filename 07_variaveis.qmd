@@ -1,0 +1,181 @@
+---
+title: "Geração de variáveis explicativas de localização"
+author: 
+  - "Ramon Lucato de Aguilar"
+---
+
+## Clusters de localização
+
+Tendo em vista a heterogeneidade espacial dos dados, em adição aos níveis 
+espaciais "Distritos"" e "Setores censitários"", foram gerados *clusters* 
+espaciais para cada tipo de imóvel e para cada município com base no método de 
+agrupamento não supervisionado *k-means*. As variáveis de entrada para a 
+clusterização foram as coordenadas geográficas (*lat*, *lon*) padronizadas.
+
+Para tanto, as tipologias imobiliárias foram reclassificadas a partir das 
+tipologias presentes na base de dados, de acordo com a @tbl-reclass.
+
+
+| Classificação da base de dados | Reclassificação |
+| :------------------------------|:--------------- |
+| Apartamento                    | Apartamento     |
+| Cobertura                      | Apartamento     |
+| Flat                           | Apartamento     |
+| Casa                           | Casa            |
+| Casa de Condomínio             | Casa            |
+| Casa de vila                   | Casa            |
+| Sobrado                        | Casa            |
+| Lote/Terreno                   | Lote            |
+
+: Reclassificação das tipologias imobiliárias para geração dos clusters espaciais. Elaboração própria. {#tbl-reclass}
+
+O número de *clusters* (k) por cidade foi controlado, de modo a ser um número 
+inteiro no intervalo $3 \leq n \leq 30$, na dependência do número de observações
+por município (n). Nesse sentido, *k* foi calculado conforme @eq-kclusters:
+
+$$
+k - 3 + 3 \cdot \log_{10}{n}
+$$ {#eq-kclusters}
+
+Sendo:
+
+$$
+k = \max(k,3)
+$$ {#eq-kmax}
+
+e
+
+$$
+k = \min(k,30)
+$$ {#eq-kmin}
+
+
+A @tbl-clusters identifica o número de clusters gerado por tipologia e município.
+
+| Lote | Município      | k Apartamento | k Casa | k Lote |
+| :---:|:---------------|--------------:|-------:|-------:|
+| 1    | Porto Velho    | 12            | 12     | 9      |
+|      | Fortaleza      | 16            | 15     | 11     |
+|      | Belo Horizonte | 18            | 16     | 13     |
+|      | Campo Grande   | 13            | 14     | 11     |
+| 2    | Manaus         | 14            | 14     | 12     |
+|      | Salvador       | 17            | 16     | 10     |
+|      | Rio de Janeiro | 19            | 16     | 13     |
+|      | Curitiba       | 17            | 16     | 15     |
+|      | Cuiabá.        | 14            | 14     | 11     |
+
+: Número de clusters gerado por tipologia e município. Elaboração própria. {#tbl-clusters}
+
+## Variáveis de localização – Acessibilidade e Centralidade
+
+Em complemento às variáveis de localização procedentes do grupo de trabalho 
+"Cartografia e variáveis", foram geradas as variáveis de localização 
+*Acessibilidade* e *Centralidade*. Estas são fundadas na abordagem da 
+configuração espacial urbana, a qual se baseia em análises de redes. Nessa 
+perspectiva, a representação fundamental de um sistema espacial é um grafo que 
+inclui as unidades de espaço público (trechos de vias) e suas conexões com 
+espaços adjacentes (trechos vizinhos) [@Krafta_Rauber_2020]. A exploração das 
+propriedades das redes espaciais urbanas levou ao desenvolvimento de uma série 
+de medidas configuracionais, dentre as quais as duas adotadas neste trabalho.
+
+A configuração espacial se relaciona diretamente com o valor imobiliário, uma 
+vez que a geração de espaços mais ou menos acessíveis ou centrais está ligada à 
+facilitação ou obstrução de interações entre indivíduos e a seu acesso aos 
+benefícios e oportunidades urbanas @Batty.
+
+### Acessibilidade (Ace)
+
+A acessibilidade refere-se à proximidade ou facilidade de acesso de uma 
+localização em relação ao conjunto de localizações urbanas @Hansen1959, 
+refletindo a vantagem locacional do espaço. Por essa razão, localizações mais 
+acessíveis tendem a traduzir-se em valores imobiliários superiores 
+[@CHEN2023; @Morales2020]. A medida é calculada 
+mensurando-se o quão próximo um trecho viário está de todos os outros trechos do
+sistema, conforme @eq-Ace:
+
+$$
+\text{Ace}_i = \sum_{i\neq j,\, j:d_{ij\leq 7000}} \frac{W_j}{d_{ij}}
+$$ {#eq-Ace}
+
+Em que, *Wj* é a carga do trecho de destino do movimento, e *dij* é a extensão
+do caminho mínimo (menor distância) pela rede entre o trecho de origem, *i*, e o
+trecho de destino *j*, tendo em vista o raio limite de busca de 7000 metros.
+Tanto para a acessibilidade como para a centralidade a carga é a população
+residente no trecho, presumindo-se que localizações são mais acessíveis não
+apenas pela configuração geométrica da rede, mas também na proporção em que são
+potenciais focos de origem ou destino de indivíduos.
+
+### Centralidade (Cen)
+
+A centralidade mensura a capacidade de intermediação, verificando a recorrência
+com que um trecho viário pertence ao caminho mínimo entre todos os pares de
+pontos componentes da rede. Desse modo, a centralidade relaciona-se diretamente
+à probabilidade de que o trecho seja escolhido em deslocamentos urbanos e, por
+extensão, ao movimento. Assim, por um lado, valores altos de centralidade se
+associam a valores do solo ou imobiliários superiores [@Morales2020;
+@RAHMAN2021], posto que estas vias conferem vantagem de acesso a vias
+arteriais. Além disso, maior movimento implica em superior competitividade por
+usos do solo que dependam de maior visibilidade (comércio e serviços), o que
+pode impactar positivamente no valor para outros usos. Por outro lado, essas
+vias podem ser associadas a externalidades negativas de movimento
+(congestionamento, ruídos, poluição etc.), o que teria efeitos marginais
+negativos sobre os valores de imóveis [@Wang2020; @Heyman2019].
+
+Dentre as muitas versões possíveis de centralidade, neste trabalho adota-se uma
+medida de *centralidade gravitacional*, calculada em duas etapas, conforme
+@eq-Cen:
+
+$$
+\text{Cen} = EB_k \cdot GF_k
+$$ {#eq-Cen}
+
+*EBk* corresponde a uma medida "*edge betweenness*", a qual calcula o número de 
+caminhos mínimos entre *i* e *j* que passam pelo trecho de referência *k*:
+
+$$
+EB_k = \sum_{i \neq j} \frac{\sigma_{ij}(k)}{\sigma_{ij}}
+$$ {#eq-EB}
+
+Em que, $\sigma_{ij} (k)$ corresponde ao número de caminhos mínimos entre os 
+trechos *i* e *j* que passam por *k*, e $\sigma_{ij}$ corresponde ao total de 
+caminhos mínimos entre *i* e *j*. Em outras palavras, o trecho possui alto valor
+de EB quando muitos caminhos mínimos o perpassam, funcionando como um corredor 
+importante de circulação.
+
+*GFk* é o "fator gravitacional", isto é, o quão relevante é cada trecho em 
+termos de polarização do movimento, dada suas capacidades de origem e destino em
+função da população. A medida é calculada como: 
+
+$$
+GF_k = \sum_{j:d_{ij\leq 7000}} \frac{W_i W_j}{d_{ij}}
+$$ {#eq-GF}
+
+Em que, *Wi* e *Wj* correspondem à população dos trechos de origem e de destino,
+respectivamente, e *dij* é a extensão do caminho mínimo entre *i* e *j*, tendo
+em vista o raio limite de busca de 7000 metros.
+
+Adotou-se raio limite de 7000 metros com o duplo objetivo de otimizar o
+processamento dos cálculos e porque @XIAO2017, corroborado por @Aguilar,
+entendem que esse raio se correlaciona ao movimento macroescalar urbano
+(automobilístico) em maior medida que o raio global. Adicionalmente, também para
+otimizar o desempenho dos cálculos, apenas para *GFk* limitou-se o raio de
+busca, dado que uma *EBk* limitada exigiria recalcular caminhos mínimos para
+muitos subconjuntos da rede.
+
+A rede viária foi modelada como um grafo primal não direcionado, em que vértices
+representam interseções viárias e arestas representam trechos. O comprimento
+destes foi utilizado como peso para as arestas. A população associada aos
+trechos foi previamente estimada a partir da divisão da população dos setores
+censitários [@ibge2023] pelos trechos incidentes em cada setor. Como os
+cálculos são efetuados sobre os vértices, e não sobre as arestas, a população de
+cada vértice foi estimada como a média da população de cada aresta a ele
+relacionada.
+
+Para os cálculos foram empregados, no R, os pacotes `sfnetworks` para a
+conversão da rede viária em uma estrutura de rede espacial, e `igraph`,
+utilizado para conversão da rede em grafos.
+
+As medidas foram posteriormente normalizadas para o intervalo \[0, 1\],
+utilizando o percentil acumulado (*percent rank*). Como a centralidade exibe
+distribuição potencial, com forte assimetria positiva, aplicou-se previamente à
+normalização a transformação $\ln(\text{Cen} + 1)$.
