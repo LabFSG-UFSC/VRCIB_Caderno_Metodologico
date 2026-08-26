@@ -180,73 +180,133 @@
     ]
   },
   {
-    "objectID": "09_lotes.html",
-    "href": "09_lotes.html",
-    "title": "9  Análise de dados de lotes urbanos",
+    "objectID": "08_metricas.html",
+    "href": "08_metricas.html",
+    "title": "8  Métricas de Qualidade de Modelos",
     "section": "",
-    "text": "9.1 Modelo Linear Hierárquico (MLH)\nOs dados de lotes urbanos foram analisados a partir de modelos de regressão linear generalizada, seguido de krigagem ordinária dos resíduos, resultando num modelo final de regressão linear ordinária com os resíduos krigados como variável explicativa. Nas seções abaixo esse procedimento é detalhado.\nAntes do ajuste dos modelos previsores foi necessário o tratamento de variáveis. Merece destaque o fato de que a distância ao litoral (“dist_litoral”) somente foi calculada para municípios costeiros, possuindo valores ausentes nos demais contextos. Para lidar com esse inconveniente, foi incluída a variável dicotômica “litoraneo” (1 = município costeiro; 0 = município interiorano) e os valores ausentes de “dist_litoral” (todos com “litorâneo” = 0) foram substituídos por 0.\nEm seguida foi ajustado um modelo linear hierárquico (MLH, pacote lme4) condicionado à verificação de multicolinearidade, a partir dos valores de Variance Inflation Factor (VIF). O MLH captura a relação entre variáveis explicativas (efeitos fixos) e a variável explicada, considerando a estrutura hierárquica dos dados por meio de efeitos aleatórios, neste trabalho definidos a partir de agrupamentos espaciais (RAUDENBUSH, 2002). Foram empregados como níveis hierárquicos os municípios (“cd_mun”), os clusters de localização para lotes (“cluster”), e os setores censitários (“cd_setor”). A especificação do MLH é:\nMLH &lt;- lmer(log(valor_unitario) ~ log(area/450) + log(dist_cbd_m/100) + \n              classe_declividade + log1p(dist_litoral_cond/100) + litoraneo + \n              impermeab + log1p(d_demo_h_km2_setor) + log1p(dens_eq_saud_setor) +\n              rend_med_pct_sm_setor + sqrt(var_ren_med_setor) + ace + cen + \n              VUM2 + log1p(altura_media_muni_500m) + ndvi_media + \n              log1p(ndbi_media) + log1p(ui_media) + bci_media_media_setor +\n              (1 | cluster) + (1 | cd_mun) + (1 | cd_setor),\n            data = Lote8)\nA definição das variáveis consta no Quadro 1.\nQuadro 1. Definição das variáveis empregadas nos modelos. Elaboração própria.\nForam sucessivamente removidas as variáveis com maiores valores (para \\(VIF \\geq 10\\)) e coeficientes menos significativos, o que resultou na exclusão de ndbi_media (\\(VIF = 145,1532;\\; t = -0,809\\)), rndsi_media (\\(VIF = 50,6742;\\; t = 2,742\\)) e ui_media (\\(VIF = 191,4915;\\; t = -3,014\\)).\nAs. Tabelas 9.1, 9.2 e 9.3 exibem os resultados do modelo definitivo empregado.\nFoi efetuada análise dos resíduos, indicando que existe desvio da distribuição teórica (\\(D = 0,0710; \\; p &lt; 2,2e-16\\)), mas ele é muito pequeno, o que é normal, diante do grande número de observações. Existe dispersão de 4,61% (\\(p &lt; 2,2e-16\\)), acima do esperado, porém o valor é pequeno e não preocupante. Por fim, revelou-se 0,30% de outliers (\\(p &lt; 2,2e-16\\)), cifra plausível para quase 15 mil observações em nove cidades.\nAlém do \\(R^2\\) e do AIC, o ajuste do modelo foi avaliado por meio das métricas Raiz do Erro Quadrático Médio (RMSE) e Erro Percentual Absoluto Médio (MAPE), que apresentaram valores de 578,46 e 0,1529, respectivamente. O RMSE indica que, em média, as estimativas apresentam desvios da ordem de R$ 578,46 em relação aos valores observados, enquanto o MAPE indica um erro percentual absoluto médio de aproximadamente 15,3%. A Tabela 9.4 demonstra essas métricas segregadas por município:\nNota-se que embora o município com maior erro (Manaus) apresente raiz do erro quadrático médio de R$ 1901,00, em termos de erro percentual absoluto médio esse valor é inferior a 20%, cifra considerada aceitável para o fim de avaliação em massa e em sintonia com a literatura (OLIVEIRA et al., 2022; PROVÍNCIA DE CÓRDOBA, 2025).",
+    "text": "8.1 Introdução\nO MAPE, ou Mean Absolute Prediction Error, é uma das métricas mais utilizadas na comunidade de Engenharia de Avaliações, especialmente nos modelos de Machine Learning. Esta métrica pode ser calculado de acordo com a Equação 8.1:\n\\[\n\\text{MAPE} = \\frac{1}{n}\\sum_{i = 1}^n \\left | \\frac{A_i - F_i}{A_i} \\right |\n\\tag{8.1}\\]\nEm que \\(A_i\\) é o valor observado e \\(F_i\\) é valor previsto pelo modelo.\nPara compreensão do problema em adotar uma das métricas mais famosas, o MAPE, considere-se uma amostra de apenas 5 dados: {50, 100, 150, 200, 250}. A média amostral, \\(\\bar x\\) , neste caso, e a mediana amostral, \\(\\tilde x\\), são iguais, com valor 150. O MAPE para a média (ou mediana) amostral, portanto , é igual a 63,00%. Porém, para se analisar como se chega a esse número, pode-se calcular o erro percentual absoluto para cada dado da amostra (o MAPE nada mais é do que a média dos valores abaixo):\n[1] \"200,00%\" \" 50,00%\" \"  0,00%\" \" 25,00%\" \" 40,00%\"\nNota-se que o erro percentual absoluto do primeiro dado amostral (\\(X_1 = 50\\)) é muito alto (200%). No entanto, o mesmo não ocorre para o outro lado: a uma mesma distância da média encontra-se o último dado (250). Só que o erro percentual absoluto deste dado é muito menor (apenas 40%).\nDesta forma, se ao invés de utilizarmos a média amostral, utilizarmos um estimador arbitrário, por exemplo, \\(\\check x = 2\\bar x/3\\), i.e. se utilizamos o estimador \\(\\check x = 100\\), ao invés de adotar a média ou a mediana amostral, teríamos um MAPE igual a 48,67%, i.e. 14,33 p.p. menor do que o MAPE para a média ou mediana. Seria esse estimador arbitrário, \\(\\check x\\), em estimador superior à média (ou mediana) amostral? Para que fique bem claro, mostra-se abaixo os erros percentuais absolutos de cada dado amostral para o estimador arbitrário \\(\\check x\\):\n[1] \"100,00%\" \"  0,00%\" \" 33,33%\" \" 50,00%\" \" 60,00%\"\nComo o estimador arbitrário fica mais próximo dos dados de menor valor na amostra, então os erros percentuais para estes dados ficam menores (menor erro percentual passa de 200% para apenas 100%) e os erros percentuais para maior ficam apenas levemente superiores (maior erro percentual passa de 40% para 60%). Em outras palavras, minimizar o MAPE significa dar mais peso às observações de menor valor dentro da amostra.\nUma solução seria minimizar o erro relativo absoluto em relação ao valor de mercado, ou seja, minimizar a métrica da Equação 8.2:\n\\[\n\\text{MARE} = \\frac{1}{n}\\sum_{i = 1}^n \\left | \\frac{A_i - F_i}{F_i} \\right |\n\\tag{8.2}\\]\nPara a amostra em tela, os erros relativos percentuais absolutos seriam:\n[1] \"66,67%\" \"33,33%\" \" 0,00%\" \"33,33%\" \"66,67%\"\nA média destes erros é \\(\\text{MARE} =\\) 40,00%.\nÉ fácil ver que o MARE é aumenta para outros estimadores fora da média ou mediana, como o estimador arbitrário \\(\\check x = 2\\bar x/3\\). Para este estimador, teríamos:\n[1] \" 50,00%\" \"  0,00%\" \" 50,00%\" \"100,00%\" \"150,00%\"\nOu seja, para o estimador arbitrário, \\(\\text{MARE} =\\) 70,00%.\nNo entanto, para o estimador arbitrário \\(\\check x = 3\\bar{x}/2\\), i.e. para um estimador arbitrariamente superior à média/mediana amostral, o MARE seria menor, pois:\n[1] \"77,78%\" \"55,56%\" \"33,33%\" \"11,11%\" \"11,11%\"\nOu seja, para este segundo estimador arbitrário, \\(\\text{MARE} =\\) 37,78%. Em suma, o MARE dá maior peso aos erros percentuais positivos, ao contrário do MAPE, ainda que este efeito seja menor no MARE do que no MAPE.\nA solução, portanto, para fins de minimização, seria utilizar o sMAPE (MAPE simétrico) da Equação 8.3:\n\\[\n\\text{sMAPE} = \\frac{2}{n} \\sum_{i=1}^n \\frac{ |x_i - \\bar x|}{|x_i| + |\\bar{x}|}\n\\tag{8.3}\\]\nPara a média (ou mediana amostral), o valor dessa última métrica é 43,71%. Para o estimador arbitrário, \\(\\check x = 2\\bar x/3\\), o sMAPE seria igual a 51,81%. E para o segundo estimador arbitrário, \\(\\check x = 3\\bar x/2\\), o sMAPE fica igual a 53,30%.\nPara entender, o erro percentual simétrico absoluto para cada dado da amostra seria (considerando-se média ou mediana):\n[1] \"50,00%\" \"20,00%\" \" 0,00%\" \"14,29%\" \"25,00%\"\nJá com o primeiro estimador arbitrário, teríamos:\n[1] \"33,33%\" \" 0,00%\" \"20,00%\" \"33,33%\" \"42,86%\"\nE para o segundo estimador arbitrário, tem-se:\n[1] \"63,64%\" \"38,46%\" \"20,00%\" \" 5,88%\" \" 5,26%\"\nEm suma, o sMAPE equilibra melhor os erros abaixo e acima do estimador adotado.",
     "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Análise de dados de lotes urbanos</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Métricas de Qualidade de Modelos</span>"
     ]
   },
   {
-    "objectID": "09_lotes.html#modelo-linear-hierárquico-mlh",
-    "href": "09_lotes.html#modelo-linear-hierárquico-mlh",
-    "title": "9  Análise de dados de lotes urbanos",
+    "objectID": "08_metricas.html#questões-de-interpretação",
+    "href": "08_metricas.html#questões-de-interpretação",
+    "title": "8  Métricas de Qualidade de Modelos",
+    "section": "8.2 Questões de interpretação",
+    "text": "8.2 Questões de interpretação\nPara fins interpretativos, pondera-se:\n\nO MAPE para a média (ou mediana) é igual a 63%, porém para os resíduos positivos, o erro percentual absoluto médio é igual a 25,00%, enquanto que para o es resíduos negativos este valor é igual a 50,00%. Em suma, além de não ser a métrica ideal para fins de minimização, como o MAPE considera o erro percentual em relação ao valor observado, mesmo em uma amostra simétrica, os erros positivos e negativos serão bem diferentes, ainda que em magnitudes iguais, o que prejudica a interpretação;\nO MARE, ainda que não seja ideal para fins de minimização, pois privilegia suavemente os resíduos positivos, parece ser ótimo em termos interpretativos, pois permite saber quanto, em média, as observações distam do valor de mercado, em termos percentuais absolutos;\nO sMAPE, embora talvez seja o ideal para fins de minimização, não parece ser de grande valia para fins de interpretação.",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Métricas de Qualidade de Modelos</span>"
+    ]
+  },
+  {
+    "objectID": "08_metricas.html#outras-opções",
+    "href": "08_metricas.html#outras-opções",
+    "title": "8  Métricas de Qualidade de Modelos",
+    "section": "8.3 Outras opções",
+    "text": "8.3 Outras opções\n\n8.3.1 MAAPE\nO MAAPE, ou Mean Arctangent Absolute Percentage Error, pode ser escrito conforme a Equação 8.4:\n\\[\n\\text{MAAPE} = \\frac{1}{n}\\sum_{i=1}^n \\arctan \\left ( \\left | \\frac{A_i - F_i}{A_i} \\right | \\right)\n\\tag{8.4}\\]\nPara a média/mediana amostral:\n\n\n[1] 0.4392563\n\n\nPara os estimadores arbitrariamente abaixo e acima da média/mediana:\n\n\n[1] 0.4222432\n\n\n\n\n[1] 0.5752447\n\n\n\n\n8.3.2 sMAE ou wMAPE\nO MAPE ponderado, ou wMAPE, pode ser escrito conforme a Equação 8.5:\n\\[\n\\text{wMAPE} = \\frac{\\sum_{i=1}^n |x_i - \\bar x|}{\\sum_{i = 1}^n |x_i|}\n\\tag{8.5}\\]\nO wMAPE também pode ser chamado de sMAE (scale Mean Absolute Error), que é definido como na Equação 8.6:\n\\[\n\\text{sMAE} = \\frac{\\text{MAE}}{\\bar x}\n\\tag{8.6}\\]\nTrata-se de uma métrica interessante, pois combina uma métrica de erro de predição bem aceita, o erro médio absoluto\nPara a média/mediana amostral:\n\n\n[1] 0.4\n\n\nPara os estimadores arbitrariamente abaixo e acima da média/mediana:\n\n\n[1] 0.4666667\n\n\n\n\n[1] 0.5666667\n\n\n\n\n8.3.3 MASE\nO MASE, ou Mean Absolute Scale Error, é calculado conforme a Equação 8.7. É tido como uma métrica melhor do que qualquer erro percentual, porém, não tem finalidade interpretativa.\n\\[\n\\text{MASE} = \\frac{\\text{MAE}}{\\frac{1}{n-1}\\sum_{i = 1}^n|x_i - x_{i-1}|}\n\\tag{8.7}\\]\nPara a média/mediana amostral:\n\n\n[1] 1.2\n\n\nPara os estimadores arbitrariamente abaixo e acima da média/mediana:\n\n\n[1] 1.4\n\n\n\n\n[1] 1.7\n\n\n\n\n8.3.4 rMAE\nO rMAE, ou Relative MAE é uma métrica interessante, que é o mean absolute error do modelo em análise comparado à mesma métrica de um modelo de referência (benchmark), conforme a Equação 8.8:\n\\[\n\\text{rMAE} = \\frac{\\text{MAE}_\\text{modelo}}{\\text{MAE}_{benchmark}}\n\\tag{8.8}\\]\num rMAE maior do que 1, então o modelo tem uma performance pior do que o benchmark. Se rMAE for menor do que 1, então o modelo em tela tem uma performance melhor do que o benchmark.\nPara o benchmark, i.e., para a média/mediana, o MAE é:\n\n\n[1] 60\n\n\nPara o estimador arbitrário a menor:\n\n\n[1] 1.166667\n\n\nPara o estimador arbitrário a maior:\n\n\n[1] 1.416667\n\n\nOu seja, nenhum dos dois estimadores arbitrários é melhor do que a média/mediana amostra.",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Métricas de Qualidade de Modelos</span>"
+    ]
+  },
+  {
+    "objectID": "08_metricas.html#estudos-de-casos",
+    "href": "08_metricas.html#estudos-de-casos",
+    "title": "8  Métricas de Qualidade de Modelos",
+    "section": "8.4 Estudos de Casos",
+    "text": "8.4 Estudos de Casos\nNesta seção as métricas serão analisadas para conjuntos de dados aleatórios com: (1) distribuição normal e; (2) distribuição lognormal. Para ambos os conjuntos de dados as métricas testadas serão computadas para diversos estimadores (moda, média, mediana, etc.).\n\n8.4.1 Distribuição normal\n\n\n\n\n\n\n\n\nFigura 8.1: Amostra aleatório com distribuição normal com média 150 e desvio-padrão 50.\n\n\n\n\n\nPara a amostra da Figura 8.1, a média amostral resultou em 151,11, a mediana amostral é 147,76, a moda 1 é 140,67 e a média aparada (10%) é igual a 150,66.\nEm suma, nota-se que, neste estudo de caso: a média resultou muito próxima ao parâmetro populacional (+0,74%); a mediana também se mostrou um bom estimador para a tendência central da amostra (-1,49%), um pouco menos eficiente do que a média, contudo; a moda resultou viesada para baixo (-6,22%); e a média aparada (10%) resultou como o estimador ótimo da tendência central (+0,44%).\nNota-se na Tabela 8.1 que, apesar do claro viés presente na moda amostral, o MAPE resultou menor para este estimador, assim como o MAAPE. As métricas sMAE, sMAPE e MASE resultaram mais baixos para mediana, enquanto o MARE resultou mais baixo para a média amostral. Nota-se, portanto, a métrica MAPE se mostrou a menos apta para informar o melhor estimador para a tendência central da amostra.\n\n\n\n\nTabela 8.1: Métricas para os estimadores da amostra normal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nEstimador\nMAE\nsMAE\nMAPE\nMAAPE\nsMAPE\nMARE\nMASE\n\n\n\n\nmédia\n38.01\n25.15%\n41.42%\n26.67%\n26.44%\n25.15%\n68.12%\n\n\nmediana\n37.83\n25.04%\n40.39%\n26.22%\n26.36%\n25.6%\n67.81%\n\n\nmoda\n38.49\n25.47%\n38.9%\n25.88%\n26.86%\n27.36%\n68.98%\n\n\nmédia aparada (10%)\n37.97\n25.13%\n41.27%\n26.6%\n26.42%\n25.2%\n68.05%\n\n\n\n\n\n\n\n\nAlém disto, o MAPE mostra-se claramente inadequado quando utilizado como uma informação do erro percentual médio da amostra. O MAAPE mostrou-se, em termos de informação do erro percentual médio, uma métrica melhor, apesar de apresentar o mesmo problema do MAPE, de priorizar os valores mais baixos.\n\n\n8.4.2 Distribuição lognormal\n\n\n\n\n\n\n\n\nFigura 8.2: Amostra aleatório com distribuição lognormal com mediana 150 e desvio-padrao igual a .25 (na escala log).\n\n\n\n\n\nPara a amostra da Figura 8.2, a média amostral resultou rm 151,11, a mediana amostral é 147,76 e a moda é 140,67. Em suma, nota-se que a moda amostral encontra-se um pouco viesada para baixo, neste caso, enquanto os estimadores média e mediana são ambos bons estimadores para a tendência central da amostra.\nNota-se na Tabela 8.2 que o MAPE resultou menor para a moda amostral, enquanto as outras métricas foram melhores para a média ou mediana amostrais, assim como ocorreu com a distribuão normal.\nNeste caso, deve-se notar que o MAPE elencou a moda como melhor estimador, enquanto as outras métricas colocaram a média ou mediana como mais precisos. Assim, a adoção do MAPE não pode ser considerada como ruim no caso de dados com distribuição lognormal, desde que o objetivo da modelagem seja estimar a moda da distribuição, que é realmente mais baixa que as outras medidas de tendência central. Contudo, se o objetivo for estimar a mediana, como é mais comum na Engenharia de Avaliações, as outras métricas são mais interessantes.\n\n\n\n\nTabela 8.2: Métricas para os estimadores da amostra lognormal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nEstimador\nMAE\nsMAE\nMAPE\nMAAPE\nsMAPE\nMARE\nMASE\n\n\n\n\nmédia\n38.43\n25.43%\n42.74%\n27.3%\n26.68%\n24.8%\n68.87%\n\n\nmediana\n37.85\n25.05%\n40.58%\n26.3%\n26.36%\n25.5%\n67.83%\n\n\nmoda\n38.33\n25.37%\n39.04%\n25.88%\n26.75%\n27.08%\n68.7%\n\n\nmédia aparada (10%)\n38.11\n25.22%\n41.78%\n26.84%\n26.5%\n25.04%\n68.3%\n\n\n\n\n\n\n\n\n\nMelhores estimadores por métrica\n\n\nDistribuição dos dados\nMelhor Estimador\nMétricas\n\n\n\n\nNormal\nmédia\nMARE\n\n\nNormal\nmediana\nsMAE, sMAPE, MASE\n\n\nNormal\nmoda\nMAPE, MAAPE\n\n\nLogNormal\nmédia\nMARE\n\n\nLogNormal\nmediana\nsMAE, sMAPE, MASE\n\n\nLogNormal\nmoda\nMAPE, MAAPE",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Métricas de Qualidade de Modelos</span>"
+    ]
+  },
+  {
+    "objectID": "08_metricas.html#considerações-finais",
+    "href": "08_metricas.html#considerações-finais",
+    "title": "8  Métricas de Qualidade de Modelos",
+    "section": "8.5 Considerações finais",
+    "text": "8.5 Considerações finais\nO MAPE mostrou-se uma métrica inadequada, a não ser que se pretenda estimar a moda de dados com distribuição lognormal. Caso contrário, ainda que a moda seja um péssimo estimador para a tendência central de dados com distribuição normal, o MAPE, assim como o MAAPE, apontam este estimador como o melhor preditor, o que é inadequado.\nAdemais, os percentuais obtidos com o MAPE distam dos percentuais obtidos com as outras métricas para os mesmos estimadores. Ou seja, o MAPE não é uma boa métrica quando se deseja interpretar a real precisão dos modelos estatísticos.\nO sMAPE parece ser uma métrica ideal, na engenharia de avaliações, para fins de minimização. Porém, para fins de interpretação, uma melhor métrica seria o MARE, que representa o quanto, percentualmente, os dados da amostra distam, em média, do valor de mercado estimado.",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Métricas de Qualidade de Modelos</span>"
+    ]
+  },
+  {
+    "objectID": "08_metricas.html#footnotes",
+    "href": "08_metricas.html#footnotes",
+    "title": "8  Métricas de Qualidade de Modelos",
     "section": "",
-    "text": "Variável\nDefinição\n\n\n\n\nvalor_unitario\nValor unitário do lote, obtido pela razão entre o valor absoluto registrado no anúncio e a área.\n\n\narea/450\nÁrea do lote homogeneizada (dividida pela área do lote padrão, estipulada em 450 m²).\n\n\ndist_cbd_m/100\nDistância ao centro principal (dividida por 100).\n\n\nclasse_declividade\nClasse de declividade do terreno, variando de 1 (plano) a 6 (escarpado).\n\n\ndist_litoral_cond/100\nDistância ao litoral condicionada a municípios costeiros (dividida por 100).\n\n\nlitoraneo\nVariável dicotômica para municípios costeiros.\n\n\nimpermeab\nPercentagem de solo impermeabilizado no setor censitário.\n\n\nd_demo_h_km2_setor\nDensidade demográfica (hab/km²) do setor censitário.\n\n\ndens_eq_saud_setor\nDensidade de equipamentos de saúde (n/km²) do setor censitário.\n\n\nrend_med_pct_sm_setor\nRenda per capita média em salários mínimos do setor censitário\n\n\nvar_ren_med_setor\nVariância da renda média do chefe do domicílio, por setor censitário.\n\n\nace\nAcessibilidade.\n\n\ncen\nCentralidade.\n\n\nVUM2\nValor do m² edificado, estimado a partir do modelo com imóveis edificados.\n\n\naltura_media_muni_500m\nAltura média das edificações em raio de 500 m a partir da observação.\n\n\nndvi_media\nÍndice de vegetação diferenciada normalizada média em raio de 500 m a partir da observação.\n\n\nndbi_media\nÍndice de áreas construídas por diferença normalizada em raio de 500 m a partir da observação.\n\n\nui_media\nÍndice de urbanização em raio de 500 m a partir da observação.\n\n\nbci_media\nÍndice de composição biofísica em raio de 500 m a partir da observação.\n\n\n\n\n\n\n\n\nTabela 9.1: Modelo linear hierárquico para lotes das capitais dos Lotes 1 e 2. Elaboração própria.\n\n\n\n\n\n\n\n\n\n\n\n\nEfeitos fixos\nEstimativa\nErro-padrão\nValor-t\nVIF\n\n\n\n\nIntercepto\n5,9880\n0,2216\n27,7170\n/\n\n\nlog(area/450)\n-0,3116\n0,0042\n-73,663\n1,0175\n\n\nlog(dist_cbd_m/100)\n-0,0352\n0,0221\n-1,5950\n1,8089\n\n\nclasse_declividade\n-0,0150\n0,0052\n-2,8800\n1,0314\n\n\nlog1p(dist_litoral_cond/100)\n-0,0466\n0,0191\n-2,4390\n1,1828\n\n\nlitoraneo\n0,6687\n0,2765\n2,4180\n1,0994\n\n\nimpermeab\n0,0019\n0,0007\n2,5980\n2,1173\n\n\nlog1p(d_demo_h_km2_setor)\n-0,0438\n0,0105\n-4,1640\n1,7830\n\n\nlog1p(dens_eq_saud_setor)\n0,0281\n0,0046\n6,1670\n1,1548\n\n\nrend_med_pct_sm_setor\n0,1601\n0,0104\n15,3880\n2,4180\n\n\nsqrt(var_ren_med_setor)\n-1,799e-06\n1,062e-06\n-1,6940\n1,3523\n\n\nace\n0,1768\n0,0563\n3,1400\n2,0417\n\n\ncen\n0,2960\n0,0371\n7,9770.\n1,2631\n\n\nI(VUM2/4870)\n0,6442\n0,0386\n16,6790\n1,9282\n\n\nlog1p(altura_media_muni_500m)\n0,3223\n0,0354\n9,1110\n1,7466\n\n\nndvi_media\n-0,6657\n0,0809\n-8,2310\n1,8428\n\n\nbci_media\n0,6146\n0,2334\n2,633\n1,2803\n\n\n\n\n\n\n\n\n\nTabela 9.2: Estatísticas de qualidade de ajuste para o modelo MLH. Elaboração própria.\n\n\n\n\n\nEstatística\nValor\n\n\n\n\n\\(R^2\\) condicional (efeitos fixos e aleatórios)\n0,8990\n\n\n\\(R^2\\) marginal (efeitos fixos)\n0,3780\n\n\nAIC\n5491,5660\n\n\n\n\n\n\n\n\n\nTabela 9.3: Variância dos efeitos aleatórios. Elaboração própria.\n\n\n\n\n\nNível\nVar.\n\n\n\n\nMunicípio\n0,1357\n\n\nCluster\n0,0323\n\n\nSetor\n0,1050\n\n\nResidual.\n0,0527\n\n\n\n\n\n\n\n\n\n\n\nTabela 9.4: RMSE e MAPE por município dos Lotes 1 e 2. Elaboração própria.\n\n\n\n\n\nMunicípio\nRMSE\nMAPE\nn\n\n\n\n\nManaus\n1901,00\n0,184\n516\n\n\nCuiabá\n352,00\n0,176\n349\n\n\nCuritiba\n474,00\n0,158\n8818\n\n\nSalvador\n519,00\n0,151\n212\n\n\nRio de Janeiro\n434,00\n0,142\n1450\n\n\nFortaleza\n299,00\n0,141\n503\n\n\nBelo Horizonte\n504,00\n0,131\n1408\n\n\nPorto Velho\n104,00\n0,129\n80\n\n\nCampo Grande\n121,00\n0,127\n444",
+    "text": "A moda amostral foi estimada com o pacote modeest, com o estimador de Parzen, que busca o valor máximo de uma densidade kernel gaussiana.↩︎",
     "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Análise de dados de lotes urbanos</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Métricas de Qualidade de Modelos</span>"
     ]
   },
   {
-    "objectID": "09_lotes.html#homogeneização",
-    "href": "09_lotes.html#homogeneização",
-    "title": "9  Análise de dados de lotes urbanos",
-    "section": "9.2 Homogeneização",
-    "text": "9.2 Homogeneização",
-    "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Análise de dados de lotes urbanos</span>"
-    ]
-  },
-  {
-    "objectID": "09_lotes.html#geração-da-superfície-de-valores-unitários-de-lotes",
-    "href": "09_lotes.html#geração-da-superfície-de-valores-unitários-de-lotes",
-    "title": "9  Análise de dados de lotes urbanos",
-    "section": "9.3 Geração da superfície de valores unitários de lotes",
-    "text": "9.3 Geração da superfície de valores unitários de lotes",
-    "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Análise de dados de lotes urbanos</span>"
-    ]
-  },
-  {
-    "objectID": "09_lotes.html#modelo-final",
-    "href": "09_lotes.html#modelo-final",
-    "title": "9  Análise de dados de lotes urbanos",
-    "section": "9.4 Modelo final",
-    "text": "9.4 Modelo final\n\n\n\n\nOLIVEIRA, A. A. F. DE; BANDEIRA, S. R. V.; SILVA, C. V. A. Estimativa de desempenho de métodos de aprendizado de máquina baseados em árvores de decisão na valoração do solo no município de Fortaleza, Brasil. Revista Valorem, v. 1, n. 1, p. 1–15, 2022. Disponível em: &lt;https://revistavalorem.com/index.php/home/article/view/8&gt;.\n\n\nPROVÍNCIA DE CÓRDOBA. Informe Estudio del mercado de la tierra urbana de la Provincia de Córdoba 2025., 2025. Córdoba: IDECOR.\n\n\nRAUDENBUSH, A. S., S. W.; Bryk. Hierarchical Linear Models: Applications and Data Analysis Methods. 2º ed. Thousand Oaks: Sage Publications, 2002.",
-    "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Análise de dados de lotes urbanos</span>"
-    ]
-  },
-  {
-    "objectID": "10_equacoes.html",
-    "href": "10_equacoes.html",
-    "title": "10  Equações de Estimação",
+    "objectID": "10_lotes.html",
+    "href": "10_lotes.html",
+    "title": "10  Análise de dados de lotes urbanos",
     "section": "",
-    "text": "11 Equações de Estimação",
+    "text": "10.1 Modelo Linear Hierárquico (MLH)\nOs dados de lotes urbanos foram analisados a partir de modelos de regressão linear generalizada, seguido de krigagem ordinária dos resíduos, resultando num modelo final de regressão linear ordinária com os resíduos krigados como variável explicativa. Nas seções abaixo esse procedimento é detalhado.\nAntes do ajuste dos modelos previsores foi necessário o tratamento de variáveis. Merece destaque o fato de que a distância ao litoral (“dist_litoral”) somente foi calculada para municípios costeiros, possuindo valores ausentes nos demais contextos. Para lidar com esse inconveniente, foi incluída a variável dicotômica “litoraneo” (1 = município costeiro; 0 = município interiorano) e os valores ausentes de “dist_litoral” (todos com “litorâneo” = 0) foram substituídos por 0.\nEm seguida foi ajustado um modelo linear hierárquico (MLH, pacote lme4) condicionado à verificação de multicolinearidade, a partir dos valores de Variance Inflation Factor (VIF). O MLH captura a relação entre variáveis explicativas (efeitos fixos) e a variável explicada, considerando a estrutura hierárquica dos dados por meio de efeitos aleatórios, neste trabalho definidos a partir de agrupamentos espaciais (RAUDENBUSH, 2002). Foram empregados como níveis hierárquicos os municípios (“cd_mun”), os clusters de localização para lotes (“cluster”), e os setores censitários (“cd_setor”). A especificação do MLH é:\nMLH &lt;- lmer(log(valor_unitario) ~ log(area/450) + log(dist_cbd_m/100) + \n              classe_declividade + log1p(dist_litoral_cond/100) + litoraneo + \n              impermeab + log1p(d_demo_h_km2_setor) + log1p(dens_eq_saud_setor) +\n              rend_med_pct_sm_setor + sqrt(var_ren_med_setor) + ace + cen + \n              VUM2 + log1p(altura_media_muni_500m) + ndvi_media + \n              log1p(ndbi_media) + log1p(ui_media) + bci_media_media_setor +\n              (1 | cluster) + (1 | cd_mun) + (1 | cd_setor),\n            data = Lote8)\nA definição das variáveis consta no Quadro 1.\nQuadro 1. Definição das variáveis empregadas nos modelos. Elaboração própria.\nForam sucessivamente removidas as variáveis com maiores valores (para \\(VIF \\geq 10\\)) e coeficientes menos significativos, o que resultou na exclusão de ndbi_media (\\(VIF = 145,1532;\\; t = -0,809\\)), rndsi_media (\\(VIF = 50,6742;\\; t = 2,742\\)) e ui_media (\\(VIF = 191,4915;\\; t = -3,014\\)).\nAs. Tabelas 10.1, 10.2 e 10.3 exibem os resultados do modelo definitivo empregado.\nFoi efetuada análise dos resíduos, indicando que existe desvio da distribuição teórica (\\(D = 0,0710; \\; p &lt; 2,2e-16\\)), mas ele é muito pequeno, o que é normal, diante do grande número de observações. Existe dispersão de 4,61% (\\(p &lt; 2,2e-16\\)), acima do esperado, porém o valor é pequeno e não preocupante. Por fim, revelou-se 0,30% de outliers (\\(p &lt; 2,2e-16\\)), cifra plausível para quase 15 mil observações em nove cidades.\nAlém do \\(R^2\\) e do AIC, o ajuste do modelo foi avaliado por meio das métricas Raiz do Erro Quadrático Médio (RMSE) e Erro Percentual Absoluto Médio (MAPE), que apresentaram valores de 578,46 e 0,1529, respectivamente. O RMSE indica que, em média, as estimativas apresentam desvios da ordem de R$ 578,46 em relação aos valores observados, enquanto o MAPE indica um erro percentual absoluto médio de aproximadamente 15,3%. A Tabela 10.4 demonstra essas métricas segregadas por município:\nNota-se que embora o município com maior erro (Manaus) apresente raiz do erro quadrático médio de R$ 1901,00, em termos de erro percentual absoluto médio esse valor é inferior a 20%, cifra considerada aceitável para o fim de avaliação em massa e em sintonia com a literatura (OLIVEIRA et al., 2022; PROVÍNCIA DE CÓRDOBA, 2025).",
     "crumbs": [
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Equações de Estimação</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Análise de dados de lotes urbanos</span>"
+    ]
+  },
+  {
+    "objectID": "10_lotes.html#modelo-linear-hierárquico-mlh",
+    "href": "10_lotes.html#modelo-linear-hierárquico-mlh",
+    "title": "10  Análise de dados de lotes urbanos",
+    "section": "",
+    "text": "Variável\nDefinição\n\n\n\n\nvalor_unitario\nValor unitário do lote, obtido pela razão entre o valor absoluto registrado no anúncio e a área.\n\n\narea/450\nÁrea do lote homogeneizada (dividida pela área do lote padrão, estipulada em 450 m²).\n\n\ndist_cbd_m/100\nDistância ao centro principal (dividida por 100).\n\n\nclasse_declividade\nClasse de declividade do terreno, variando de 1 (plano) a 6 (escarpado).\n\n\ndist_litoral_cond/100\nDistância ao litoral condicionada a municípios costeiros (dividida por 100).\n\n\nlitoraneo\nVariável dicotômica para municípios costeiros.\n\n\nimpermeab\nPercentagem de solo impermeabilizado no setor censitário.\n\n\nd_demo_h_km2_setor\nDensidade demográfica (hab/km²) do setor censitário.\n\n\ndens_eq_saud_setor\nDensidade de equipamentos de saúde (n/km²) do setor censitário.\n\n\nrend_med_pct_sm_setor\nRenda per capita média em salários mínimos do setor censitário\n\n\nvar_ren_med_setor\nVariância da renda média do chefe do domicílio, por setor censitário.\n\n\nace\nAcessibilidade.\n\n\ncen\nCentralidade.\n\n\nVUM2\nValor do m² edificado, estimado a partir do modelo com imóveis edificados.\n\n\naltura_media_muni_500m\nAltura média das edificações em raio de 500 m a partir da observação.\n\n\nndvi_media\nÍndice de vegetação diferenciada normalizada média em raio de 500 m a partir da observação.\n\n\nndbi_media\nÍndice de áreas construídas por diferença normalizada em raio de 500 m a partir da observação.\n\n\nui_media\nÍndice de urbanização em raio de 500 m a partir da observação.\n\n\nbci_media\nÍndice de composição biofísica em raio de 500 m a partir da observação.\n\n\n\n\n\n\n\n\nTabela 10.1: Modelo linear hierárquico para lotes das capitais dos Lotes 1 e 2. Elaboração própria.\n\n\n\n\n\n\n\n\n\n\n\n\nEfeitos fixos\nEstimativa\nErro-padrão\nValor-t\nVIF\n\n\n\n\nIntercepto\n5,9880\n0,2216\n27,7170\n/\n\n\nlog(area/450)\n-0,3116\n0,0042\n-73,663\n1,0175\n\n\nlog(dist_cbd_m/100)\n-0,0352\n0,0221\n-1,5950\n1,8089\n\n\nclasse_declividade\n-0,0150\n0,0052\n-2,8800\n1,0314\n\n\nlog1p(dist_litoral_cond/100)\n-0,0466\n0,0191\n-2,4390\n1,1828\n\n\nlitoraneo\n0,6687\n0,2765\n2,4180\n1,0994\n\n\nimpermeab\n0,0019\n0,0007\n2,5980\n2,1173\n\n\nlog1p(d_demo_h_km2_setor)\n-0,0438\n0,0105\n-4,1640\n1,7830\n\n\nlog1p(dens_eq_saud_setor)\n0,0281\n0,0046\n6,1670\n1,1548\n\n\nrend_med_pct_sm_setor\n0,1601\n0,0104\n15,3880\n2,4180\n\n\nsqrt(var_ren_med_setor)\n-1,799e-06\n1,062e-06\n-1,6940\n1,3523\n\n\nace\n0,1768\n0,0563\n3,1400\n2,0417\n\n\ncen\n0,2960\n0,0371\n7,9770.\n1,2631\n\n\nI(VUM2/4870)\n0,6442\n0,0386\n16,6790\n1,9282\n\n\nlog1p(altura_media_muni_500m)\n0,3223\n0,0354\n9,1110\n1,7466\n\n\nndvi_media\n-0,6657\n0,0809\n-8,2310\n1,8428\n\n\nbci_media\n0,6146\n0,2334\n2,633\n1,2803\n\n\n\n\n\n\n\n\n\nTabela 10.2: Estatísticas de qualidade de ajuste para o modelo MLH. Elaboração própria.\n\n\n\n\n\nEstatística\nValor\n\n\n\n\n\\(R^2\\) condicional (efeitos fixos e aleatórios)\n0,8990\n\n\n\\(R^2\\) marginal (efeitos fixos)\n0,3780\n\n\nAIC\n5491,5660\n\n\n\n\n\n\n\n\n\nTabela 10.3: Variância dos efeitos aleatórios. Elaboração própria.\n\n\n\n\n\nNível\nVar.\n\n\n\n\nMunicípio\n0,1357\n\n\nCluster\n0,0323\n\n\nSetor\n0,1050\n\n\nResidual.\n0,0527\n\n\n\n\n\n\n\n\n\n\n\nTabela 10.4: RMSE e MAPE por município dos Lotes 1 e 2. Elaboração própria.\n\n\n\n\n\nMunicípio\nRMSE\nMAPE\nn\n\n\n\n\nManaus\n1901,00\n0,184\n516\n\n\nCuiabá\n352,00\n0,176\n349\n\n\nCuritiba\n474,00\n0,158\n8818\n\n\nSalvador\n519,00\n0,151\n212\n\n\nRio de Janeiro\n434,00\n0,142\n1450\n\n\nFortaleza\n299,00\n0,141\n503\n\n\nBelo Horizonte\n504,00\n0,131\n1408\n\n\nPorto Velho\n104,00\n0,129\n80\n\n\nCampo Grande\n121,00\n0,127\n444",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Análise de dados de lotes urbanos</span>"
+    ]
+  },
+  {
+    "objectID": "10_lotes.html#homogeneização",
+    "href": "10_lotes.html#homogeneização",
+    "title": "10  Análise de dados de lotes urbanos",
+    "section": "10.2 Homogeneização",
+    "text": "10.2 Homogeneização",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Análise de dados de lotes urbanos</span>"
+    ]
+  },
+  {
+    "objectID": "10_lotes.html#geração-da-superfície-de-valores-unitários-de-lotes",
+    "href": "10_lotes.html#geração-da-superfície-de-valores-unitários-de-lotes",
+    "title": "10  Análise de dados de lotes urbanos",
+    "section": "10.3 Geração da superfície de valores unitários de lotes",
+    "text": "10.3 Geração da superfície de valores unitários de lotes",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Análise de dados de lotes urbanos</span>"
+    ]
+  },
+  {
+    "objectID": "10_lotes.html#modelo-final",
+    "href": "10_lotes.html#modelo-final",
+    "title": "10  Análise de dados de lotes urbanos",
+    "section": "10.4 Modelo final",
+    "text": "10.4 Modelo final\n\n\n\n\nOLIVEIRA, A. A. F. DE; BANDEIRA, S. R. V.; SILVA, C. V. A. Estimativa de desempenho de métodos de aprendizado de máquina baseados em árvores de decisão na valoração do solo no município de Fortaleza, Brasil. Revista Valorem, v. 1, n. 1, p. 1–15, 2022. Disponível em: &lt;https://revistavalorem.com/index.php/home/article/view/8&gt;.\n\n\nPROVÍNCIA DE CÓRDOBA. Informe Estudio del mercado de la tierra urbana de la Provincia de Córdoba 2025., 2025. Córdoba: IDECOR.\n\n\nRAUDENBUSH, A. S., S. W.; Bryk. Hierarchical Linear Models: Applications and Data Analysis Methods. 2º ed. Thousand Oaks: Sage Publications, 2002.",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Análise de dados de lotes urbanos</span>"
+    ]
+  },
+  {
+    "objectID": "11_equacoes.html",
+    "href": "11_equacoes.html",
+    "title": "11  Equações de Estimação",
+    "section": "",
+    "text": "12 Equações de Estimação",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Equações de Estimação</span>"
     ]
   },
   {
     "objectID": "99_conclusao.html",
     "href": "99_conclusao.html",
-    "title": "12  Conclusão",
+    "title": "13  Conclusão",
     "section": "",
     "text": "Neste caderno mostrou-se …",
     "crumbs": [
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Conclusão</span>"
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Conclusão</span>"
     ]
   },
   {

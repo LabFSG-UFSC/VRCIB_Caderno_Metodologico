@@ -108,6 +108,49 @@ tab |>
 Estes modelos são gerados sempre com a mesma especificação para cada
 capital, o que permitirá, no futuro, a metanálise dos coeficientes.
 
+
+```{r}
+# Acrescentar MAPE neste relatório
+# Calcular MAPE após método evolutivo e comparar
+```
+
+```{r}
+# Algoritmos de classificação: verificar o número ótimo de clusteres e os 
+# algoritmos robustos, além da possibilidade de classificação dos dados em padrões
+# sem a presença de PU
+# Autor: Vini e Droubi
+```
+
+
+```{r}
+# FAM (Fator de Ajuste de Mercado): verificar a viabilidade de estimação do 
+# FAM a partir das superfícies de valor de metro quadrado construído e de VU
+# de Lotes e dos CUB's.
+# Autor: Francisco, Ramon e Droubi
+# Diretrizes:
+# 1. Pegar a amostra saneada de Casas e Apartamentos em Florianópolis;
+# 2. Homogeneizar os dados de acordo com os fatores estimados na PoC;
+# 3. Calcular os valores homogeneizados para: (1) Casas e, (2) Apartamentos;
+# 4. Consolidar os valores homogeneizados medianos por setor para (1) casas e
+# (2) apartamentos;
+# 5. Krigar os valores medianos dos setores, obtendo duas superfícies (casas e
+# aptos);
+# 6. Calcular os custos de reprodução (CR) para os imóveis paradigma (casas e 
+# aptos);
+# 7. Obter o FAM através da eq.: FAM = (Vi - Vt)/CR, em que:
+# Vi: é o valor da casa ou apartamento paradigma;
+# Vt: é o valor do terreno na localidade (obtida da superfícia já criada);
+# CR: é o custo de reprodução calculado em (6).
+
+```
+
+```{r}
+# Descrição dos padrões construtivos
+# Pesquisa dos custos de reprodução para estes padrões construtivos
+# Autor: Francisco e Droubi
+```
+
+
 ## Geração da superfície de valores unitários de metro quadrado construído
 
 ### Homogeneização dos dados amostrais

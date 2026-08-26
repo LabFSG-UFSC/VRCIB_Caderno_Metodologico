@@ -7,10 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Luiz Fernando Palin Droubi">
-<meta name="author" content="Vinícius Lohn da Silva">
-<meta name="author" content="Caroline Bernardo Silva">
 
-<title>4&nbsp; Métodos de classificação – Caderno Metodológico</title>
+<title>8&nbsp; Métricas de Qualidade de Modelos – Caderno Metodológico</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,27 +24,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -56,8 +34,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./05_renda_krigada.html" rel="next">
-<link href="./03_limpeza.html" rel="prev">
+<link href="./09_ML.html" rel="next">
+<link href="./07_variaveis.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -139,7 +117,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04_classificacao.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Métodos de classificação</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./08_metricas.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Métricas de Qualidade de Modelos</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Procurar" onclick="window.quartoOpenSearch();">
@@ -227,7 +205,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04_classificacao.html" class="sidebar-item-text sidebar-link active">
+  <a href="./04_classificacao.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Métodos de classificação</span></span></a>
   </div>
 </li>
@@ -251,7 +229,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08_metricas.html" class="sidebar-item-text sidebar-link">
+  <a href="./08_metricas.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Métricas de Qualidade de Modelos</span></span></a>
   </div>
 </li>
@@ -318,18 +296,31 @@ window.Quarto = {
     <h2 id="toc-title">Índice</h2>
    
   <ul>
-  <li><a href="#k-means" id="toc-k-means" class="nav-link active" data-scroll-target="#k-means"><span class="header-section-number">4.1</span> <em>K-means</em></a></li>
-  <li><a href="#k-tau" id="toc-k-tau" class="nav-link" data-scroll-target="#k-tau"><span class="header-section-number">4.2</span> <em>K-TAU</em></a></li>
-  <li><a href="#k-medoids" id="toc-k-medoids" class="nav-link" data-scroll-target="#k-medoids"><span class="header-section-number">4.3</span> <em>K-medoids</em></a></li>
+  <li><a href="#introdução" id="toc-introdução" class="nav-link active" data-scroll-target="#introdução"><span class="header-section-number">8.1</span> Introdução</a></li>
+  <li><a href="#questões-de-interpretação" id="toc-questões-de-interpretação" class="nav-link" data-scroll-target="#questões-de-interpretação"><span class="header-section-number">8.2</span> Questões de interpretação</a></li>
+  <li><a href="#outras-opções" id="toc-outras-opções" class="nav-link" data-scroll-target="#outras-opções"><span class="header-section-number">8.3</span> Outras opções</a>
+  <ul>
+  <li><a href="#maape" id="toc-maape" class="nav-link" data-scroll-target="#maape"><span class="header-section-number">8.3.1</span> MAAPE</a></li>
+  <li><a href="#smae-ou-wmape" id="toc-smae-ou-wmape" class="nav-link" data-scroll-target="#smae-ou-wmape"><span class="header-section-number">8.3.2</span> sMAE ou wMAPE</a></li>
+  <li><a href="#mase" id="toc-mase" class="nav-link" data-scroll-target="#mase"><span class="header-section-number">8.3.3</span> MASE</a></li>
+  <li><a href="#rmae" id="toc-rmae" class="nav-link" data-scroll-target="#rmae"><span class="header-section-number">8.3.4</span> rMAE</a></li>
+  </ul></li>
+  <li><a href="#estudos-de-casos" id="toc-estudos-de-casos" class="nav-link" data-scroll-target="#estudos-de-casos"><span class="header-section-number">8.4</span> Estudos de Casos</a>
+  <ul>
+  <li><a href="#distribuição-normal" id="toc-distribuição-normal" class="nav-link" data-scroll-target="#distribuição-normal"><span class="header-section-number">8.4.1</span> Distribuição normal</a></li>
+  <li><a href="#distribuição-lognormal" id="toc-distribuição-lognormal" class="nav-link" data-scroll-target="#distribuição-lognormal"><span class="header-section-number">8.4.2</span> Distribuição lognormal</a></li>
+  </ul></li>
+  <li><a href="#considerações-finais" id="toc-considerações-finais" class="nav-link" data-scroll-target="#considerações-finais"><span class="header-section-number">8.5</span> Considerações finais</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/edit/main/04_classificacao.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/edit/main/08_metricas.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Métodos de classificação</span></h1>
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Métricas de Qualidade de Modelos</span></h1>
+<p class="subtitle lead">Aplicadas à Engenharia de Avaliações</p>
 </div>
 
 
@@ -337,11 +328,9 @@ window.Quarto = {
 <div class="quarto-title-meta">
 
     <div>
-    <div class="quarto-title-meta-heading">Autores</div>
+    <div class="quarto-title-meta-heading">Autor</div>
     <div class="quarto-title-meta-contents">
              <p>Luiz Fernando Palin Droubi </p>
-             <p>Vinícius Lohn da Silva </p>
-             <p>Caroline Bernardo Silva </p>
           </div>
   </div>
     
@@ -354,109 +343,451 @@ window.Quarto = {
 </header>
 
 
-<p>Para este projeto foram utilizados métodos robustos de classificação (ou <em>clusterização</em>). Assim como no caso da regressão robusta, é mais fácil compreender os métodos de classificação robusta quando comparámo-los aos métodos clássicos de classificação, como o método <em>K-means</em>.</p>
-<section id="k-means" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="k-means"><span class="header-section-number">4.1</span> <em>K-means</em></h2>
-<p>O método <em>K-means</em> é um método de <em>clusterização</em> de dados que consiste na minimização da distância quadrática entre os pontos da amostras e <em>K</em> centros <span class="math inline">\(\mu_1, \mu_2, \ldots, \mu_k\)</span>. Sejam as distâncias definidas conforme a <a href="#eq-distances" class="quarto-xref">Equação&nbsp;<span>4.1</span></a> abaixo</p>
-<p><span id="eq-distances"><span class="math display">\[
-D(\mathbf x_i,\boldsymbol{\mu_1}, \ldots, \boldsymbol \mu_K) = \min_{1\leq i\leq K} ||\mathbf x_i - \boldsymbol \mu_j||, \, 1\leq i, \leq k
-\tag{4.1}\]</span></span></p>
-<p>Os centros dos clusters, dessa forma, são obtidos conforme a <a href="#eq-kmeans" class="quarto-xref">Equação&nbsp;<span>4.2</span></a>:</p>
-<p><span id="eq-kmeans"><span class="math display">\[
-(\boldsymbol{\hat \mu_1}, \ldots, \boldsymbol{\hat \mu_k}) = \arg\min\limits_{\boldsymbol{\mu_1}, \ldots, \boldsymbol{\mu_k}} \sum_{i=1}^n D^2(\mathbf x_i,\boldsymbol{\mu_1}, \ldots, \boldsymbol \mu_K)
-\tag{4.2}\]</span></span></p>
-<p>O problema com o método <em>K-means</em> é que, a exemplo do que ocorre com o método dos mínimos quadrados ordinários, este método é muito sensível à presença de <em>outliers</em> <span class="citation" data-cites="Gonzalez2019">(<a href="references.html#ref-Gonzalez2019" role="doc-biblioref">GONZALEZ et al., 2019, p. 2</a>)</span>. A <a href="#fig-kmeans" class="quarto-xref">Figura&nbsp;<span>4.1</span></a> (A) mostra que o método é eficiente em estimar as k-médias, porém, na presença de <em>outliers</em> (<a href="#fig-kmeans" class="quarto-xref">Figura&nbsp;<span>4.1</span></a> (B)), os resultados ficam comprometidos.</p>
-<div id="fig-kmeans" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-kmeans-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="./img/K-means.png" class="img-fluid figure-img">
+<section id="introdução" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="introdução"><span class="header-section-number">8.1</span> Introdução</h2>
+<p>O MAPE, ou <em>Mean Absolute Prediction Error</em>, é uma das métricas mais utilizadas na comunidade de Engenharia de Avaliações, especialmente nos modelos de <em>Machine Learning</em>. Esta métrica pode ser calculado de acordo com a <a href="#eq-MAPE" class="quarto-xref">Equação&nbsp;<span>8.1</span></a>:</p>
+<p><span id="eq-MAPE"><span class="math display">\[
+\text{MAPE} = \frac{1}{n}\sum_{i = 1}^n \left | \frac{A_i - F_i}{A_i} \right |
+\tag{8.1}\]</span></span></p>
+<p>Em que <span class="math inline">\(A_i\)</span> é o valor observado e <span class="math inline">\(F_i\)</span> é valor previsto pelo modelo.</p>
+<p>Para compreensão do problema em adotar uma das métricas mais famosas, o MAPE, considere-se uma amostra de apenas 5 dados: {50, 100, 150, 200, 250}. A média amostral, <span class="math inline">\(\bar x\)</span> , neste caso, e a mediana amostral, <span class="math inline">\(\tilde x\)</span>, são iguais, com valor 150. O MAPE para a média (ou mediana) amostral, portanto , é igual a 63,00%. Porém, para se analisar como se chega a esse número, pode-se calcular o erro percentual absoluto para cada dado da amostra (o MAPE nada mais é do que a média dos valores abaixo):</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "200,00%" " 50,00%" "  0,00%" " 25,00%" " 40,00%"</code></pre>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-kmeans-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;4.1: Problema com <em>K-means</em>: sensibilidade à <em>outliers</em>. Fonte: <span class="citation" data-cites="Gonzalez2019">GONZALEZ et al. (<a href="references.html#ref-Gonzalez2019" role="doc-biblioref">2019</a>)</span>
+</div>
+<p>Nota-se que o erro percentual absoluto do primeiro dado amostral (<span class="math inline">\(X_1 = 50\)</span>) é muito alto (200%). No entanto, o mesmo não ocorre para o outro lado: a uma mesma distância da média encontra-se o último dado (250). Só que o erro percentual absoluto deste dado é muito menor (apenas 40%).</p>
+<p>Desta forma, se ao invés de utilizarmos a média amostral, utilizarmos um estimador arbitrário, por exemplo, <span class="math inline">\(\check x = 2\bar x/3\)</span>, <em>i.e.</em> se utilizamos o estimador <span class="math inline">\(\check x = 100\)</span>, ao invés de adotar a média ou a mediana amostral, teríamos um MAPE igual a 48,67%, <em>i.e.</em> 14,33 p.p. menor do que o MAPE para a média ou mediana. Seria esse estimador arbitrário, <span class="math inline">\(\check x\)</span>, em estimador superior à média (ou mediana) amostral? Para que fique bem claro, mostra-se abaixo os erros percentuais absolutos de cada dado amostral para o estimador arbitrário <span class="math inline">\(\check x\)</span>:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "100,00%" "  0,00%" " 33,33%" " 50,00%" " 60,00%"</code></pre>
+</div>
+</div>
+<p>Como o estimador arbitrário fica mais próximo dos dados de menor valor na amostra, então os erros percentuais para estes dados ficam menores (menor erro percentual passa de 200% para apenas 100%) e os erros percentuais para maior ficam apenas levemente superiores (maior erro percentual passa de 40% para 60%). Em outras palavras, minimizar o MAPE significa dar mais peso às observações de menor valor dentro da amostra.</p>
+<p>Uma solução seria minimizar o erro relativo absoluto em relação ao <em>valor de mercado</em>, ou seja, minimizar a métrica da <a href="#eq-MARE" class="quarto-xref">Equação&nbsp;<span>8.2</span></a>:</p>
+<p><span id="eq-MARE"><span class="math display">\[
+\text{MARE} = \frac{1}{n}\sum_{i = 1}^n \left | \frac{A_i - F_i}{F_i} \right |
+\tag{8.2}\]</span></span></p>
+<p>Para a amostra em tela, os erros relativos percentuais absolutos seriam:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "66,67%" "33,33%" " 0,00%" "33,33%" "66,67%"</code></pre>
+</div>
+</div>
+<p>A média destes erros é <span class="math inline">\(\text{MARE} =\)</span> 40,00%.</p>
+<p>É fácil ver que o MARE é aumenta para outros estimadores fora da média ou mediana, como o estimador arbitrário <span class="math inline">\(\check x = 2\bar x/3\)</span>. Para este estimador, teríamos:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] " 50,00%" "  0,00%" " 50,00%" "100,00%" "150,00%"</code></pre>
+</div>
+</div>
+<p>Ou seja, para o estimador arbitrário, <span class="math inline">\(\text{MARE} =\)</span> 70,00%.</p>
+<p>No entanto, para o estimador arbitrário <span class="math inline">\(\check x = 3\bar{x}/2\)</span>, <em>i.e.</em> para um estimador arbitrariamente superior à média/mediana amostral, o MARE seria menor, pois:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "77,78%" "55,56%" "33,33%" "11,11%" "11,11%"</code></pre>
+</div>
+</div>
+<p>Ou seja, para este segundo estimador arbitrário, <span class="math inline">\(\text{MARE} =\)</span> 37,78%. Em suma, o MARE dá maior peso aos erros percentuais positivos, ao contrário do MAPE, ainda que este efeito seja menor no MARE do que no MAPE.</p>
+<p>A solução, portanto, para fins de minimização, seria utilizar o sMAPE (MAPE simétrico) da <a href="#eq-sMAPE" class="quarto-xref">Equação&nbsp;<span>8.3</span></a>:</p>
+<p><span id="eq-sMAPE"><span class="math display">\[
+\text{sMAPE} = \frac{2}{n} \sum_{i=1}^n \frac{ |x_i - \bar x|}{|x_i| + |\bar{x}|}
+\tag{8.3}\]</span></span></p>
+<p>Para a média (ou mediana amostral), o valor dessa última métrica é 43,71%. Para o estimador arbitrário, <span class="math inline">\(\check x = 2\bar x/3\)</span>, o sMAPE seria igual a 51,81%. E para o segundo estimador arbitrário, <span class="math inline">\(\check x = 3\bar x/2\)</span>, o sMAPE fica igual a 53,30%.</p>
+<p>Para entender, o erro percentual simétrico absoluto para cada dado da amostra seria (considerando-se média ou mediana):</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "50,00%" "20,00%" " 0,00%" "14,29%" "25,00%"</code></pre>
+</div>
+</div>
+<p>Já com o primeiro estimador arbitrário, teríamos:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "33,33%" " 0,00%" "20,00%" "33,33%" "42,86%"</code></pre>
+</div>
+</div>
+<p>E para o segundo estimador arbitrário, tem-se:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "63,64%" "38,46%" "20,00%" " 5,88%" " 5,26%"</code></pre>
+</div>
+</div>
+<p>Em suma, o sMAPE equilibra melhor os erros abaixo e acima do estimador adotado.</p>
+</section>
+<section id="questões-de-interpretação" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="questões-de-interpretação"><span class="header-section-number">8.2</span> Questões de interpretação</h2>
+<p>Para fins interpretativos, pondera-se:</p>
+<ol type="1">
+<li><p>O MAPE para a média (ou mediana) é igual a 63%, porém para os resíduos positivos, o erro percentual absoluto médio é igual a 25,00%, enquanto que para o es resíduos negativos este valor é igual a 50,00%. Em suma, além de não ser a métrica ideal para fins de minimização, como o MAPE considera o erro percentual em relação ao valor observado, mesmo em uma amostra simétrica, os erros positivos e negativos serão bem diferentes, ainda que em magnitudes iguais, o que prejudica a interpretação;</p></li>
+<li><p>O MARE, ainda que não seja ideal para fins de minimização, pois privilegia suavemente os resíduos positivos, parece ser ótimo em termos interpretativos, pois permite saber quanto, em média, as observações distam do <em>valor de mercado</em>, em termos percentuais absolutos;</p></li>
+<li><p>O sMAPE, embora talvez seja o ideal para fins de minimização, não parece ser de grande valia para fins de interpretação.</p></li>
+</ol>
+</section>
+<section id="outras-opções" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="outras-opções"><span class="header-section-number">8.3</span> Outras opções</h2>
+<section id="maape" class="level3" data-number="8.3.1">
+<h3 data-number="8.3.1" class="anchored" data-anchor-id="maape"><span class="header-section-number">8.3.1</span> MAAPE</h3>
+<p>O MAAPE, ou <em>Mean Arctangent Absolute Percentage Error</em>, pode ser escrito conforme a <a href="#eq-MAAPE" class="quarto-xref">Equação&nbsp;<span>8.4</span></a>:</p>
+<p><span id="eq-MAAPE"><span class="math display">\[
+\text{MAAPE} = \frac{1}{n}\sum_{i=1}^n \arctan \left ( \left | \frac{A_i - F_i}{A_i} \right | \right)
+\tag{8.4}\]</span></span></p>
+<p>Para a média/mediana amostral:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4392563</code></pre>
+</div>
+</div>
+<p>Para os estimadores arbitrariamente abaixo e acima da média/mediana:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4222432</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5752447</code></pre>
+</div>
+</div>
+</section>
+<section id="smae-ou-wmape" class="level3" data-number="8.3.2">
+<h3 data-number="8.3.2" class="anchored" data-anchor-id="smae-ou-wmape"><span class="header-section-number">8.3.2</span> sMAE ou wMAPE</h3>
+<p>O MAPE ponderado, ou wMAPE, pode ser escrito conforme a <a href="#eq-wMAPE" class="quarto-xref">Equação&nbsp;<span>8.5</span></a>:</p>
+<p><span id="eq-wMAPE"><span class="math display">\[
+\text{wMAPE} = \frac{\sum_{i=1}^n |x_i - \bar x|}{\sum_{i = 1}^n |x_i|}
+\tag{8.5}\]</span></span></p>
+<p>O wMAPE também pode ser chamado de sMAE (scale Mean Absolute Error), que é definido como na <a href="#eq-sMAE" class="quarto-xref">Equação&nbsp;<span>8.6</span></a>:</p>
+<p><span id="eq-sMAE"><span class="math display">\[
+\text{sMAE} = \frac{\text{MAE}}{\bar x}
+\tag{8.6}\]</span></span></p>
+<p>Trata-se de uma métrica interessante, pois combina uma métrica de erro de predição bem aceita, o erro médio absoluto</p>
+<p>Para a média/mediana amostral:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4</code></pre>
+</div>
+</div>
+<p>Para os estimadores arbitrariamente abaixo e acima da média/mediana:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4666667</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5666667</code></pre>
+</div>
+</div>
+</section>
+<section id="mase" class="level3" data-number="8.3.3">
+<h3 data-number="8.3.3" class="anchored" data-anchor-id="mase"><span class="header-section-number">8.3.3</span> MASE</h3>
+<p>O MASE, ou <em>Mean Absolute Scale Error</em>, é calculado conforme a <a href="#eq-MASE" class="quarto-xref">Equação&nbsp;<span>8.7</span></a>. É tido como uma métrica melhor do que qualquer erro percentual, porém, não tem finalidade interpretativa.</p>
+<p><span id="eq-MASE"><span class="math display">\[
+\text{MASE} = \frac{\text{MAE}}{\frac{1}{n-1}\sum_{i = 1}^n|x_i - x_{i-1}|}
+\tag{8.7}\]</span></span></p>
+<p>Para a média/mediana amostral:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.2</code></pre>
+</div>
+</div>
+<p>Para os estimadores arbitrariamente abaixo e acima da média/mediana:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.4</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.7</code></pre>
+</div>
+</div>
+</section>
+<section id="rmae" class="level3" data-number="8.3.4">
+<h3 data-number="8.3.4" class="anchored" data-anchor-id="rmae"><span class="header-section-number">8.3.4</span> rMAE</h3>
+<p>O rMAE, ou <em>Relative MAE</em> é uma métrica interessante, que é o <em>mean absolute error</em> do modelo em análise comparado à mesma métrica de um modelo de referência (<em>benchmark</em>), conforme a <a href="#eq-rMAE" class="quarto-xref">Equação&nbsp;<span>8.8</span></a>:</p>
+<p><span id="eq-rMAE"><span class="math display">\[
+\text{rMAE} = \frac{\text{MAE}_\text{modelo}}{\text{MAE}_{benchmark}}
+\tag{8.8}\]</span></span></p>
+<p>um rMAE maior do que 1, então o modelo tem uma performance pior do que o <em>benchmark</em>. Se rMAE for menor do que 1, então o modelo em tela tem uma performance melhor do que o <em>benchmark</em>.</p>
+<p>Para o <em>benchmark</em>, <em>i.e.</em>, para a média/mediana, o MAE é:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 60</code></pre>
+</div>
+</div>
+<p>Para o estimador arbitrário a menor:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.166667</code></pre>
+</div>
+</div>
+<p>Para o estimador arbitrário a maior:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.416667</code></pre>
+</div>
+</div>
+<p>Ou seja, nenhum dos dois estimadores arbitrários é melhor do que a média/mediana amostra.</p>
+</section>
+</section>
+<section id="estudos-de-casos" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="estudos-de-casos"><span class="header-section-number">8.4</span> Estudos de Casos</h2>
+<p>Nesta seção as métricas serão analisadas para conjuntos de dados aleatórios com: (1) distribuição normal e; (2) distribuição lognormal. Para ambos os conjuntos de dados as métricas testadas serão computadas para diversos estimadores (moda, média, mediana, etc.).</p>
+<section id="distribuição-normal" class="level3" data-number="8.4.1">
+<h3 data-number="8.4.1" class="anchored" data-anchor-id="distribuição-normal"><span class="header-section-number">8.4.1</span> Distribuição normal</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-normalSample" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-normalSample-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08_metricas_files/figure-html/fig-normalSample-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-normalSample-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;8.1: Amostra aleatório com distribuição normal com média 150 e desvio-padrão 50.
 </figcaption>
 </figure>
 </div>
-</section>
-<section id="k-tau" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="k-tau"><span class="header-section-number">4.2</span> <em>K-TAU</em></h2>
+</div>
+</div>
+<p>Para a amostra da <a href="#fig-normalSample" class="quarto-xref">Figura&nbsp;<span>8.1</span></a>, a média amostral resultou em 151,11, a mediana amostral é 147,76, a moda <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> é 140,67 e a média aparada (10%) é igual a 150,66.</p>
+<p>Em suma, nota-se que, neste estudo de caso: a média resultou muito próxima ao parâmetro populacional (+0,74%); a mediana também se mostrou um bom estimador para a tendência central da amostra (-1,49%), um pouco menos eficiente do que a média, contudo; a moda resultou viesada para baixo (-6,22%); e a média aparada (10%) resultou como o estimador ótimo da tendência central (+0,44%).</p>
+<p>Nota-se na <a href="#tbl-normalMetrics" class="quarto-xref">Tabela&nbsp;<span>8.1</span></a> que, apesar do claro viés presente na moda amostral, o MAPE resultou menor para este estimador, assim como o MAAPE. As métricas sMAE, sMAPE e MASE resultaram mais baixos para mediana, enquanto o MARE resultou mais baixo para a média amostral. Nota-se, portanto, a métrica MAPE se mostrou a menos apta para informar o melhor estimador para a tendência central da amostra.</p>
 <div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>Driver: GPKG 
-Available layers:
-                             layer_name     geometry_type features fields
-1                       face_logradouro Multi Line String    20329      8
-2                            logradouro Multi Line String    14261      8
-3                             municipio     Multi Polygon        1     15
-4            regiao_geografica_imediata     Multi Polygon        1     11
-5       regiao_geografica_intermediaria     Multi Polygon        1      9
-6                      setor_censitario     Multi Polygon     1004     29
-7               setor_censitario_urbano     Multi Polygon      930     29
-8                       subsetor_urbano     Multi Polygon     4360      1
-9                                    uf     Multi Polygon        1      6
-10              limite_perimetro_urbano     Multi Polygon        9     12
-11                           edificacao             Point   258267      6
-12                          amostra_omi             Point    83869     62
-13 variavel_geografica_setor_censitario     Multi Polygon     1004     68
-14      variavel_geografica_amostra_omi             Point    83600    121
-15                         layer_styles                NA       12     12
-      crs_name
-1  SIRGAS 2000
-2  SIRGAS 2000
-3  SIRGAS 2000
-4  SIRGAS 2000
-5  SIRGAS 2000
-6  SIRGAS 2000
-7  SIRGAS 2000
-8  SIRGAS 2000
-9  SIRGAS 2000
-10 SIRGAS 2000
-11 SIRGAS 2000
-12 SIRGAS 2000
-13 SIRGAS 2000
-14 SIRGAS 2000
-15        &lt;NA&gt;</code></pre>
+<div id="tbl-normalMetrics" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-normalMetrics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;8.1: Métricas para os estimadores da amostra normal.
+</figcaption>
+<div aria-describedby="tbl-normalMetrics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 8%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Estimador</th>
+<th style="text-align: right;">MAE</th>
+<th style="text-align: left;">sMAE</th>
+<th style="text-align: left;">MAPE</th>
+<th style="text-align: left;">MAAPE</th>
+<th style="text-align: left;">sMAPE</th>
+<th style="text-align: left;">MARE</th>
+<th style="text-align: left;">MASE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">média</td>
+<td style="text-align: right;">38.01</td>
+<td style="text-align: left;">25.15%</td>
+<td style="text-align: left;">41.42%</td>
+<td style="text-align: left;">26.67%</td>
+<td style="text-align: left;">26.44%</td>
+<td style="text-align: left;">25.15%</td>
+<td style="text-align: left;">68.12%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mediana</td>
+<td style="text-align: right;">37.83</td>
+<td style="text-align: left;">25.04%</td>
+<td style="text-align: left;">40.39%</td>
+<td style="text-align: left;">26.22%</td>
+<td style="text-align: left;">26.36%</td>
+<td style="text-align: left;">25.6%</td>
+<td style="text-align: left;">67.81%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">moda</td>
+<td style="text-align: right;">38.49</td>
+<td style="text-align: left;">25.47%</td>
+<td style="text-align: left;">38.9%</td>
+<td style="text-align: left;">25.88%</td>
+<td style="text-align: left;">26.86%</td>
+<td style="text-align: left;">27.36%</td>
+<td style="text-align: left;">68.98%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">média aparada (10%)</td>
+<td style="text-align: right;">37.97</td>
+<td style="text-align: left;">25.13%</td>
+<td style="text-align: left;">41.27%</td>
+<td style="text-align: left;">26.6%</td>
+<td style="text-align: left;">26.42%</td>
+<td style="text-align: left;">25.2%</td>
+<td style="text-align: left;">68.05%</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Reading layer `variavel_geografica_amostra_omi' from data source 
-  `/Users/droubi/Documents/LabFSG/Caderno_Metodologico/data/4205407_Florianopolis_r007_2026-04-06.gpkg' 
-  using driver `GPKG'
-Simple feature collection with 83600 features and 121 fields
-Geometry type: POINT
-Dimension:     XY
-Bounding box:  xmin: -48.60608 ymin: -27.81767 xmax: -48.37625 ymax: -27.38705
-Geodetic CRS:  SIRGAS 2000</code></pre>
+</div>
+</figure>
 </div>
 </div>
+<p>Além disto, o MAPE mostra-se claramente inadequado quando utilizado como uma informação do erro percentual médio da amostra. O MAAPE mostrou-se, em termos de informação do erro percentual médio, uma métrica melhor, apesar de apresentar o mesmo problema do MAPE, de priorizar os valores mais baixos.</p>
+</section>
+<section id="distribuição-lognormal" class="level3" data-number="8.4.2">
+<h3 data-number="8.4.2" class="anchored" data-anchor-id="distribuição-lognormal"><span class="header-section-number">8.4.2</span> Distribuição lognormal</h3>
 <div class="cell">
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="04_classificacao_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<div id="fig-lognormalSample" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-lognormalSample-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08_metricas_files/figure-html/fig-lognormalSample-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-lognormalSample-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;8.2: Amostra aleatório com distribuição lognormal com mediana 150 e desvio-padrao igual a .25 (na escala log).
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
+<p>Para a amostra da <a href="#fig-lognormalSample" class="quarto-xref">Figura&nbsp;<span>8.2</span></a>, a média amostral resultou rm 151,11, a mediana amostral é 147,76 e a moda é 140,67. Em suma, nota-se que a moda amostral encontra-se um pouco viesada para baixo, neste caso, enquanto os estimadores média e mediana são ambos bons estimadores para a tendência central da amostra.</p>
+<p>Nota-se na <a href="#tbl-lognormalMetrics" class="quarto-xref">Tabela&nbsp;<span>8.2</span></a> que o MAPE resultou menor para a moda amostral, enquanto as outras métricas foram melhores para a média ou mediana amostrais, assim como ocorreu com a distribuão normal.</p>
+<p>Neste caso, deve-se notar que o MAPE elencou a moda como melhor estimador, enquanto as outras métricas colocaram a média ou mediana como mais precisos. Assim, a adoção do MAPE não pode ser considerada como ruim no caso de dados com distribuição lognormal, desde que o objetivo da modelagem seja estimar a moda da distribuição, que é realmente mais baixa que as outras medidas de tendência central. Contudo, se o objetivo for estimar a mediana, como é mais comum na Engenharia de Avaliações, as outras métricas são mais interessantes.</p>
 <div class="cell">
+<div id="tbl-lognormalMetrics" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-lognormalMetrics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;8.2: Métricas para os estimadores da amostra lognormal.
+</figcaption>
+<div aria-describedby="tbl-lognormalMetrics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="04_classificacao_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 8%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Estimador</th>
+<th style="text-align: right;">MAE</th>
+<th style="text-align: left;">sMAE</th>
+<th style="text-align: left;">MAPE</th>
+<th style="text-align: left;">MAAPE</th>
+<th style="text-align: left;">sMAPE</th>
+<th style="text-align: left;">MARE</th>
+<th style="text-align: left;">MASE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">média</td>
+<td style="text-align: right;">38.43</td>
+<td style="text-align: left;">25.43%</td>
+<td style="text-align: left;">42.74%</td>
+<td style="text-align: left;">27.3%</td>
+<td style="text-align: left;">26.68%</td>
+<td style="text-align: left;">24.8%</td>
+<td style="text-align: left;">68.87%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mediana</td>
+<td style="text-align: right;">37.85</td>
+<td style="text-align: left;">25.05%</td>
+<td style="text-align: left;">40.58%</td>
+<td style="text-align: left;">26.3%</td>
+<td style="text-align: left;">26.36%</td>
+<td style="text-align: left;">25.5%</td>
+<td style="text-align: left;">67.83%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">moda</td>
+<td style="text-align: right;">38.33</td>
+<td style="text-align: left;">25.37%</td>
+<td style="text-align: left;">39.04%</td>
+<td style="text-align: left;">25.88%</td>
+<td style="text-align: left;">26.75%</td>
+<td style="text-align: left;">27.08%</td>
+<td style="text-align: left;">68.7%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">média aparada (10%)</td>
+<td style="text-align: right;">38.11</td>
+<td style="text-align: left;">25.22%</td>
+<td style="text-align: left;">41.78%</td>
+<td style="text-align: left;">26.84%</td>
+<td style="text-align: left;">26.5%</td>
+<td style="text-align: left;">25.04%</td>
+<td style="text-align: left;">68.3%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </figure>
 </div>
 </div>
-</div>
-<p><span class="citation" data-cites="Gonzalez2019">GONZALEZ et al. (<a href="references.html#ref-Gonzalez2019" role="doc-biblioref">2019</a>)</span> propuseram</p>
+<table class="caption-top table">
+<caption>Melhores estimadores por métrica</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Distribuição dos dados</th>
+<th style="text-align: left;">Melhor Estimador</th>
+<th style="text-align: left;">Métricas</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Normal</td>
+<td style="text-align: left;">média</td>
+<td style="text-align: left;">MARE</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Normal</td>
+<td style="text-align: left;">mediana</td>
+<td style="text-align: left;">sMAE, sMAPE, MASE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Normal</td>
+<td style="text-align: left;">moda</td>
+<td style="text-align: left;">MAPE, MAAPE</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LogNormal</td>
+<td style="text-align: left;">média</td>
+<td style="text-align: left;">MARE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LogNormal</td>
+<td style="text-align: left;">mediana</td>
+<td style="text-align: left;">sMAE, sMAPE, MASE</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LogNormal</td>
+<td style="text-align: left;">moda</td>
+<td style="text-align: left;">MAPE, MAAPE</td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="k-medoids" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="k-medoids"><span class="header-section-number">4.3</span> <em>K-medoids</em></h2>
-<p><em>K-medoids</em> é um método robusto de <em>clusterização</em> que</p>
+</section>
+<section id="considerações-finais" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="considerações-finais"><span class="header-section-number">8.5</span> Considerações finais</h2>
+<p>O MAPE mostrou-se uma métrica inadequada, a não ser que se pretenda estimar a moda de dados com distribuição lognormal. Caso contrário, ainda que a moda seja um péssimo estimador para a tendência central de dados com distribuição normal, o MAPE, assim como o MAAPE, apontam este estimador como o melhor preditor, o que é inadequado.</p>
+<p>Ademais, os percentuais obtidos com o MAPE distam dos percentuais obtidos com as outras métricas para os mesmos estimadores. Ou seja, o MAPE não é uma boa métrica quando se deseja interpretar a real precisão dos modelos estatísticos.</p>
+<p>O sMAPE parece ser uma métrica ideal, na engenharia de avaliações, para fins de minimização. Porém, para fins de interpretação, uma melhor métrica seria o MARE, que representa o quanto, percentualmente, os dados da amostra distam, em média, do valor de mercado estimado.</p>
 
 
-<div id="refs" class="references csl-bib-body" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-Gonzalez2019" class="csl-entry" role="listitem">
-GONZALEZ, J. D.; YOHAI, V. J.; ZAMAR, R. H. Robust Clustering Using Tau-Scales., 2019. Disponível em: &lt;<a href="https://arxiv.org/abs/1906.08198">https://arxiv.org/abs/1906.08198</a>&gt;.
-</div>
-</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>A moda amostral foi estimada com o pacote <em>modeest</em>, com o estimador de Parzen, que busca o valor máximo de uma densidade kernel gaussiana.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
@@ -862,13 +1193,13 @@ GONZALEZ, J. D.; YOHAI, V. J.; ZAMAR, R. H. Robust Clustering Using Tau-Scales.,
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./03_limpeza.html" class="pagination-link" aria-label="Limpeza de dados">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Limpeza de dados</span></span>
+      <a href="./07_variaveis.html" class="pagination-link" aria-label="Geração de variáveis explicativas de localização">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Geração de variáveis explicativas de localização</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./05_renda_krigada.html" class="pagination-link" aria-label="Geração da renda per capita krigada">
-        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Geração da renda per capita krigada</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./09_ML.html" class="pagination-link" aria-label="Análise de dados com modelos de aprendizado de máquina">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Análise de dados com modelos de aprendizado de máquina</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -880,7 +1211,7 @@ GONZALEZ, J. D.; YOHAI, V. J.; ZAMAR, R. H. Robust Clustering Using Tau-Scales.,
 </div>   
     <div class="nav-footer-center">
 <p><img src="img/Logo com RFB e UFSC.png" class="img-fluid" width="250"></p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/edit/main/04_classificacao.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/edit/main/08_metricas.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>

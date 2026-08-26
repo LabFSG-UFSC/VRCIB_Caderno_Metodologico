@@ -1,0 +1,512 @@
+---
+title: Métricas de Qualidade de Modelos
+subtitle: Aplicadas à Engenharia de Avaliações
+author: Luiz Fernando Palin Droubi
+lang: pt-br
+echo: false
+---
+
+```{r}
+#| include: false
+library(appraiseR)
+library(MLmetrics)
+library(Metrics)
+library(kableExtra)
+library(tibble)
+library(dplyr)
+library(EnvStats)
+library(ggplot2)
+```
+
+
+## Introdução
+
+O MAPE, ou *Mean Absolute Prediction Error*, é uma das métricas mais utilizadas
+na comunidade de Engenharia de Avaliações, especialmente nos modelos de
+*Machine Learning*. Esta métrica pode ser calculado de acordo com a @eq-MAPE:
+
+$$
+\text{MAPE} = \frac{1}{n}\sum_{i = 1}^n \left | \frac{A_i - F_i}{A_i} \right |
+$$ {#eq-MAPE}
+
+Em que $A_i$ é o valor observado e $F_i$ é valor previsto pelo modelo.
+
+```{r}
+#| echo: false
+x <- c(50, 100, 150, 200, 250)
+```
+
+Para compreensão do problema em adotar uma das métricas mais famosas, o MAPE, 
+considere-se uma amostra de apenas 5 dados: {50, 100, 150, 200, 250}. A média 
+amostral, $\bar x$ , neste caso, e a mediana amostral, $\tilde x$, são iguais,
+com valor 150. O MAPE para a média (ou mediana) amostral, portanto , é igual a 
+`r pct(MAPE(mean(x), x))`. Porém, para se analisar como se chega a esse número,
+pode-se calcular o erro percentual absoluto para cada dado da amostra (o MAPE 
+nada mais é do que a média dos valores abaixo):
+
+```{r}
+pe_x <- abs((x - mean(x))/x)
+pct(pe_x)
+```
+
+Nota-se que o erro percentual absoluto do primeiro dado amostral ($X_1 = 50$) é 
+muito alto (200%). No entanto, o mesmo não ocorre para o outro lado: a uma mesma 
+distância da média encontra-se o último dado (250). Só que o erro percentual
+absoluto deste dado é muito menor (apenas 40%). 
+
+Desta forma, se ao invés de utilizarmos a média amostral, utilizarmos um 
+estimador arbitrário, por exemplo, $\check x = 2\bar x/3$, *i.e.* se 
+utilizamos o estimador $\check x = 100$, ao invés de adotar a média ou a mediana
+amostral, teríamos um MAPE igual a `r pct(MAPE(2*mean(x)/3, x))`, *i.e.* 14,33 
+p.p. menor do que o MAPE para a média ou mediana. Seria esse estimador 
+arbitrário, $\check x$, em estimador superior à média (ou mediana) amostral? 
+Para que fique bem claro, mostra-se abaixo os erros percentuais absolutos de 
+cada dado amostral para o estimador arbitrário $\check x$: 
+
+```{r}
+pe_x <- abs((x - 2*mean(x)/3)/x)
+pct(pe_x)
+```
+
+Como o estimador arbitrário fica mais próximo dos dados de menor valor na 
+amostra, então os erros percentuais para estes dados ficam menores (menor
+erro percentual passa de 200% para apenas 100%) e os erros percentuais para
+maior ficam apenas levemente superiores (maior erro percentual passa de 40%
+para 60%). Em outras palavras, minimizar o MAPE significa dar mais peso às
+observações de menor valor dentro da amostra.
+
+Uma solução seria minimizar o erro relativo absoluto em relação ao
+*valor de mercado*, ou seja, minimizar a métrica da @eq-MARE:
+
+$$
+\text{MARE} = \frac{1}{n}\sum_{i = 1}^n \left | \frac{A_i - F_i}{F_i} \right |
+$$ {#eq-MARE}
+
+```{r}
+MARE <- function(y_pred, y_true) mean(mean(abs((y_true - y_pred)/y_pred)))
+```
+
+Para a amostra em tela, os erros relativos percentuais absolutos seriam: 
+
+```{r}
+pe_x <- abs((x - mean(x))/mean(x))
+pct(pe_x)
+```
+
+A média destes erros é $\text{MARE} =$ `r pct(MARE(mean(x), x))`.
+
+É fácil ver que o MARE é aumenta para outros estimadores fora da média ou 
+mediana, como o estimador arbitrário $\check x = 2\bar x/3$. Para este estimador,
+teríamos:
+
+```{r}
+pe_x <- abs((x - 2*mean(x)/3)/(2*mean(x)/3))
+pct(pe_x)
+```
+
+Ou seja, para o estimador arbitrário, $\text{MARE} =$ `r pct(MARE(2*mean(x)/3, x))`.
+
+No entanto, para o estimador arbitrário $\check x = 3\bar{x}/2$, *i.e.* para um
+estimador arbitrariamente superior à média/mediana amostral, o MARE seria menor,
+pois:
+
+```{r}
+pe_x <- abs((x - 3*mean(x)/2)/(3*mean(x)/2))
+pct(pe_x)
+```
+
+Ou seja, para este segundo estimador arbitrário, $\text{MARE} =$ 
+`r pct(MARE(3*mean(x)/2, x))`. Em suma, o MARE dá maior peso aos erros 
+percentuais positivos, ao contrário do MAPE, ainda que este efeito seja menor no
+MARE do que no MAPE.
+
+A solução, portanto, para fins de minimização, seria utilizar o sMAPE (MAPE 
+simétrico) da @eq-sMAPE:
+
+$$
+\text{sMAPE} = \frac{2}{n} \sum_{i=1}^n \frac{ |x_i - \bar x|}{|x_i| + |\bar{x}|}
+$$ {#eq-sMAPE}
+
+Para a média (ou mediana amostral), o valor dessa última métrica é 
+`r pct(smape(x, mean(x)))`. Para o estimador arbitrário, $\check x = 2\bar x/3$, 
+o sMAPE seria igual a `r pct(smape(x, 2*mean(x)/3))`. E para o segundo estimador
+arbitrário, $\check x = 3\bar x/2$, o sMAPE fica igual a 
+`r pct(smape(x, 3*mean(x)/2))`.
+
+Para entender, o erro percentual simétrico absoluto para cada dado da amostra 
+seria (considerando-se média ou mediana):
+
+```{r}
+pe_x <- abs(x - mean(x))/(abs(x) + abs(mean(x)))
+pct(pe_x)
+```
+
+Já com o primeiro estimador arbitrário, teríamos:
+
+```{r}
+pe_x <- abs(x - 2*mean(x)/3)/(abs(x) + abs(2*mean(x)/3))
+pct(pe_x)
+```
+
+E para o segundo estimador arbitrário, tem-se:
+
+```{r}
+pe_x <- abs(x - 3*mean(x)/2)/(abs(x) + abs(3*mean(x)/2))
+pct(pe_x)
+```
+
+Em suma, o sMAPE equilibra melhor os erros abaixo e acima do estimador adotado.
+
+
+## Questões de interpretação
+
+Para fins interpretativos, pondera-se:
+
+1. O MAPE para a média (ou mediana) é igual a 63%, porém para os resíduos
+positivos, o erro percentual absoluto médio é igual a `r pct(mean(25, 40)/100)`,
+enquanto que para o es resíduos negativos este valor é igual a 
+`r pct(mean(50, 200)/100)`. Em suma, além de não ser a métrica ideal para fins
+de minimização, como o MAPE considera o erro percentual em relação ao valor 
+observado, mesmo em uma amostra simétrica, os erros positivos e negativos serão
+bem diferentes, ainda que em magnitudes iguais, o que prejudica a interpretação;
+
+2. O MARE, ainda que não seja ideal para fins de minimização, pois privilegia
+suavemente os resíduos positivos, parece ser ótimo em termos interpretativos, 
+pois permite saber quanto, em média, as observações distam do *valor de mercado*,
+em termos percentuais absolutos;
+
+3. O sMAPE, embora talvez seja o ideal para fins de minimização, não parece ser
+de grande valia para fins de interpretação.
+
+## Outras opções
+
+### MAAPE
+
+O MAAPE, ou *Mean Arctangent Absolute Percentage Error*, pode ser escrito 
+conforme a @eq-MAAPE:
+
+$$
+\text{MAAPE} = \frac{1}{n}\sum_{i=1}^n \arctan \left ( \left | \frac{A_i - F_i}{A_i} \right | \right)
+$$ {#eq-MAAPE}
+
+```{r}
+MAAPE <- function(y_pred, y_true) {
+  mean(atan(abs((y_true - y_pred)/y_true)))
+}
+```
+
+Para a média/mediana amostral:
+
+```{r}
+MAAPE(mean(x), x)
+```
+
+Para os estimadores arbitrariamente abaixo e acima da média/mediana:
+
+```{r}
+MAAPE(2*mean(x)/3, x)
+```
+
+```{r}
+MAAPE(3*mean(x)/2, x)
+```
+
+### sMAE ou wMAPE
+
+O MAPE ponderado, ou wMAPE, pode ser escrito conforme a @eq-wMAPE:
+
+$$
+\text{wMAPE} = \frac{\sum_{i=1}^n |x_i - \bar x|}{\sum_{i = 1}^n |x_i|}
+$$ {#eq-wMAPE}
+
+O wMAPE também pode ser chamado de sMAE (scale Mean Absolute Error), que é
+definido como na @eq-sMAE:
+
+$$
+\text{sMAE} = \frac{\text{MAE}}{\bar x}
+$$ {#eq-sMAE}
+
+```{r}
+sMAE <- function(y_pred, y_true) {
+  MLmetrics::MAE(y_pred, y_true)/mean(y_true)
+}
+```
+
+Trata-se de uma métrica interessante, pois combina uma métrica de erro de 
+predição bem aceita, o erro médio absoluto 
+
+Para a média/mediana amostral:
+
+```{r}
+# Metrics::mae(x, mean(x))/mean(x)
+# MLmetrics::MAE(mean(x), x)/mean(x)
+sMAE(mean(x), x)
+```
+
+Para os estimadores arbitrariamente abaixo e acima da média/mediana:
+
+```{r}
+MLmetrics::MAE(2*mean(x)/3, x)/mean(x)
+# Metrics::mae(x, 2*mean(x)/3)/mean(x)
+```
+
+```{r}
+MLmetrics::MAE(3*mean(x)/2, x)/mean(x)
+# Metrics::mae(x, 3*mean(x)/2)/mean(x)
+```
+
+### MASE
+
+O MASE, ou *Mean Absolute Scale Error*, é calculado conforme a @eq-MASE. É tido
+como uma métrica melhor do que qualquer erro percentual, porém, não tem 
+finalidade interpretativa.
+
+$$
+\text{MASE} = \frac{\text{MAE}}{\frac{1}{n-1}\sum_{i = 1}^n|x_i - x_{i-1}|}
+$$ {#eq-MASE}
+
+Para a média/mediana amostral:
+
+```{r}
+Metrics::mase(x, mean(x))
+```
+
+Para os estimadores arbitrariamente abaixo e acima da média/mediana:
+
+```{r}
+Metrics::mase(x, 2*mean(x)/3)
+```
+
+```{r}
+Metrics::mase(x, 3*mean(x)/2)
+```
+
+
+### rMAE
+
+O rMAE, ou *Relative MAE* é uma métrica interessante, que é o 
+*mean absolute error* do modelo em análise comparado à mesma métrica de um 
+modelo de referência (*benchmark*), conforme a @eq-rMAE:
+
+$$
+\text{rMAE} = \frac{\text{MAE}_\text{modelo}}{\text{MAE}_{benchmark}}
+$$ {#eq-rMAE}
+
+um rMAE maior do que 1, então o modelo tem uma performance pior do que o
+*benchmark*. Se rMAE for menor do que 1, então o modelo em tela tem uma
+performance melhor do que o *benchmark*.
+
+Para o *benchmark*, *i.e.*, para a média/mediana, o MAE é:
+
+```{r}
+mae_med <- mae(x, mean(x))
+mae_med
+```
+
+Para o estimador arbitrário a menor:
+
+```{r}
+mae_menor <- mae(x, 2*mean(x)/3)
+mae_menor/mae_med
+```
+
+Para o estimador arbitrário a maior:
+
+```{r}
+mae_maior <- mae(x, 3*mean(x)/2)
+mae_maior/mae_med
+```
+
+Ou seja, nenhum dos dois estimadores arbitrários é melhor do que a média/mediana
+amostra.
+
+## Estudos de Casos
+
+Nesta seção as métricas serão analisadas para conjuntos de dados aleatórios
+com: (1) distribuição normal e; (2) distribuição lognormal. Para ambos os
+conjuntos de dados as métricas testadas serão computadas para diversos 
+estimadores (moda, média, mediana, etc.).
+
+### Distribuição normal
+
+```{r}
+#| label: fig-normalSample
+#| fig-cap: "Amostra aleatório com distribuição normal com média 150 e desvio-padrão 50."
+set.seed(1)
+x <- rnorm(n = 250, mean = 150, sd = 50)
+me <- mean(x)
+med <- median(x)
+# mo <- collapse::fmode(x)
+mo <- modeest::mlv(x, method = "Parzen")
+ma <- mean(x, trim = .10)
+# hist(x, prob = TRUE, col = "lightblue", 
+#     main = "Histograma com Densidade Kernel gaussiana.")
+# Add density curve
+# lines(density(x), col = "red", lwd = 2)
+
+df <- data.frame(x = x)
+# Plot histogram plus density
+ggplot(df, aes(x = x)) +
+  geom_histogram(aes(y = after_stat(density)), 
+                 fill = "lightblue", color = "black", bins = 15) +
+  geom_density(color = "red", linewidth = 1) +
+  geom_vline(aes(xintercept = 150), 
+             color = "red", linetype = "dashed", linewidth = 1.2) +
+  theme_minimal()
+```
+
+Para a amostra da @fig-normalSample, a média amostral resultou em `r brf(me)`,
+a mediana amostral é `r brf(med)`, a moda [^1] é `r brf(mo)` e a média aparada 
+(10%) é igual a `r brf(ma)`.
+
+Em suma, nota-se que, neste estudo de caso: a média resultou muito próxima ao 
+parâmetro populacional (+`r pct(me/150-1)`); a mediana também se mostrou um bom 
+estimador para a tendência central da amostra (`r pct(med/150-1)`), um pouco 
+menos eficiente do que a média, contudo; a moda resultou viesada para baixo
+(`r pct(mo/150-1)`); e a média aparada (10%) resultou como o estimador ótimo
+da tendência central (+`r pct(ma/150-1)`).
+
+[^1]: A moda amostral foi estimada com o pacote *modeest*, com o estimador de 
+Parzen, que busca o valor máximo de uma densidade kernel gaussiana.
+
+```{r}
+metrics <- tribble(
+  ~Estimador, ~MAE, ~sMAE, ~MAPE, ~MAAPE, ~sMAPE, ~MARE, ~MASE,
+  "média", MLmetrics::MAE(me, x), sMAE(me, x), MAPE(me, x), MAAPE(me, x), smape(x, me),  MARE(me, x), mase(x, me),
+  "mediana", MLmetrics::MAE(med, x), sMAE(med, x), MAPE(med, x), MAAPE(med, x), smape(x, med), MARE(med, x), mase(x, med),
+  "moda", MLmetrics::MAE(mo, x), sMAE(mo, x), MAPE(mo, x), MAAPE(mo, x), smape(x, mo), MARE(mo, x), mase(x, mo),
+  "média aparada (10%)", MLmetrics::MAE(ma, x), sMAE(ma, x), MAPE(ma, x), MAAPE(ma, x), smape(x, ma), MARE(ma, x), mase(x, ma),
+)
+```
+
+```{r}
+# Format values as percentages with one decimal place
+metrics_formatted <- metrics |>
+  mutate(
+    sMAE = paste0(round(sMAE * 100, 2), "%"),
+    MAPE = paste0(round(MAPE * 100, 2), "%"),
+    MAAPE = paste0(round(MAAPE * 100, 2), "%"),
+    sMAPE = paste0(round(sMAPE * 100, 2), "%"),
+    MARE = paste0(round(MARE * 100, 2), "%"),
+    MASE = paste0(round(MASE * 100, 2), "%"))
+```
+
+Nota-se na @tbl-normalMetrics que, apesar do claro viés presente na moda
+amostral, o MAPE resultou menor para este estimador, assim como o MAAPE. As 
+métricas sMAE, sMAPE e MASE resultaram mais baixos para mediana, enquanto o MARE 
+resultou mais baixo para a média amostral. Nota-se, portanto, a métrica MAPE se 
+mostrou a menos apta para informar o melhor estimador para a tendência central 
+da amostra.
+
+```{r}
+#| label: tbl-normalMetrics
+#| tbl-cap: "Métricas para os estimadores da amostra normal."
+kable(metrics_formatted, digits = 2)
+```
+
+Além disto, o MAPE mostra-se claramente inadequado quando utilizado como uma
+informação do erro percentual médio da amostra. O MAAPE mostrou-se, em termos de
+informação do erro percentual médio, uma métrica melhor, apesar de apresentar 
+o mesmo problema do MAPE, de priorizar os valores mais baixos.
+
+
+
+### Distribuição lognormal
+
+```{r}
+#| label: fig-lognormalSample
+#| fig-cap: "Amostra aleatório com distribuição lognormal com mediana 150 e desvio-padrao igual a .25 (na escala log)."
+set.seed(1)
+lx <- rlnorm3(250, meanlog = log(140), sdlog = .25, threshold = 10)
+lme <- mean(lx)
+lmed <- median(lx)
+lmo <- modeest::mlv(lx, method = "Parzen")
+lma <- mean(lx, trim = .10)
+# hist(x)
+df <- data.frame(x = lx)
+# Plot histogram plus density
+ggplot(df, aes(x = x)) +
+  geom_histogram(aes(y = after_stat(density)), 
+                 fill = "lightblue", color = "black", bins = 15) +
+  geom_density(color = "red", linewidth = 1) +
+  geom_vline(aes(xintercept = 150), 
+             color = "red", linetype = "dashed", linewidth = 1.2) +
+  theme_minimal()
+```
+
+Para a amostra da @fig-lognormalSample, a média amostral resultou rm `r brf(me)`,
+a mediana amostral é `r brf(med)` e a moda é `r brf(mo)`. Em suma, nota-se que
+a moda amostral encontra-se um pouco viesada para baixo, neste caso, enquanto
+os estimadores média e mediana são ambos bons estimadores para a tendência
+central da amostra.
+
+
+```{r}
+lmetrics <- tribble(
+  ~Estimador, ~MAE, ~sMAE, ~MAPE, ~MAAPE, ~sMAPE, ~MARE, ~MASE,
+  "média", MLmetrics::MAE(lme, x), sMAE(lme, x), MAPE(lme, x), MAAPE(lme, x), smape(x, lme),  MARE(lme, x), mase(x, lme),
+  "mediana", MLmetrics::MAE(lmed, x), sMAE(lmed, x), MAPE(lmed, x), MAAPE(lmed, x), smape(x, lmed), MARE(lmed, x), mase(x, lmed),
+  "moda", MLmetrics::MAE(lmo, x), sMAE(lmo, x), MAPE(lmo, x), MAAPE(lmo, x), smape(x, lmo), MARE(lmo, x), mase(x, lmo),
+  "média aparada (10%)", MLmetrics::MAE(lma, x), sMAE(lma, x), MAPE(lma, x), MAAPE(lma, x), smape(x, lma), MARE(lma, x), mase(x, lma),
+)
+```
+
+```{r}
+# Format values as percentages with one decimal place
+lmetrics_formatted <- lmetrics |>
+  mutate(
+    sMAE = paste0(round(sMAE * 100, 2), "%"),
+    MAPE = paste0(round(MAPE * 100, 2), "%"),
+    MAAPE = paste0(round(MAAPE * 100, 2), "%"),
+    sMAPE = paste0(round(sMAPE * 100, 2), "%"),
+    MARE = paste0(round(MARE * 100, 2), "%"),
+    MASE = paste0(round(MASE * 100, 2), "%"))
+```
+
+Nota-se na @tbl-lognormalMetrics que o MAPE resultou menor para a moda amostral,
+enquanto as outras métricas foram melhores para a média ou mediana amostrais,
+assim como ocorreu com a distribuão normal.
+
+Neste caso, deve-se notar que o MAPE elencou a moda como melhor estimador, 
+enquanto as outras métricas colocaram a média ou mediana como mais precisos.
+Assim, a adoção do MAPE não pode ser considerada como ruim no caso de dados
+com distribuição lognormal, desde que o objetivo da modelagem seja estimar a
+moda da distribuição, que é realmente mais baixa que as outras medidas de
+tendência central. Contudo, se o objetivo for estimar a mediana, como é mais
+comum na Engenharia de Avaliações, as outras métricas são mais interessantes.
+
+```{r}
+#| label: tbl-lognormalMetrics
+#| tbl-cap: "Métricas para os estimadores da amostra lognormal."
+kable(lmetrics_formatted, digits = 2)
+```
+
+| Distribuição dos dados | Melhor Estimador | Métricas          |
+|:-----------------------|:-----------------|:------------------|
+| Normal                 | média            | MARE              |
+| Normal                 | mediana          | sMAE, sMAPE, MASE |
+| Normal                 | moda             | MAPE, MAAPE       |
+| LogNormal              | média            | MARE              |
+| LogNormal              | mediana          | sMAE, sMAPE, MASE |
+| LogNormal              | moda             | MAPE, MAAPE       |
+: Melhores estimadores por métrica
+
+## Considerações finais
+
+O MAPE mostrou-se uma métrica inadequada, a não ser que se pretenda estimar a
+moda de dados com distribuição lognormal. Caso contrário, ainda que a moda seja
+um péssimo estimador para a tendência central de dados com distribuição normal,
+o MAPE, assim como o MAAPE, apontam este estimador como o melhor preditor, o que
+é inadequado.
+
+Ademais, os percentuais obtidos com o MAPE distam dos percentuais obtidos com
+as outras métricas para os mesmos estimadores. Ou seja, o MAPE não é uma boa 
+métrica quando se deseja interpretar a real precisão dos modelos estatísticos.
+
+O sMAPE parece ser uma métrica ideal, na engenharia de avaliações, para fins de
+minimização. Porém, para fins de interpretação, uma melhor métrica seria o MARE,
+que representa o quanto, percentualmente, os dados da amostra distam, em média,
+do valor de mercado estimado.
+
+
+

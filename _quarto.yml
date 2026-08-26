@@ -27,10 +27,11 @@ book:
     - 05_renda_krigada.qmd
     - 06_VUM2.qmd
     - 07_variaveis.qmd
-    - 08_ML.qmd
-    - 09_lotes.qmd
-    - 10_equacoes.qmd
-    - 11_municipios.qmd
+    - 08_metricas.qmd
+    - 09_ML.qmd
+    - 10_lotes.qmd
+    - 11_equacoes.qmd
+    - 12_municipios.qmd
     - 99_conclusao.qmd
     - references.qmd
   appendices:
