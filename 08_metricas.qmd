@@ -8,9 +8,9 @@ echo: false
 
 ```{r}
 #| include: false
-library(appraiseR)
+# library(appraiseR)
 library(MLmetrics)
-library(Metrics)
+library(Metrics, include.only = "smape")
 library(kableExtra)
 library(tibble)
 library(dplyr)
@@ -18,6 +18,25 @@ library(EnvStats)
 library(ggplot2)
 ```
 
+```{r}
+# ==============================================================================
+## FUNÇÕES PARA FORMATAÇÃO DE TEXTO
+# ==============================================================================
+
+brf <- function(x, decimal.mark = ",", big.mark = ".", digits = 2,
+                nsmall = 2, scientific = FALSE, ...) {
+  format(x, decimal.mark = decimal.mark, big.mark = big.mark, digits = digits,
+         nsmall = nsmall, scientific = scientific, ...)
+}
+
+
+pct <- function (x, ...) {
+  if (length(x) == 0)
+    return(character())
+  x <- brf(100*x, ...)
+  paste0(x, "%")
+}
+```
 
 ## Introdução
 
@@ -216,7 +235,7 @@ MAAPE(3*mean(x)/2, x)
 O MAPE ponderado, ou wMAPE, pode ser escrito conforme a @eq-wMAPE:
 
 $$
-\text{wMAPE} = \frac{\sum_{i=1}^n |x_i - \bar x|}{\sum_{i = 1}^n |x_i|}
+\text{wMAPE} = \frac{\sum_{i=1}^n |A_i - F_i|}{\sum_{i = 1}^n |A_i|}
 $$ {#eq-wMAPE}
 
 O wMAPE também pode ser chamado de sMAE (scale Mean Absolute Error), que é
@@ -239,19 +258,19 @@ Para a média/mediana amostral:
 
 ```{r}
 # Metrics::mae(x, mean(x))/mean(x)
-# MLmetrics::MAE(mean(x), x)/mean(x)
+# MAE(mean(x), x)/mean(x)
 sMAE(mean(x), x)
 ```
 
 Para os estimadores arbitrariamente abaixo e acima da média/mediana:
 
 ```{r}
-MLmetrics::MAE(2*mean(x)/3, x)/mean(x)
+MAE(2*mean(x)/3, x)/mean(x)
 # Metrics::mae(x, 2*mean(x)/3)/mean(x)
 ```
 
 ```{r}
-MLmetrics::MAE(3*mean(x)/2, x)/mean(x)
+MAE(3*mean(x)/2, x)/mean(x)
 # Metrics::mae(x, 3*mean(x)/2)/mean(x)
 ```
 
@@ -299,21 +318,21 @@ performance melhor do que o *benchmark*.
 Para o *benchmark*, *i.e.*, para a média/mediana, o MAE é:
 
 ```{r}
-mae_med <- mae(x, mean(x))
+mae_med <- MAE(mean(x), x)
 mae_med
 ```
 
 Para o estimador arbitrário a menor:
 
 ```{r}
-mae_menor <- mae(x, 2*mean(x)/3)
+mae_menor <- MAE(2*mean(x)/3, x)
 mae_menor/mae_med
 ```
 
 Para o estimador arbitrário a maior:
 
 ```{r}
-mae_maior <- mae(x, 3*mean(x)/2)
+mae_maior <- MAE(3*mean(x)/2, x)
 mae_maior/mae_med
 ```
 
@@ -322,35 +341,49 @@ amostra.
 
 ## Estudos de Casos
 
-Nesta seção as métricas serão analisadas para conjuntos de dados aleatórios
-com: (1) distribuição normal e; (2) distribuição lognormal. Para ambos os
-conjuntos de dados as métricas testadas serão computadas para diversos 
-estimadores (moda, média, mediana, etc.).
+Nesta seção diversas métricas serão analisadas para conjuntos de dados gerados
+de forma randômica. No primeiro estudo de caso os dados são gerados com 
+distribuição normal; no segundo, com distribuição lognormal; e no terceiro, com
+distribuição normal contaminada. Em cada estudo de caso são computados diversos
+estimadores (moda, média, mediana, etc.), as métricas são calculadas para
+cada estimador e então comparadas.
 
 ### Distribuição normal
 
 ```{r}
-#| label: fig-normalSample
-#| fig-cap: "Amostra aleatório com distribuição normal com média 150 e desvio-padrão 50."
-set.seed(1)
-x <- rnorm(n = 250, mean = 150, sd = 50)
+set.seed(4)
+n <- 250
+mi <- 250
+sigma <- 100
+x <- rnorm(n = n, mean = mi, sd = sigma)
 me <- mean(x)
 med <- median(x)
 # mo <- collapse::fmode(x)
 mo <- modeest::mlv(x, method = "Parzen")
 ma <- mean(x, trim = .10)
+```
+
+Foi gerado um conjunto de dados com uma variável aleatória $X$ com distribuição
+normal de parâmetros $\mu_X = 250$ e $\sigma_X = 100$, ou seja, uma distribuição
+normal com coeficiente de variação igual a 40%. O histograma da amostra é
+apresentado na @fig-normalSample.
+
+
+```{r}
+#| label: fig-normalSample
+#| fig-cap: "Amostra aleatória com distribuição normal com média 250 e desvio-padrão 50."
 # hist(x, prob = TRUE, col = "lightblue", 
 #     main = "Histograma com Densidade Kernel gaussiana.")
 # Add density curve
 # lines(density(x), col = "red", lwd = 2)
-
 df <- data.frame(x = x)
 # Plot histogram plus density
 ggplot(df, aes(x = x)) +
   geom_histogram(aes(y = after_stat(density)), 
                  fill = "lightblue", color = "black", bins = 15) +
   geom_density(color = "red", linewidth = 1) +
-  geom_vline(aes(xintercept = 150), 
+  scale_x_continuous(limits = c(0, 500)) +
+  geom_vline(aes(xintercept = mi), 
              color = "red", linetype = "dashed", linewidth = 1.2) +
   theme_minimal()
 ```
@@ -360,22 +393,22 @@ a mediana amostral é `r brf(med)`, a moda [^1] é `r brf(mo)` e a média aparad
 (10%) é igual a `r brf(ma)`.
 
 Em suma, nota-se que, neste estudo de caso: a média resultou muito próxima ao 
-parâmetro populacional (+`r pct(me/150-1)`); a mediana também se mostrou um bom 
-estimador para a tendência central da amostra (`r pct(med/150-1)`), um pouco 
+parâmetro populacional (+`r pct(me/mi-1)`); a mediana também se mostrou um bom 
+estimador para a tendência central da amostra (`r pct(med/mi-1)`), um pouco 
 menos eficiente do que a média, contudo; a moda resultou viesada para baixo
-(`r pct(mo/150-1)`); e a média aparada (10%) resultou como o estimador ótimo
-da tendência central (+`r pct(ma/150-1)`).
+(`r pct(mo/mi-1)`); e a média aparada (10%) resultou como o estimador ótimo
+da tendência central (+`r pct(ma/mi-1)`).
 
 [^1]: A moda amostral foi estimada com o pacote *modeest*, com o estimador de 
 Parzen, que busca o valor máximo de uma densidade kernel gaussiana.
 
 ```{r}
 metrics <- tribble(
-  ~Estimador, ~MAE, ~sMAE, ~MAPE, ~MAAPE, ~sMAPE, ~MARE, ~MASE,
-  "média", MLmetrics::MAE(me, x), sMAE(me, x), MAPE(me, x), MAAPE(me, x), smape(x, me),  MARE(me, x), mase(x, me),
-  "mediana", MLmetrics::MAE(med, x), sMAE(med, x), MAPE(med, x), MAAPE(med, x), smape(x, med), MARE(med, x), mase(x, med),
-  "moda", MLmetrics::MAE(mo, x), sMAE(mo, x), MAPE(mo, x), MAAPE(mo, x), smape(x, mo), MARE(mo, x), mase(x, mo),
-  "média aparada (10%)", MLmetrics::MAE(ma, x), sMAE(ma, x), MAPE(ma, x), MAAPE(ma, x), smape(x, ma), MARE(ma, x), mase(x, ma),
+  ~Estimador, ~MAE, ~sMAE, ~MAPE, ~MAAPE, ~sMAPE, ~MARE,
+  "média", MAE(me, x), sMAE(me, x), MAPE(me, x), MAAPE(me, x), smape(x, me),  MARE(me, x), 
+  "mediana", MAE(med, x), sMAE(med, x), MAPE(med, x), MAAPE(med, x), smape(x, med), MARE(med, x), 
+  "moda", MAE(mo, x), sMAE(mo, x), MAPE(mo, x), MAAPE(mo, x), smape(x, mo), MARE(mo, x), 
+  "média aparada (10%)", MAE(ma, x), sMAE(ma, x), MAPE(ma, x), MAAPE(ma, x), smape(x, ma), MARE(ma, x), 
 )
 ```
 
@@ -387,13 +420,13 @@ metrics_formatted <- metrics |>
     MAPE = paste0(round(MAPE * 100, 2), "%"),
     MAAPE = paste0(round(MAAPE * 100, 2), "%"),
     sMAPE = paste0(round(sMAPE * 100, 2), "%"),
-    MARE = paste0(round(MARE * 100, 2), "%"),
-    MASE = paste0(round(MASE * 100, 2), "%"))
+    MARE = paste0(round(MARE * 100, 2), "%")
+    )
 ```
 
 Nota-se na @tbl-normalMetrics que, apesar do claro viés presente na moda
 amostral, o MAPE resultou menor para este estimador, assim como o MAAPE. As 
-métricas sMAE, sMAPE e MASE resultaram mais baixos para mediana, enquanto o MARE 
+métricas sMAE, e sMAPE resultaram mais baixos para mediana, enquanto o MARE 
 resultou mais baixo para a média amostral. Nota-se, portanto, a métrica MAPE se 
 mostrou a menos apta para informar o melhor estimador para a tendência central 
 da amostra.
@@ -404,24 +437,34 @@ da amostra.
 kable(metrics_formatted, digits = 2)
 ```
 
-Além disto, o MAPE mostra-se claramente inadequado quando utilizado como uma
-informação do erro percentual médio da amostra. O MAAPE mostrou-se, em termos de
-informação do erro percentual médio, uma métrica melhor, apesar de apresentar 
-o mesmo problema do MAPE, de priorizar os valores mais baixos.
+Além disto, as métricas mostram que o MAPE não representa uma informação
+interpretável da dispersão dos erros na amostra. O MAAPE mostrou-se, em termos 
+de informação em relação à dispersão dos erros, uma métrica melhor, apesar de
+apresentar o mesmo problema do MAPE, de priorizar os valores mais baixos.
 
-
-
-### Distribuição lognormal
+### Distribuição Lognormal
 
 ```{r}
-#| label: fig-lognormalSample
-#| fig-cap: "Amostra aleatório com distribuição lognormal com mediana 150 e desvio-padrao igual a .25 (na escala log)."
 set.seed(1)
-lx <- rlnorm3(250, meanlog = log(140), sdlog = .25, threshold = 10)
+lmi <- log(235)
+lsigma <- .35
+lx <- rlnorm3(n, meanlog = lmi, sdlog = lsigma, threshold = 0)
 lme <- mean(lx)
 lmed <- median(lx)
 lmo <- modeest::mlv(lx, method = "Parzen")
 lma <- mean(lx, trim = .10)
+```
+
+Foi gerado um conjunto de dados com uma variável aleatória $X$ com distribuição
+lognormal de parâmetros $\mu_X = \ln(240)$ e $\sigma_X = 0,275$. A média (ou 
+valor esperado) dessa distribuição é, portanto, igual a 
+$E(X) = \mu_X + 0,5\cdot \sigma_X^2 =$ `r brf(exp(lmi + .5*lsigma^2))` 
+$\approx 250$ e a moda igual a $Mo(X) = \mu_X - \sigma_X^2 =$ 
+`r brf(exp(lmi -lsigma^2))`.
+
+```{r}
+#| label: fig-lognormalSample
+#| fig-cap: "Amostra aleatória com distribuição lognormal com mediana 235 e desvio-padrao igual a .35 (na escala log)."
 # hist(x)
 df <- data.frame(x = lx)
 # Plot histogram plus density
@@ -429,25 +472,31 @@ ggplot(df, aes(x = x)) +
   geom_histogram(aes(y = after_stat(density)), 
                  fill = "lightblue", color = "black", bins = 15) +
   geom_density(color = "red", linewidth = 1) +
-  geom_vline(aes(xintercept = 150), 
+  scale_x_continuous(limits = c(0, 500)) +
+  geom_vline(aes(xintercept = exp(lmi)), 
              color = "red", linetype = "dashed", linewidth = 1.2) +
   theme_minimal()
 ```
 
-Para a amostra da @fig-lognormalSample, a média amostral resultou rm `r brf(me)`,
-a mediana amostral é `r brf(med)` e a moda é `r brf(mo)`. Em suma, nota-se que
-a moda amostral encontra-se um pouco viesada para baixo, neste caso, enquanto
-os estimadores média e mediana são ambos bons estimadores para a tendência
-central da amostra.
+Para a amostra da @fig-lognormalSample, a média amostral resultou rm `r brf(lme)`,
+a mediana amostral é `r brf(lmed)` e a moda é `r brf(lmo)`. A média aparada, 
+neste caso, resultou igual a `r brf(lma)`. No caso da distribuição lognormal,
+cada estimador tem um significado diferente, ao contrário do que ocorre com a 
+distribuição normal, caso em que as medidas coincidem, pois, no caso da
+distribuição normal os estimadores são diferentes, mas estimam o mesmo parâmetro
+$\mu$. Portanto, não há que se falar em melhor estimador para a distribuição
+lognormal. Contudo, pode-se verificar na @tbl-lognormalMetrics qual métrica é
+minimizada com cada estimador.
+
 
 
 ```{r}
 lmetrics <- tribble(
-  ~Estimador, ~MAE, ~sMAE, ~MAPE, ~MAAPE, ~sMAPE, ~MARE, ~MASE,
-  "média", MLmetrics::MAE(lme, x), sMAE(lme, x), MAPE(lme, x), MAAPE(lme, x), smape(x, lme),  MARE(lme, x), mase(x, lme),
-  "mediana", MLmetrics::MAE(lmed, x), sMAE(lmed, x), MAPE(lmed, x), MAAPE(lmed, x), smape(x, lmed), MARE(lmed, x), mase(x, lmed),
-  "moda", MLmetrics::MAE(lmo, x), sMAE(lmo, x), MAPE(lmo, x), MAAPE(lmo, x), smape(x, lmo), MARE(lmo, x), mase(x, lmo),
-  "média aparada (10%)", MLmetrics::MAE(lma, x), sMAE(lma, x), MAPE(lma, x), MAAPE(lma, x), smape(x, lma), MARE(lma, x), mase(x, lma),
+  ~Estimador, ~MAE, ~sMAE, ~MAPE, ~MAAPE, ~sMAPE, ~MARE, 
+  "média", MAE(lme, lx), sMAE(lme, lx), MAPE(lme, lx), MAAPE(lme, lx), smape(x, lme),  MARE(lme, lx), 
+  "mediana", MAE(lmed, lx), sMAE(lmed, lx), MAPE(lmed, lx), MAAPE(lmed, lx), smape(x, lmed), MARE(lmed, lx), 
+  "moda", MAE(lmo, lx), sMAE(lmo, lx), MAPE(lmo, lx), MAAPE(lmo, lx), smape(lx, lmo), MARE(lmo, lx), 
+  "média aparada (10%)", MAE(lma, lx), sMAE(lma, lx), MAPE(lma, lx), MAAPE(lma, lx), smape(x, lma), MARE(lma, lx)
 )
 ```
 
@@ -459,21 +508,12 @@ lmetrics_formatted <- lmetrics |>
     MAPE = paste0(round(MAPE * 100, 2), "%"),
     MAAPE = paste0(round(MAAPE * 100, 2), "%"),
     sMAPE = paste0(round(sMAPE * 100, 2), "%"),
-    MARE = paste0(round(MARE * 100, 2), "%"),
-    MASE = paste0(round(MASE * 100, 2), "%"))
+    MARE = paste0(round(MARE * 100, 2), "%"))
 ```
 
 Nota-se na @tbl-lognormalMetrics que o MAPE resultou menor para a moda amostral,
-enquanto as outras métricas foram melhores para a média ou mediana amostrais,
-assim como ocorreu com a distribuão normal.
-
-Neste caso, deve-se notar que o MAPE elencou a moda como melhor estimador, 
-enquanto as outras métricas colocaram a média ou mediana como mais precisos.
-Assim, a adoção do MAPE não pode ser considerada como ruim no caso de dados
-com distribuição lognormal, desde que o objetivo da modelagem seja estimar a
-moda da distribuição, que é realmente mais baixa que as outras medidas de
-tendência central. Contudo, se o objetivo for estimar a mediana, como é mais
-comum na Engenharia de Avaliações, as outras métricas são mais interessantes.
+o que era esperado, enquanto as outras métricas foram melhores para a média ou 
+mediana amostrais, assim como ocorreu com a distribuição normal.
 
 ```{r}
 #| label: tbl-lognormalMetrics
@@ -484,12 +524,86 @@ kable(lmetrics_formatted, digits = 2)
 | Distribuição dos dados | Melhor Estimador | Métricas          |
 |:-----------------------|:-----------------|:------------------|
 | Normal                 | média            | MARE              |
-| Normal                 | mediana          | sMAE, sMAPE, MASE |
+| Normal                 | mediana          | sMAE, sMAPE.      |
 | Normal                 | moda             | MAPE, MAAPE       |
 | LogNormal              | média            | MARE              |
-| LogNormal              | mediana          | sMAE, sMAPE, MASE |
+| LogNormal              | mediana          | sMAE, sMAPE.      |
 | LogNormal              | moda             | MAPE, MAAPE       |
 : Melhores estimadores por métrica
+
+
+### Distribuição normal contaminada
+
+Neste terceiro estudo de caso foram gerados `r n` dados com distribuição normal
+contaminada na proporção 80/20, *i.e.* 20% de dados contaminantes. A
+@fig-cNormal mostra o histograma da amostra.
+
+```{r}
+set.seed(3)
+
+# Generate 250 points 
+# p.mix represents the proportion belonging to the FIRST distribution
+z <- rnormMix(n = n, 
+              mean1 = mi, sd1 = sigma/2,   # Good data
+              mean2 = mi, sd2 = sigma,     # Contaminated data
+              p.mix = 0.80)                # 80% good, 20% contaminated
+zme <- mean(z)
+zmed <- median(z)
+zmo <- modeest::mlv(z, method = "Parzen")
+zma <- mean(z, trim = .10)
+```
+
+
+```{r}
+#| label: fig-cNormal
+#| fig-cap: "Amostra com distribuição normal contaminada, com média igual a 250."
+
+# hist(x)
+df <- data.frame(x = z)
+# Plot histogram plus density
+ggplot(df, aes(x = x)) +
+  geom_histogram(aes(y = after_stat(density)), 
+                 fill = "lightblue", color = "black", bins = 15) +
+  geom_density(color = "red", linewidth = 1) +
+  geom_vline(aes(xintercept = mi), 
+             color = "red", linetype = "dashed", linewidth = 1.2) +
+  theme_minimal()
+```
+
+```{r}
+metrics <- tribble(
+  ~Estimador, ~MAE, ~sMAE, ~MAPE, ~MAAPE, ~sMAPE, ~MARE,
+  "média", MAE(zme, z), sMAE(zme, z), MAPE(zme, z), MAAPE(zme, z), smape(z, zme),  MARE(zme, z), 
+  "mediana", MAE(zmed, z), sMAE(zmed, z), MAPE(zmed, z), MAAPE(zmed, z), smape(z, zmed), MARE(zmed, z), 
+  "moda", MAE(zmo, z), sMAE(zmo, z), MAPE(zmo, z), MAAPE(zmo, z), smape(z, zmo), MARE(zmo, z), 
+  "média aparada (10%)", MAE(zma, z), sMAE(zma, z), MAPE(zma, z), MAAPE(zma, z), smape(z, zma), MARE(zma, z)
+)
+```
+
+```{r}
+# Format values as percentages with one decimal place
+metrics_formatted <- metrics |>
+  mutate(
+    sMAE = paste0(round(sMAE * 100, 2), "%"),
+    MAPE = paste0(round(MAPE * 100, 2), "%"),
+    MAAPE = paste0(round(MAAPE * 100, 2), "%"),
+    sMAPE = paste0(round(sMAPE * 100, 2), "%"),
+    MARE = paste0(round(MARE * 100, 2), "%")
+    )
+```
+
+Nota-se na @tbl-CnormalMetrics que, apesar do claro viés presente na moda
+amostral, o MAPE resultou menor para este estimador, assim como o MAAPE. As 
+métricas sMAE e sMAPE resultaram mais baixos para mediana, enquanto o MARE 
+resultou mais baixo para a média amostral. Nota-se, portanto, a métrica MAPE se 
+mostrou a menos apta para informar o melhor estimador para a tendência central 
+da amostra.
+
+```{r}
+#| label: tbl-CnormalMetrics
+#| tbl-cap: "Métricas para os estimadores da amostra normal."
+kable(metrics_formatted, digits = 2)
+```
 
 ## Considerações finais
 

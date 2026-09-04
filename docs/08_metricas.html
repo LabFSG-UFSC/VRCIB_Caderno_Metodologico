@@ -308,7 +308,8 @@ window.Quarto = {
   <li><a href="#estudos-de-casos" id="toc-estudos-de-casos" class="nav-link" data-scroll-target="#estudos-de-casos"><span class="header-section-number">8.4</span> Estudos de Casos</a>
   <ul>
   <li><a href="#distribuição-normal" id="toc-distribuição-normal" class="nav-link" data-scroll-target="#distribuição-normal"><span class="header-section-number">8.4.1</span> Distribuição normal</a></li>
-  <li><a href="#distribuição-lognormal" id="toc-distribuição-lognormal" class="nav-link" data-scroll-target="#distribuição-lognormal"><span class="header-section-number">8.4.2</span> Distribuição lognormal</a></li>
+  <li><a href="#distribuição-lognormal" id="toc-distribuição-lognormal" class="nav-link" data-scroll-target="#distribuição-lognormal"><span class="header-section-number">8.4.2</span> Distribuição Lognormal</a></li>
+  <li><a href="#distribuição-normal-contaminada" id="toc-distribuição-normal-contaminada" class="nav-link" data-scroll-target="#distribuição-normal-contaminada"><span class="header-section-number">8.4.3</span> Distribuição normal contaminada</a></li>
   </ul></li>
   <li><a href="#considerações-finais" id="toc-considerações-finais" class="nav-link" data-scroll-target="#considerações-finais"><span class="header-section-number">8.5</span> Considerações finais</a></li>
   </ul>
@@ -532,9 +533,10 @@ window.Quarto = {
 </section>
 <section id="estudos-de-casos" class="level2" data-number="8.4">
 <h2 data-number="8.4" class="anchored" data-anchor-id="estudos-de-casos"><span class="header-section-number">8.4</span> Estudos de Casos</h2>
-<p>Nesta seção as métricas serão analisadas para conjuntos de dados aleatórios com: (1) distribuição normal e; (2) distribuição lognormal. Para ambos os conjuntos de dados as métricas testadas serão computadas para diversos estimadores (moda, média, mediana, etc.).</p>
+<p>Nesta seção diversas métricas serão analisadas para conjuntos de dados gerados de forma randômica. No primeiro estudo de caso os dados são gerados com distribuição normal; no segundo, com distribuição lognormal; e no terceiro, com distribuição normal contaminada. Em cada estudo de caso são computados diversos estimadores (moda, média, mediana, etc.), as métricas são calculadas para cada estimador e então comparadas.</p>
 <section id="distribuição-normal" class="level3" data-number="8.4.1">
 <h3 data-number="8.4.1" class="anchored" data-anchor-id="distribuição-normal"><span class="header-section-number">8.4.1</span> Distribuição normal</h3>
+<p>Foi gerado um conjunto de dados com uma variável aleatória <span class="math inline">\(X\)</span> com distribuição normal de parâmetros <span class="math inline">\(\mu_X = 250\)</span> e <span class="math inline">\(\sigma_X = 100\)</span>, ou seja, uma distribuição normal com coeficiente de variação igual a 40%. O histograma da amostra é apresentado na <a href="#fig-normalSample" class="quarto-xref">Figura&nbsp;<span>8.1</span></a>.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-normalSample" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -543,15 +545,15 @@ window.Quarto = {
 <img src="08_metricas_files/figure-html/fig-normalSample-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-normalSample-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;8.1: Amostra aleatório com distribuição normal com média 150 e desvio-padrão 50.
+Figura&nbsp;8.1: Amostra aleatória com distribuição normal com média 250 e desvio-padrão 50.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Para a amostra da <a href="#fig-normalSample" class="quarto-xref">Figura&nbsp;<span>8.1</span></a>, a média amostral resultou em 151,11, a mediana amostral é 147,76, a moda <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> é 140,67 e a média aparada (10%) é igual a 150,66.</p>
-<p>Em suma, nota-se que, neste estudo de caso: a média resultou muito próxima ao parâmetro populacional (+0,74%); a mediana também se mostrou um bom estimador para a tendência central da amostra (-1,49%), um pouco menos eficiente do que a média, contudo; a moda resultou viesada para baixo (-6,22%); e a média aparada (10%) resultou como o estimador ótimo da tendência central (+0,44%).</p>
-<p>Nota-se na <a href="#tbl-normalMetrics" class="quarto-xref">Tabela&nbsp;<span>8.1</span></a> que, apesar do claro viés presente na moda amostral, o MAPE resultou menor para este estimador, assim como o MAAPE. As métricas sMAE, sMAPE e MASE resultaram mais baixos para mediana, enquanto o MARE resultou mais baixo para a média amostral. Nota-se, portanto, a métrica MAPE se mostrou a menos apta para informar o melhor estimador para a tendência central da amostra.</p>
+<p>Para a amostra da <a href="#fig-normalSample" class="quarto-xref">Figura&nbsp;<span>8.1</span></a>, a média amostral resultou em 250,99, a mediana amostral é 245,49, a moda <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> é 229,19 e a média aparada (10%) é igual a 250,62.</p>
+<p>Em suma, nota-se que, neste estudo de caso: a média resultou muito próxima ao parâmetro populacional (+0,40%); a mediana também se mostrou um bom estimador para a tendência central da amostra (-1,80%), um pouco menos eficiente do que a média, contudo; a moda resultou viesada para baixo (-8,33%); e a média aparada (10%) resultou como o estimador ótimo da tendência central (+0,25%).</p>
+<p>Nota-se na <a href="#tbl-normalMetrics" class="quarto-xref">Tabela&nbsp;<span>8.1</span></a> que, apesar do claro viés presente na moda amostral, o MAPE resultou menor para este estimador, assim como o MAAPE. As métricas sMAE, e sMAPE resultaram mais baixos para mediana, enquanto o MARE resultou mais baixo para a média amostral. Nota-se, portanto, a métrica MAPE se mostrou a menos apta para informar o melhor estimador para a tendência central da amostra.</p>
 <div class="cell">
 <div id="tbl-normalMetrics" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -561,16 +563,6 @@ Tabela&nbsp;8.1: Métricas para os estimadores da amostra normal.
 <div aria-describedby="tbl-normalMetrics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="cell caption-top table table-sm table-striped small">
-<colgroup>
-<col style="width: 29%">
-<col style="width: 8%">
-<col style="width: 10%">
-<col style="width: 10%">
-<col style="width: 10%">
-<col style="width: 10%">
-<col style="width: 10%">
-<col style="width: 10%">
-</colgroup>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Estimador</th>
@@ -580,49 +572,44 @@ Tabela&nbsp;8.1: Métricas para os estimadores da amostra normal.
 <th style="text-align: left;">MAAPE</th>
 <th style="text-align: left;">sMAPE</th>
 <th style="text-align: left;">MARE</th>
-<th style="text-align: left;">MASE</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">média</td>
-<td style="text-align: right;">38.01</td>
-<td style="text-align: left;">25.15%</td>
-<td style="text-align: left;">41.42%</td>
-<td style="text-align: left;">26.67%</td>
-<td style="text-align: left;">26.44%</td>
-<td style="text-align: left;">25.15%</td>
-<td style="text-align: left;">68.12%</td>
+<td style="text-align: right;">77.52</td>
+<td style="text-align: left;">30.89%</td>
+<td style="text-align: left;">63.7%</td>
+<td style="text-align: left;">32.9%</td>
+<td style="text-align: left;">33.07%</td>
+<td style="text-align: left;">30.89%</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">mediana</td>
-<td style="text-align: right;">37.83</td>
-<td style="text-align: left;">25.04%</td>
-<td style="text-align: left;">40.39%</td>
-<td style="text-align: left;">26.22%</td>
-<td style="text-align: left;">26.36%</td>
-<td style="text-align: left;">25.6%</td>
-<td style="text-align: left;">67.81%</td>
+<td style="text-align: right;">77.34</td>
+<td style="text-align: left;">30.81%</td>
+<td style="text-align: left;">62.23%</td>
+<td style="text-align: left;">32.48%</td>
+<td style="text-align: left;">33.05%</td>
+<td style="text-align: left;">31.51%</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">moda</td>
-<td style="text-align: right;">38.49</td>
-<td style="text-align: left;">25.47%</td>
-<td style="text-align: left;">38.9%</td>
-<td style="text-align: left;">25.88%</td>
-<td style="text-align: left;">26.86%</td>
-<td style="text-align: left;">27.36%</td>
-<td style="text-align: left;">68.98%</td>
+<td style="text-align: right;">78.55</td>
+<td style="text-align: left;">31.3%</td>
+<td style="text-align: left;">58.6%</td>
+<td style="text-align: left;">31.8%</td>
+<td style="text-align: left;">33.69%</td>
+<td style="text-align: left;">34.27%</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">média aparada (10%)</td>
-<td style="text-align: right;">37.97</td>
-<td style="text-align: left;">25.13%</td>
-<td style="text-align: left;">41.27%</td>
-<td style="text-align: left;">26.6%</td>
-<td style="text-align: left;">26.42%</td>
-<td style="text-align: left;">25.2%</td>
-<td style="text-align: left;">68.05%</td>
+<td style="text-align: right;">77.50</td>
+<td style="text-align: left;">30.88%</td>
+<td style="text-align: left;">63.59%</td>
+<td style="text-align: left;">32.87%</td>
+<td style="text-align: left;">33.06%</td>
+<td style="text-align: left;">30.92%</td>
 </tr>
 </tbody>
 </table>
@@ -631,10 +618,11 @@ Tabela&nbsp;8.1: Métricas para os estimadores da amostra normal.
 </figure>
 </div>
 </div>
-<p>Além disto, o MAPE mostra-se claramente inadequado quando utilizado como uma informação do erro percentual médio da amostra. O MAAPE mostrou-se, em termos de informação do erro percentual médio, uma métrica melhor, apesar de apresentar o mesmo problema do MAPE, de priorizar os valores mais baixos.</p>
+<p>Além disto, as métricas mostram que o MAPE não representa uma informação interpretável da dispersão dos erros na amostra. O MAAPE mostrou-se, em termos de informação em relação à dispersão dos erros, uma métrica melhor, apesar de apresentar o mesmo problema do MAPE, de priorizar os valores mais baixos.</p>
 </section>
 <section id="distribuição-lognormal" class="level3" data-number="8.4.2">
-<h3 data-number="8.4.2" class="anchored" data-anchor-id="distribuição-lognormal"><span class="header-section-number">8.4.2</span> Distribuição lognormal</h3>
+<h3 data-number="8.4.2" class="anchored" data-anchor-id="distribuição-lognormal"><span class="header-section-number">8.4.2</span> Distribuição Lognormal</h3>
+<p>Foi gerado um conjunto de dados com uma variável aleatória <span class="math inline">\(X\)</span> com distribuição lognormal de parâmetros <span class="math inline">\(\mu_X = \ln(240)\)</span> e <span class="math inline">\(\sigma_X = 0,275\)</span>. A média (ou valor esperado) dessa distribuição é, portanto, igual a <span class="math inline">\(E(X) = \mu_X + 0,5\cdot \sigma_X^2 =\)</span> 249,84 <span class="math inline">\(\approx 250\)</span> e a moda igual a <span class="math inline">\(Mo(X) = \mu_X - \sigma_X^2 =\)</span> 207,91.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-lognormalSample" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -643,15 +631,14 @@ Tabela&nbsp;8.1: Métricas para os estimadores da amostra normal.
 <img src="08_metricas_files/figure-html/fig-lognormalSample-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-lognormalSample-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;8.2: Amostra aleatório com distribuição lognormal com mediana 150 e desvio-padrao igual a .25 (na escala log).
+Figura&nbsp;8.2: Amostra aleatória com distribuição lognormal com mediana 235 e desvio-padrao igual a .35 (na escala log).
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Para a amostra da <a href="#fig-lognormalSample" class="quarto-xref">Figura&nbsp;<span>8.2</span></a>, a média amostral resultou rm 151,11, a mediana amostral é 147,76 e a moda é 140,67. Em suma, nota-se que a moda amostral encontra-se um pouco viesada para baixo, neste caso, enquanto os estimadores média e mediana são ambos bons estimadores para a tendência central da amostra.</p>
-<p>Nota-se na <a href="#tbl-lognormalMetrics" class="quarto-xref">Tabela&nbsp;<span>8.2</span></a> que o MAPE resultou menor para a moda amostral, enquanto as outras métricas foram melhores para a média ou mediana amostrais, assim como ocorreu com a distribuão normal.</p>
-<p>Neste caso, deve-se notar que o MAPE elencou a moda como melhor estimador, enquanto as outras métricas colocaram a média ou mediana como mais precisos. Assim, a adoção do MAPE não pode ser considerada como ruim no caso de dados com distribuição lognormal, desde que o objetivo da modelagem seja estimar a moda da distribuição, que é realmente mais baixa que as outras medidas de tendência central. Contudo, se o objetivo for estimar a mediana, como é mais comum na Engenharia de Avaliações, as outras métricas são mais interessantes.</p>
+<p>Para a amostra da <a href="#fig-lognormalSample" class="quarto-xref">Figura&nbsp;<span>8.2</span></a>, a média amostral resultou rm 250,68, a mediana amostral é 231,34 e a moda é 214,45. A média aparada, neste caso, resultou igual a 241,75. No caso da distribuição lognormal, cada estimador tem um significado diferente, ao contrário do que ocorre com a distribuição normal, caso em que as medidas coincidem, pois, no caso da distribuição normal os estimadores são diferentes, mas estimam o mesmo parâmetro <span class="math inline">\(\mu\)</span>. Portanto, não há que se falar em melhor estimador para a distribuição lognormal. Contudo, pode-se verificar na <a href="#tbl-lognormalMetrics" class="quarto-xref">Tabela&nbsp;<span>8.2</span></a> qual métrica é minimizada com cada estimador.</p>
+<p>Nota-se na <a href="#tbl-lognormalMetrics" class="quarto-xref">Tabela&nbsp;<span>8.2</span></a> que o MAPE resultou menor para a moda amostral, o que era esperado, enquanto as outras métricas foram melhores para a média ou mediana amostrais, assim como ocorreu com a distribuição normal.</p>
 <div class="cell">
 <div id="tbl-lognormalMetrics" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -661,16 +648,6 @@ Tabela&nbsp;8.2: Métricas para os estimadores da amostra lognormal.
 <div aria-describedby="tbl-lognormalMetrics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="cell caption-top table table-sm table-striped small">
-<colgroup>
-<col style="width: 29%">
-<col style="width: 8%">
-<col style="width: 10%">
-<col style="width: 10%">
-<col style="width: 10%">
-<col style="width: 10%">
-<col style="width: 10%">
-<col style="width: 10%">
-</colgroup>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Estimador</th>
@@ -680,49 +657,44 @@ Tabela&nbsp;8.2: Métricas para os estimadores da amostra lognormal.
 <th style="text-align: left;">MAAPE</th>
 <th style="text-align: left;">sMAPE</th>
 <th style="text-align: left;">MARE</th>
-<th style="text-align: left;">MASE</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">média</td>
-<td style="text-align: right;">38.43</td>
-<td style="text-align: left;">25.43%</td>
-<td style="text-align: left;">42.74%</td>
-<td style="text-align: left;">27.3%</td>
-<td style="text-align: left;">26.68%</td>
-<td style="text-align: left;">24.8%</td>
-<td style="text-align: left;">68.87%</td>
+<td style="text-align: right;">67.57</td>
+<td style="text-align: left;">26.95%</td>
+<td style="text-align: left;">29.84%</td>
+<td style="text-align: left;">27.06%</td>
+<td style="text-align: left;">33.06%</td>
+<td style="text-align: left;">26.95%</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">mediana</td>
-<td style="text-align: right;">37.85</td>
-<td style="text-align: left;">25.05%</td>
-<td style="text-align: left;">40.58%</td>
-<td style="text-align: left;">26.3%</td>
-<td style="text-align: left;">26.36%</td>
-<td style="text-align: left;">25.5%</td>
-<td style="text-align: left;">67.83%</td>
+<td style="text-align: right;">65.53</td>
+<td style="text-align: left;">26.14%</td>
+<td style="text-align: left;">26.74%</td>
+<td style="text-align: left;">24.73%</td>
+<td style="text-align: left;">33.56%</td>
+<td style="text-align: left;">28.33%</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">moda</td>
-<td style="text-align: right;">38.33</td>
-<td style="text-align: left;">25.37%</td>
-<td style="text-align: left;">39.04%</td>
-<td style="text-align: left;">25.88%</td>
-<td style="text-align: left;">26.75%</td>
-<td style="text-align: left;">27.08%</td>
-<td style="text-align: left;">68.7%</td>
+<td style="text-align: right;">67.69</td>
+<td style="text-align: left;">27%</td>
+<td style="text-align: left;">25.74%</td>
+<td style="text-align: left;">24.13%</td>
+<td style="text-align: left;">26.91%</td>
+<td style="text-align: left;">31.57%</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">média aparada (10%)</td>
-<td style="text-align: right;">38.11</td>
-<td style="text-align: left;">25.22%</td>
-<td style="text-align: left;">41.78%</td>
-<td style="text-align: left;">26.84%</td>
-<td style="text-align: left;">26.5%</td>
-<td style="text-align: left;">25.04%</td>
-<td style="text-align: left;">68.3%</td>
+<td style="text-align: right;">66.33</td>
+<td style="text-align: left;">26.46%</td>
+<td style="text-align: left;">28.28%</td>
+<td style="text-align: left;">25.9%</td>
+<td style="text-align: left;">33.12%</td>
+<td style="text-align: left;">27.44%</td>
 </tr>
 </tbody>
 </table>
@@ -749,7 +721,7 @@ Tabela&nbsp;8.2: Métricas para os estimadores da amostra lognormal.
 <tr class="even">
 <td style="text-align: left;">Normal</td>
 <td style="text-align: left;">mediana</td>
-<td style="text-align: left;">sMAE, sMAPE, MASE</td>
+<td style="text-align: left;">sMAE, sMAPE.</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Normal</td>
@@ -764,7 +736,7 @@ Tabela&nbsp;8.2: Métricas para os estimadores da amostra lognormal.
 <tr class="odd">
 <td style="text-align: left;">LogNormal</td>
 <td style="text-align: left;">mediana</td>
-<td style="text-align: left;">sMAE, sMAPE, MASE</td>
+<td style="text-align: left;">sMAE, sMAPE.</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">LogNormal</td>
@@ -773,6 +745,89 @@ Tabela&nbsp;8.2: Métricas para os estimadores da amostra lognormal.
 </tr>
 </tbody>
 </table>
+</section>
+<section id="distribuição-normal-contaminada" class="level3" data-number="8.4.3">
+<h3 data-number="8.4.3" class="anchored" data-anchor-id="distribuição-normal-contaminada"><span class="header-section-number">8.4.3</span> Distribuição normal contaminada</h3>
+<p>Neste terceiro estudo de caso foram gerados 250 dados com distribuição normal contaminada na proporção 80/20, <em>i.e.</em> 20% de dados contaminantes. A <a href="#fig-cNormal" class="quarto-xref">Figura&nbsp;<span>8.3</span></a> mostra o histograma da amostra.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-cNormal" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cNormal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08_metricas_files/figure-html/fig-cNormal-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cNormal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;8.3: Amostra com distribuição normal contaminada, com média igual a 250.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Nota-se na <a href="#tbl-CnormalMetrics" class="quarto-xref">Tabela&nbsp;<span>8.3</span></a> que, apesar do claro viés presente na moda amostral, o MAPE resultou menor para este estimador, assim como o MAAPE. As métricas sMAE e sMAPE resultaram mais baixos para mediana, enquanto o MARE resultou mais baixo para a média amostral. Nota-se, portanto, a métrica MAPE se mostrou a menos apta para informar o melhor estimador para a tendência central da amostra.</p>
+<div class="cell">
+<div id="tbl-CnormalMetrics" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-CnormalMetrics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;8.3: Métricas para os estimadores da amostra normal.
+</figcaption>
+<div aria-describedby="tbl-CnormalMetrics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Estimador</th>
+<th style="text-align: right;">MAE</th>
+<th style="text-align: left;">sMAE</th>
+<th style="text-align: left;">MAPE</th>
+<th style="text-align: left;">MAAPE</th>
+<th style="text-align: left;">sMAPE</th>
+<th style="text-align: left;">MARE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">média</td>
+<td style="text-align: right;">77.47</td>
+<td style="text-align: left;">30.21%</td>
+<td style="text-align: left;">57.17%</td>
+<td style="text-align: left;">32.06%</td>
+<td style="text-align: left;">32.34%</td>
+<td style="text-align: left;">30.21%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mediana</td>
+<td style="text-align: right;">77.39</td>
+<td style="text-align: left;">30.18%</td>
+<td style="text-align: left;">57.91%</td>
+<td style="text-align: left;">32.21%</td>
+<td style="text-align: left;">32.27%</td>
+<td style="text-align: left;">29.78%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">moda</td>
+<td style="text-align: right;">79.45</td>
+<td style="text-align: left;">30.98%</td>
+<td style="text-align: left;">63.33%</td>
+<td style="text-align: left;">33.88%</td>
+<td style="text-align: left;">32.76%</td>
+<td style="text-align: left;">28.29%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">média aparada (10%)</td>
+<td style="text-align: right;">77.60</td>
+<td style="text-align: left;">30.26%</td>
+<td style="text-align: left;">56.75%</td>
+<td style="text-align: left;">31.99%</td>
+<td style="text-align: left;">32.41%</td>
+<td style="text-align: left;">30.51%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
 </section>
 </section>
 <section id="considerações-finais" class="level2" data-number="8.5">
